@@ -315,6 +315,33 @@ body {
   background: #d97706;
 }
 
+.btn-teal {
+  background: #0d9488;
+  color: white;
+}
+
+.btn-teal:hover {
+  background: #0f766e;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn-success:hover {
+  background: #15803d;
+}
+
 .btn-small {
   padding: 6px 14px;
   font-size: 13px;
@@ -880,20 +907,29 @@ body {
 
 /* ===== Practice Screen ===== */
 .practice-container {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  padding: 28px;
-  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .practice-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
 }
 
 .practice-topics {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.practice-topics h2 {
+  margin-bottom: 16px;
+}
+
+.practice-topics-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
@@ -922,6 +958,13 @@ body {
 .practice-topic-meta {
   font-size: 13px;
   color: var(--text-muted);
+}
+
+.practice-content {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
 }
 
 .practice-content-header {
@@ -1090,7 +1133,7 @@ body {
     grid-template-columns: repeat(8, 1fr);
   }
 
-  .practice-topics {
+  .practice-topics-grid {
     grid-template-columns: 1fr;
   }
 

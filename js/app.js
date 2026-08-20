@@ -619,7 +619,7 @@ const App = {
 
   // ===== Practice Mode =====
   renderPracticeTopics() {
-    const container = document.getElementById('practice-topics');
+    const container = document.getElementById('practice-topics-grid');
     container.innerHTML = '';
     for (const [sec, info] of Object.entries(SECTIONS)) {
       const bankCount = QUESTIONS.filter(q => q.section === parseInt(sec)).length;

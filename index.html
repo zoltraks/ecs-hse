@@ -92,11 +92,11 @@
         <div class="test-container">
           <div class="test-header">
             <div class="test-header-left">
-              <button class="btn btn-outline" onclick="App.confirmQuitTest()">Quit</button>
+              <button class="btn btn-danger" onclick="App.confirmQuitTest()">Quit</button>
             </div>
             <div class="test-header-right">
-              <button class="btn btn-outline" onclick="App.showReview()">Review</button>
-              <button id="flag-btn" class="btn btn-outline" onclick="App.toggleFlag()">Flag</button>
+              <button class="btn btn-success" onclick="App.showReview()">Review</button>
+              <button id="flag-btn" class="btn btn-warning" onclick="App.toggleFlag()">Flag</button>
             </div>
           </div>
 
@@ -109,12 +109,12 @@
             </div>
           </div>
 
-          <div class="question-nav" id="question-nav"></div>
-
           <div class="test-nav-row test-nav-top">
-            <button id="prev-btn-top" class="btn btn-warning" onclick="App.prevQuestion()">Previous</button>
+            <button id="prev-btn-top" class="btn btn-teal" onclick="App.prevQuestion()">Previous</button>
             <button id="next-btn-top" class="btn btn-primary" onclick="App.nextQuestion()">Next</button>
           </div>
+
+          <div class="question-nav" id="question-nav"></div>
 
           <div class="question-card" id="question-card">
             <div class="question-number">
@@ -128,7 +128,7 @@
           </div>
 
           <div class="test-nav-row test-nav-bottom">
-            <button id="prev-btn" class="btn btn-warning" onclick="App.prevQuestion()">Previous</button>
+            <button id="prev-btn" class="btn btn-teal" onclick="App.prevQuestion()">Previous</button>
             <button id="next-btn" class="btn btn-primary" onclick="App.nextQuestion()">Next</button>
           </div>
         </div>
@@ -199,14 +199,15 @@
         <div class="practice-container">
           <div class="practice-header">
             <div class="practice-header-left">
-              <button class="btn btn-outline" onclick="App.goHome()">Home</button>
+              <button class="btn btn-danger" onclick="App.goHome()">Quit</button>
             </div>
             <div class="practice-header-right">
-              <button id="all-topics-btn" class="btn btn-outline hidden" onclick="App.showPracticeTopics()">All Topics</button>
+              <button id="all-topics-btn" class="btn btn-secondary hidden" onclick="App.showPracticeTopics()">Back</button>
             </div>
           </div>
           <div id="practice-topics" class="practice-topics">
             <h2>Practice Topics</h2>
+            <div id="practice-topics-grid" class="practice-topics-grid"></div>
           </div>
           <div id="practice-content" class="practice-content hidden">
             <div class="practice-content-header">
