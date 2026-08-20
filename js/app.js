@@ -17,6 +17,7 @@ const App = {
     timeRemaining: 0,
     practiceSection: null,
     testLabel: '',
+    revealed: new Set(),
   },
 
   init() {
@@ -37,6 +38,7 @@ const App = {
       questions: this.state.questions,
       answers: this.state.answers,
       flagged: [...this.state.flagged],
+      revealed: [...this.state.revealed],
       currentIndex: this.state.currentIndex,
       startTime: this.state.startTime,
       endTime: this.state.endTime,
@@ -64,6 +66,7 @@ const App = {
       this.state.questions = data.questions || [];
       this.state.answers = data.answers || {};
       this.state.flagged = new Set(data.flagged || []);
+      this.state.revealed = new Set(data.revealed || []);
       this.state.currentIndex = data.currentIndex || 0;
       this.state.startTime = data.startTime || null;
       this.state.endTime = data.endTime || null;
@@ -264,6 +267,7 @@ const App = {
   beginTest(label) {
     this.state.answers = {};
     this.state.flagged = new Set();
+    this.state.revealed = new Set();
     this.state.currentIndex = 0;
     this.state.startTime = Date.now();
     this.state.endTime = null;
@@ -354,6 +358,7 @@ const App = {
     }
 
     // Render options
+    const isRevealed = this.state.revealed.has(this.state.currentIndex);
     const optionsList = document.getElementById('options-list');
     optionsList.innerHTML = '';
     for (const letter of ['A', 'B', 'C', 'D']) {
@@ -361,6 +366,9 @@ const App = {
       item.className = 'option-item';
       if (this.state.answers[this.state.currentIndex] === letter) {
         item.classList.add('selected');
+      }
+      if (isRevealed && letter === q.rightAnswer) {
+        item.classList.add('revealed');
       }
       item.innerHTML = `
         <div class="option-letter">${letter}</div>
@@ -424,6 +432,17 @@ const App = {
       this.state.flagged.delete(idx);
     } else {
       this.state.flagged.add(idx);
+    }
+    this.renderQuestion();
+    this.saveState();
+  },
+
+  toggleReveal() {
+    const idx = this.state.currentIndex;
+    if (this.state.revealed.has(idx)) {
+      this.state.revealed.delete(idx);
+    } else {
+      this.state.revealed.add(idx);
     }
     this.renderQuestion();
     this.saveState();

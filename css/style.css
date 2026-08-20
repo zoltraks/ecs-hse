@@ -266,7 +266,7 @@ body {
 /* ===== Buttons ===== */
 .btn {
   display: inline-block;
-  padding: 10px 24px;
+  padding: 10px 16px;
   border: none;
   border-radius: var(--radius-sm);
   font-size: 15px;
@@ -322,6 +322,15 @@ body {
 
 .btn-teal:hover {
   background: #0f766e;
+}
+
+.btn-magenta {
+  background: #c026d3;
+  color: white;
+}
+
+.btn-magenta:hover {
+  background: #a21caf;
 }
 
 .btn-danger {
@@ -432,7 +441,7 @@ body {
 
 .test-header-right {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .question-nav {
@@ -576,6 +585,17 @@ body {
   background: var(--primary);
   color: white;
   border-color: var(--primary);
+}
+
+.option-item.revealed {
+  border-color: #c026d3;
+  background: #fae8ff;
+}
+
+.option-item.revealed .option-letter {
+  background: #c026d3;
+  color: white;
+  border-color: #c026d3;
 }
 
 .option-text {
@@ -1153,6 +1173,15 @@ body {
 
   .header-content {
     gap: 8px;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .test-header-right {
+    gap: 4px;
   }
 
   .test-status-bar {
