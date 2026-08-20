@@ -511,6 +511,7 @@ const App = {
     const questions = QUESTIONS.filter(q => q.section === section);
     const info = SECTIONS[section];
 
+    this.showScreen('practice');
     document.getElementById('practice-topics').classList.add('hidden');
     const content = document.getElementById('practice-content');
     content.classList.remove('hidden');
