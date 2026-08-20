@@ -95,9 +95,9 @@
               <button class="btn btn-danger" onclick="App.confirmQuitTest()">Quit</button>
             </div>
             <div class="test-header-right">
-              <button class="btn btn-success" onclick="App.showReview()">Review</button>
-              <button id="flag-btn" class="btn btn-warning" onclick="App.toggleFlag()">Flag</button>
               <button id="reveal-btn" class="btn btn-magenta" onclick="App.toggleReveal()">Reveal</button>
+              <button id="flag-btn" class="btn btn-warning" onclick="App.toggleFlag()">Flag</button>
+              <button class="btn btn-success" onclick="App.showReview()">Review</button>
             </div>
           </div>
 
@@ -115,8 +115,6 @@
             <button id="next-btn-top" class="btn btn-primary" onclick="App.nextQuestion()">Next</button>
           </div>
 
-          <div class="question-nav" id="question-nav"></div>
-
           <div class="question-card" id="question-card">
             <div class="question-number">
               <span id="current-q-num">1</span>
@@ -127,6 +125,8 @@
             <div class="question-text" id="question-text"></div>
             <div class="options-list" id="options-list"></div>
           </div>
+
+          <div class="question-nav" id="question-nav"></div>
 
           <div class="test-nav-row test-nav-bottom">
             <button id="prev-btn" class="btn btn-teal" onclick="App.prevQuestion()">Previous</button>
