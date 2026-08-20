@@ -206,6 +206,19 @@ const App = {
     this.beginTest('Quick Quiz');
   },
 
+  startAllQuestions() {
+    this.state.mode = 'all';
+    // All questions ordered by topic (section then question number), with shuffled answers
+    const sorted = [...QUESTIONS].sort((a, b) => {
+      if (a.section !== b.section) return a.section - b.section;
+      const aNum = parseInt(a.id.split('.')[1]);
+      const bNum = parseInt(b.id.split('.')[1]);
+      return aNum - bNum;
+    });
+    this.state.questions = sorted.map(q => this.shuffleOptions(q));
+    this.beginTest('All Questions');
+  },
+
   selectQuestions(count, proportional) {
     let selected = [];
     if (proportional) {

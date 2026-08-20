@@ -220,7 +220,7 @@ body {
 
 .action-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
 
@@ -240,10 +240,6 @@ body {
 .action-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
-}
-
-.action-card.primary {
-  border: 2px solid var(--primary);
 }
 
 .action-card-icon {

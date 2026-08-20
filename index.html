@@ -65,17 +65,23 @@
               <p>50 random questions from all 11 topics, 30-minute timer. Simulates the real assessment.</p>
               <button class="btn btn-primary">Begin Test</button>
             </div>
-            <div class="action-card" onclick="App.showScreen('practice')">
-              <div class="action-card-icon">📖</div>
-              <h2>Practice Topics</h2>
-              <p>Browse and study all 327 questions organised by topic, with answers and explanations.</p>
-              <button class="btn btn-secondary">Browse Topics</button>
-            </div>
             <div class="action-card" onclick="App.startQuickTest()">
               <div class="action-card-icon">⚡</div>
               <h2>Quick Quiz</h2>
               <p>20 random questions, no timer. Great for a quick knowledge check.</p>
-              <button class="btn btn-secondary">Start Quiz</button>
+              <button class="btn btn-primary">Start Quiz</button>
+            </div>
+            <div class="action-card" onclick="App.startAllQuestions()">
+              <div class="action-card-icon">📚</div>
+              <h2>All Questions</h2>
+              <p>All 327 questions in topic order, no timer. Answers are shuffled for a full practice run.</p>
+              <button class="btn btn-primary">Check All</button>
+            </div>
+            <div class="action-card" onclick="App.showScreen('practice')">
+              <div class="action-card-icon">📖</div>
+              <h2>Practice Topics</h2>
+              <p>Browse and study all 327 questions organised by topic, with answers and explanations.</p>
+              <button class="btn btn-primary">Browse Topics</button>
             </div>
           </div>
 
@@ -203,7 +209,7 @@
               <button class="btn btn-danger" onclick="App.goHome()">Quit</button>
             </div>
             <div class="practice-header-right">
-              <button id="all-topics-btn" class="btn btn-secondary hidden" onclick="App.showPracticeTopics()">Back</button>
+              <button id="all-topics-btn" class="btn btn-success hidden" onclick="App.showPracticeTopics()">Back</button>
             </div>
           </div>
           <div id="practice-topics" class="practice-topics">
