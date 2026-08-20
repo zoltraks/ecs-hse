@@ -888,13 +888,9 @@ body {
 
 .practice-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 16px;
   margin-bottom: 24px;
-}
-
-.practice-header h2 {
-  flex: 1;
 }
 
 .practice-topics {
@@ -930,18 +926,19 @@ body {
 
 .practice-content-header {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 4px;
   margin-bottom: 20px;
 }
 
 .practice-content-header h3 {
-  flex: 1;
+  margin: 0;
 }
 
 .practice-count {
   font-size: 14px;
   color: var(--text-muted);
+  margin: 0;
 }
 
 .practice-questions {
@@ -984,7 +981,7 @@ body {
 
 .practice-q-option {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   padding: 8px 12px;
   border-radius: 6px;
@@ -1000,6 +997,16 @@ body {
 .practice-q-option-letter {
   font-weight: 700;
   min-width: 20px;
+}
+
+.practice-q-option-text {
+  flex: 1;
+}
+
+.practice-q-check {
+  color: var(--success);
+  font-weight: 700;
+  font-size: 16px;
 }
 
 .practice-q-explanation {

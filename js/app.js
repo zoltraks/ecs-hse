@@ -638,6 +638,7 @@ const App = {
     this.state.practiceSection = null;
     document.getElementById('practice-topics').classList.remove('hidden');
     document.getElementById('practice-content').classList.add('hidden');
+    document.getElementById('all-topics-btn').classList.add('hidden');
     this.saveState();
   },
 
@@ -648,6 +649,7 @@ const App = {
     this.state.practiceSection = section;
     this.showScreen('practice');
     document.getElementById('practice-topics').classList.add('hidden');
+    document.getElementById('all-topics-btn').classList.remove('hidden');
     const content = document.getElementById('practice-content');
     content.classList.remove('hidden');
 
@@ -663,12 +665,14 @@ const App = {
 
       let optionsHtml = '';
       for (const letter of ['A', 'B', 'C', 'D']) {
-        const cls = letter === q.rightAnswer ? 'practice-q-option correct' : 'practice-q-option';
-        const prefix = letter === q.rightAnswer ? '✓ ' : '';
+        const isCorrect = letter === q.rightAnswer;
+        const cls = isCorrect ? 'practice-q-option correct' : 'practice-q-option';
+        const checkMark = isCorrect ? '<span class="practice-q-check">✓</span>' : '';
         optionsHtml += `
           <div class="${cls}">
-            <span class="practice-q-option-letter">${prefix}${letter}.</span>
-            <span>${this.escapeHtml(q.options[letter])}</span>
+            <span class="practice-q-option-letter">${letter}.</span>
+            <span class="practice-q-option-text">${this.escapeHtml(q.options[letter])}</span>
+            ${checkMark}
           </div>
         `;
       }

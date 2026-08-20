@@ -67,7 +67,7 @@
             </div>
             <div class="action-card" onclick="App.showScreen('practice')">
               <div class="action-card-icon">📖</div>
-              <h2>Practice by Topic</h2>
+              <h2>Practice Topics</h2>
               <p>Browse and study all 327 questions organised by topic, with answers and explanations.</p>
               <button class="btn btn-secondary">Browse Topics</button>
             </div>
@@ -198,15 +198,20 @@
       <section id="practice-screen" class="screen">
         <div class="practice-container">
           <div class="practice-header">
-            <button class="btn btn-small btn-outline" onclick="App.goHome()">← Home</button>
-            <h2>Practice by Topic</h2>
+            <div class="practice-header-left">
+              <button class="btn btn-outline" onclick="App.goHome()">Home</button>
+            </div>
+            <div class="practice-header-right">
+              <button id="all-topics-btn" class="btn btn-outline hidden" onclick="App.showPracticeTopics()">All Topics</button>
+            </div>
           </div>
-          <div id="practice-topics" class="practice-topics"></div>
+          <div id="practice-topics" class="practice-topics">
+            <h2>Practice Topics</h2>
+          </div>
           <div id="practice-content" class="practice-content hidden">
             <div class="practice-content-header">
-              <button class="btn btn-small btn-outline" onclick="App.showPracticeTopics()">← All Topics</button>
               <h3 id="practice-topic-title"></h3>
-              <span id="practice-count" class="practice-count"></span>
+              <p id="practice-count" class="practice-count"></p>
             </div>
             <div id="practice-questions" class="practice-questions"></div>
           </div>
