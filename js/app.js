@@ -1,5 +1,8 @@
 // ===== ECS HSE Test Application =====
 
+const STORAGE_KEY = 'ecs-hse-test-state';
+const LOGO_TITLE_DEFAULT = 'ECS HSE Test';
+
 const App = {
   state: {
     screen: 'home',
@@ -12,39 +15,159 @@ const App = {
     endTime: null,
     timerInterval: null,
     timeRemaining: 0,
+    practiceSection: null,
+    testLabel: '',
   },
 
   init() {
     this.renderTopicsList();
     this.renderPracticeTopics();
-    this.showScreen('home');
+    if (this.loadState() && this.state.screen !== 'home') {
+      this.restoreScreen();
+    } else {
+      this.showScreen('home');
+    }
+  },
+
+  // ===== State Persistence =====
+  saveState() {
+    const data = {
+      screen: this.state.screen,
+      mode: this.state.mode,
+      questions: this.state.questions,
+      answers: this.state.answers,
+      flagged: [...this.state.flagged],
+      currentIndex: this.state.currentIndex,
+      startTime: this.state.startTime,
+      endTime: this.state.endTime,
+      timeRemaining: this.state.timeRemaining,
+      practiceSection: this.state.practiceSection,
+      testLabel: this.state.testLabel,
+      savedAt: Date.now(),
+    };
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {
+      console.error('saveState error:', e);
+    }
+  },
+
+  loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      if (!data || !data.screen) return false;
+      if (!data.questions || data.questions.length === 0) return false;
+      this.state.screen = data.screen;
+      this.state.mode = data.mode || null;
+      this.state.questions = data.questions || [];
+      this.state.answers = data.answers || {};
+      this.state.flagged = new Set(data.flagged || []);
+      this.state.currentIndex = data.currentIndex || 0;
+      this.state.startTime = data.startTime || null;
+      this.state.endTime = data.endTime || null;
+      this.state.timeRemaining = data.timeRemaining || 0;
+      this.state.practiceSection = data.practiceSection || null;
+      this.state.testLabel = data.testLabel || '';
+      this.state.savedAt = data.savedAt || null;
+      return true;
+    } catch (e) {
+      console.error('loadState error:', e);
+      return false;
+    }
+  },
+
+  clearState() {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {
+      // ignore
+    }
+  },
+
+  restoreScreen() {
+    const screen = this.state.screen;
+    if (screen === 'test' && this.state.questions.length > 0) {
+      // Adjust timer for elapsed time while page was closed
+      if (this.state.mode === 'full' && this.state.savedAt) {
+        const elapsed = Math.floor((Date.now() - this.state.savedAt) / 1000);
+        this.state.timeRemaining = Math.max(0, this.state.timeRemaining - elapsed);
+        if (this.state.timeRemaining <= 0) {
+          // Timer expired while away — go straight to results
+          this.state.endTime = Date.now();
+          this.showResults();
+          this.saveState();
+          return;
+        }
+      }
+      this.setLogoTitle(this.state.testLabel || 'Test');
+      document.getElementById('total-q-num').textContent = this.state.questions.length;
+      if (this.state.mode === 'full') {
+        this.startTimer();
+      }
+      this.renderQuestionNav();
+      this.renderQuestion();
+      this.showScreen('test');
+    } else if (screen === 'review' && this.state.questions.length > 0) {
+      this.showReview();
+    } else if (screen === 'results' && this.state.questions.length > 0) {
+      this.showResults();
+    } else if (screen === 'practice') {
+      if (this.state.practiceSection !== null) {
+        this.showPracticeSection(this.state.practiceSection);
+      } else {
+        this.showScreen('practice');
+      }
+    } else {
+      this.showScreen('home');
+    }
   },
 
   // ===== Screen Management =====
+  setLogoTitle(title) {
+    document.querySelector('.logo-title').textContent = title;
+  },
+
   showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(name + '-screen').classList.add('active');
     this.state.screen = name;
 
-    const headerInfo = document.getElementById('header-info');
-    const timerDisplay = document.getElementById('timer-display');
-    const progressDisplay = document.getElementById('progress-display');
+    // Reset logo title to default unless we're in a test (test title set by beginTest)
+    if (name !== 'test') {
+      this.setLogoTitle(LOGO_TITLE_DEFAULT);
+    }
 
-    if (name === 'test') {
-      headerInfo.classList.remove('hidden');
-      if (this.state.mode === 'full') {
-        timerDisplay.classList.remove('hidden');
-      } else {
-        timerDisplay.classList.add('hidden');
-      }
-      progressDisplay.classList.remove('hidden');
+    // Timer visibility: show only in full test mode
+    const timerDisplay = document.getElementById('timer-display');
+    if (name === 'test' && this.state.mode === 'full') {
+      timerDisplay.classList.remove('hidden');
     } else {
-      headerInfo.classList.add('hidden');
       timerDisplay.classList.add('hidden');
-      progressDisplay.classList.add('hidden');
     }
 
     window.scrollTo(0, 0);
+    this.saveState();
+  },
+
+  goHome() {
+    if (this.state.screen === 'test') {
+      this.showModal(
+        'Leave Test?',
+        'Your test progress will be lost. Are you sure you want to leave?',
+        () => {
+          this.stopTimer();
+          this.clearState();
+          this.showScreen('home');
+        }
+      );
+    } else {
+      if (this.state.screen === 'results') {
+        this.clearState();
+      }
+      this.showScreen('home');
+    }
   },
 
   // ===== Home Screen =====
@@ -144,8 +267,10 @@ const App = {
     this.state.currentIndex = 0;
     this.state.startTime = Date.now();
     this.state.endTime = null;
+    this.state.testLabel = label;
+    this.state.practiceSection = null;
 
-    document.getElementById('test-mode-label').textContent = label;
+    this.setLogoTitle(label);
     document.getElementById('total-q-num').textContent = this.state.questions.length;
 
     if (this.state.mode === 'full') {
@@ -167,6 +292,7 @@ const App = {
     this.state.timerInterval = setInterval(() => {
       this.state.timeRemaining--;
       this.updateTimerDisplay();
+      this.saveState();
       if (this.state.timeRemaining <= 0) {
         this.stopTimer();
         this.submitTest(false);
@@ -244,14 +370,14 @@ const App = {
       optionsList.appendChild(item);
     }
 
-    // Update nav buttons
-    document.getElementById('prev-btn').disabled = this.state.currentIndex === 0;
-    const nextBtn = document.getElementById('next-btn');
-    if (this.state.currentIndex === this.state.questions.length - 1) {
-      nextBtn.textContent = 'Review →';
-    } else {
-      nextBtn.textContent = 'Next →';
-    }
+    // Update nav buttons (top and bottom)
+    const isFirst = this.state.currentIndex === 0;
+    const isLast = this.state.currentIndex === this.state.questions.length - 1;
+    document.getElementById('prev-btn').disabled = isFirst;
+    document.getElementById('prev-btn-top').disabled = isFirst;
+    const nextLabel = isLast ? 'Review' : 'Next';
+    document.getElementById('next-btn').textContent = nextLabel;
+    document.getElementById('next-btn-top').textContent = nextLabel;
 
     // Update progress
     const progress = ((this.state.currentIndex + 1) / this.state.questions.length) * 100;
@@ -265,12 +391,14 @@ const App = {
   selectAnswer(letter) {
     this.state.answers[this.state.currentIndex] = letter;
     this.renderQuestion();
+    this.saveState();
   },
 
   nextQuestion() {
     if (this.state.currentIndex < this.state.questions.length - 1) {
       this.state.currentIndex++;
       this.renderQuestion();
+      this.saveState();
     } else {
       this.showReview();
     }
@@ -280,12 +408,14 @@ const App = {
     if (this.state.currentIndex > 0) {
       this.state.currentIndex--;
       this.renderQuestion();
+      this.saveState();
     }
   },
 
   goToQuestion(index) {
     this.state.currentIndex = index;
     this.renderQuestion();
+    this.saveState();
   },
 
   toggleFlag() {
@@ -296,6 +426,7 @@ const App = {
       this.state.flagged.add(idx);
     }
     this.renderQuestion();
+    this.saveState();
   },
 
   // ===== Review Screen =====
@@ -336,6 +467,7 @@ const App = {
       'Your progress will be lost. Are you sure you want to quit?',
       () => {
         this.stopTimer();
+        this.clearState();
         this.showScreen('home');
       }
     );
@@ -503,14 +635,17 @@ const App = {
   },
 
   showPracticeTopics() {
+    this.state.practiceSection = null;
     document.getElementById('practice-topics').classList.remove('hidden');
     document.getElementById('practice-content').classList.add('hidden');
+    this.saveState();
   },
 
   showPracticeSection(section) {
     const questions = QUESTIONS.filter(q => q.section === section);
     const info = SECTIONS[section];
 
+    this.state.practiceSection = section;
     this.showScreen('practice');
     document.getElementById('practice-topics').classList.add('hidden');
     const content = document.getElementById('practice-content');
@@ -589,3 +724,6 @@ const App = {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => App.init());
+
+// Save state before page unloads (e.g. refresh, close, navigate away)
+window.addEventListener('beforeunload', () => App.saveState());

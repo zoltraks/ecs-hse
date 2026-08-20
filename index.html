@@ -11,24 +11,16 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-content">
-        <div class="logo" onclick="App.showScreen('home')">
+        <div class="logo" onclick="App.goHome()">
           <span class="logo-icon">⚡</span>
           <div class="logo-text">
             <span class="logo-title">ECS HSE Test</span>
             <span class="logo-subtitle">Health, Safety & Environmental Assessment</span>
           </div>
         </div>
-        <div id="header-info" class="header-info hidden">
-          <div id="timer-display" class="timer-display hidden">
-            <span class="timer-icon">⏱</span>
-            <span id="timer-value" class="timer-value">30:00</span>
-          </div>
-          <div id="progress-display" class="progress-display hidden">
-            <span id="progress-text">Question 1 of 50</span>
-            <div class="progress-bar-container">
-              <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
-            </div>
-          </div>
+        <div id="timer-display" class="timer-display hidden">
+          <span class="timer-icon">⏱</span>
+          <span id="timer-value" class="timer-value">30:00</span>
         </div>
       </div>
     </header>
@@ -69,7 +61,7 @@
           <div class="action-cards">
             <div class="action-card primary" onclick="App.startTest()">
               <div class="action-card-icon">🚀</div>
-              <h2>Start Full Test</h2>
+              <h2>Full Test</h2>
               <p>50 random questions from all 11 topics, 30-minute timer. Simulates the real assessment.</p>
               <button class="btn btn-primary">Begin Test</button>
             </div>
@@ -100,17 +92,29 @@
         <div class="test-container">
           <div class="test-header">
             <div class="test-header-left">
-              <button class="btn btn-small btn-outline" onclick="App.confirmQuitTest()">Quit</button>
-            </div>
-            <div class="test-header-center">
-              <span id="test-mode-label" class="test-mode-label">Full Test</span>
+              <button class="btn btn-outline" onclick="App.confirmQuitTest()">Quit</button>
             </div>
             <div class="test-header-right">
-              <button id="flag-btn" class="btn btn-small btn-outline" onclick="App.toggleFlag()">🚩 Flag</button>
+              <button class="btn btn-outline" onclick="App.showReview()">Review</button>
+              <button id="flag-btn" class="btn btn-outline" onclick="App.toggleFlag()">Flag</button>
+            </div>
+          </div>
+
+          <div class="test-status-bar">
+            <div id="progress-display" class="progress-display">
+              <span id="progress-text">Question 1 of 50</span>
+              <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+              </div>
             </div>
           </div>
 
           <div class="question-nav" id="question-nav"></div>
+
+          <div class="test-nav-row test-nav-top">
+            <button id="prev-btn-top" class="btn btn-warning" onclick="App.prevQuestion()">Previous</button>
+            <button id="next-btn-top" class="btn btn-primary" onclick="App.nextQuestion()">Next</button>
+          </div>
 
           <div class="question-card" id="question-card">
             <div class="question-number">
@@ -123,12 +127,9 @@
             <div class="options-list" id="options-list"></div>
           </div>
 
-          <div class="test-footer">
-            <button id="prev-btn" class="btn btn-secondary" onclick="App.prevQuestion()">← Previous</button>
-            <div class="footer-center">
-              <button class="btn btn-outline" onclick="App.showReview()">Review Answers</button>
-            </div>
-            <button id="next-btn" class="btn btn-primary" onclick="App.nextQuestion()">Next →</button>
+          <div class="test-nav-row test-nav-bottom">
+            <button id="prev-btn" class="btn btn-warning" onclick="App.prevQuestion()">Previous</button>
+            <button id="next-btn" class="btn btn-primary" onclick="App.nextQuestion()">Next</button>
           </div>
         </div>
       </section>
@@ -177,7 +178,7 @@
 
           <div class="results-actions">
             <button class="btn btn-primary" onclick="App.startTest()">Retake Test</button>
-            <button class="btn btn-secondary" onclick="App.showScreen('home')">Home</button>
+            <button class="btn btn-secondary" onclick="App.goHome()">Home</button>
           </div>
 
           <div class="results-breakdown">
@@ -197,7 +198,7 @@
       <section id="practice-screen" class="screen">
         <div class="practice-container">
           <div class="practice-header">
-            <button class="btn btn-small btn-outline" onclick="App.showScreen('home')">← Home</button>
+            <button class="btn btn-small btn-outline" onclick="App.goHome()">← Home</button>
             <h2>Practice by Topic</h2>
           </div>
           <div id="practice-topics" class="practice-topics"></div>
