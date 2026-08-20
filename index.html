@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECS HSE Test - Health, Safety & Environmental Assessment</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo" onclick="App.showScreen('home')">
+          <span class="logo-icon">⚡</span>
+          <div class="logo-text">
+            <span class="logo-title">ECS HSE Test</span>
+            <span class="logo-subtitle">Health, Safety & Environmental Assessment</span>
+          </div>
+        </div>
+        <div id="header-info" class="header-info hidden">
+          <div id="timer-display" class="timer-display hidden">
+            <span class="timer-icon">⏱</span>
+            <span id="timer-value" class="timer-value">30:00</span>
+          </div>
+          <div id="progress-display" class="progress-display hidden">
+            <span id="progress-text">Question 1 of 50</span>
+            <div class="progress-bar-container">
+              <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Home Screen -->
+      <section id="home-screen" class="screen active">
+        <div class="home-container">
+          <div class="hero">
+            <h1>ECS Health, Safety & Environmental Assessment</h1>
+            <p class="hero-subtitle">Practice for the ECS HSE Awareness Assessment with the official question bank</p>
+          </div>
+
+          <div class="info-cards">
+            <div class="info-card">
+              <div class="info-card-icon">📝</div>
+              <div class="info-card-value">50</div>
+              <div class="info-card-label">Questions per test</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-icon">⏱</div>
+              <div class="info-card-value">30 min</div>
+              <div class="info-card-label">Time limit</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-icon">✅</div>
+              <div class="info-card-value">43/50</div>
+              <div class="info-card-label">Pass mark (86%)</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-icon">📚</div>
+              <div class="info-card-value">327</div>
+              <div class="info-card-label">Total question bank</div>
+            </div>
+          </div>
+
+          <div class="action-cards">
+            <div class="action-card primary" onclick="App.startTest()">
+              <div class="action-card-icon">🚀</div>
+              <h2>Start Full Test</h2>
+              <p>50 random questions from all 11 topics, 30-minute timer. Simulates the real assessment.</p>
+              <button class="btn btn-primary">Begin Test</button>
+            </div>
+            <div class="action-card" onclick="App.showScreen('practice')">
+              <div class="action-card-icon">📖</div>
+              <h2>Practice by Topic</h2>
+              <p>Browse and study all 327 questions organised by topic, with answers and explanations.</p>
+              <button class="btn btn-secondary">Browse Topics</button>
+            </div>
+            <div class="action-card" onclick="App.startQuickTest()">
+              <div class="action-card-icon">⚡</div>
+              <h2>Quick Quiz</h2>
+              <p>20 random questions, no timer. Great for a quick knowledge check.</p>
+              <button class="btn btn-secondary">Start Quiz</button>
+            </div>
+          </div>
+
+          <div class="topics-overview">
+            <h3>Assessment Topics</h3>
+            <p class="topics-intro">The real assessment draws questions from these 11 topics in the proportions shown:</p>
+            <div id="topics-list" class="topics-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Test Screen -->
+      <section id="test-screen" class="screen">
+        <div class="test-container">
+          <div class="test-header">
+            <div class="test-header-left">
+              <button class="btn btn-small btn-outline" onclick="App.confirmQuitTest()">Quit</button>
+            </div>
+            <div class="test-header-center">
+              <span id="test-mode-label" class="test-mode-label">Full Test</span>
+            </div>
+            <div class="test-header-right">
+              <button id="flag-btn" class="btn btn-small btn-outline" onclick="App.toggleFlag()">🚩 Flag</button>
+            </div>
+          </div>
+
+          <div class="question-nav" id="question-nav"></div>
+
+          <div class="question-card" id="question-card">
+            <div class="question-number">
+              <span id="current-q-num">1</span>
+              <span class="question-of">/ <span id="total-q-num">50</span></span>
+              <span id="flag-indicator" class="flag-indicator hidden">🚩</span>
+            </div>
+            <div class="question-section-tag" id="question-section-tag"></div>
+            <div class="question-text" id="question-text"></div>
+            <div class="options-list" id="options-list"></div>
+          </div>
+
+          <div class="test-footer">
+            <button id="prev-btn" class="btn btn-secondary" onclick="App.prevQuestion()">← Previous</button>
+            <div class="footer-center">
+              <button class="btn btn-outline" onclick="App.showReview()">Review Answers</button>
+            </div>
+            <button id="next-btn" class="btn btn-primary" onclick="App.nextQuestion()">Next →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Review Screen -->
+      <section id="review-screen" class="screen">
+        <div class="review-container">
+          <h2>Review Answers</h2>
+          <p class="review-intro">Click any question to jump to it. Flagged questions are highlighted.</p>
+          <div id="review-grid" class="review-grid"></div>
+          <div class="review-footer">
+            <button class="btn btn-secondary" onclick="App.backToTest()">Back to Test</button>
+            <button class="btn btn-primary" onclick="App.submitTest(true)">Submit Test</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Screen -->
+      <section id="results-screen" class="screen">
+        <div class="results-container">
+          <div id="result-banner" class="result-banner">
+            <div id="result-icon" class="result-icon"></div>
+            <h1 id="result-title"></h1>
+            <div id="result-score" class="result-score"></div>
+            <div id="result-percentage" class="result-percentage"></div>
+          </div>
+
+          <div class="result-stats">
+            <div class="stat-card">
+              <div class="stat-value" id="stat-correct">0</div>
+              <div class="stat-label">Correct</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="stat-incorrect">0</div>
+              <div class="stat-label">Incorrect</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="stat-unanswered">0</div>
+              <div class="stat-label">Unanswered</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="stat-time">0:00</div>
+              <div class="stat-label">Time Used</div>
+            </div>
+          </div>
+
+          <div class="results-actions">
+            <button class="btn btn-primary" onclick="App.startTest()">Retake Test</button>
+            <button class="btn btn-secondary" onclick="App.showScreen('home')">Home</button>
+          </div>
+
+          <div class="results-breakdown">
+            <h3>Performance by Topic</h3>
+            <div id="topic-breakdown" class="topic-breakdown"></div>
+          </div>
+
+          <div class="results-review">
+            <h3>Detailed Review</h3>
+            <p class="review-hint">Review each question with the correct answer and explanation.</p>
+            <div id="detailed-review" class="detailed-review"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Practice Screen -->
+      <section id="practice-screen" class="screen">
+        <div class="practice-container">
+          <div class="practice-header">
+            <button class="btn btn-small btn-outline" onclick="App.showScreen('home')">← Home</button>
+            <h2>Practice by Topic</h2>
+          </div>
+          <div id="practice-topics" class="practice-topics"></div>
+          <div id="practice-content" class="practice-content hidden">
+            <div class="practice-content-header">
+              <button class="btn btn-small btn-outline" onclick="App.showPracticeTopics()">← All Topics</button>
+              <h3 id="practice-topic-title"></h3>
+              <span id="practice-count" class="practice-count"></span>
+            </div>
+            <div id="practice-questions" class="practice-questions"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div class="modal">
+        <h3 id="modal-title"></h3>
+        <p id="modal-body"></p>
+        <div class="modal-actions">
+          <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+          <button id="modal-confirm" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/questions-data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
