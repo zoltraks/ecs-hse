@@ -333,6 +333,23 @@ body {
   background: #d97706;
 }
 
+.btn-cheat {
+  background: #f97316;
+  color: white;
+}
+
+.btn-cheat:hover {
+  background: #ea6510;
+}
+
+.btn-cheat.active {
+  background: #dc2626;
+}
+
+.btn-cheat.active:hover {
+  background: #b91c1c;
+}
+
 .btn-teal {
   background: #4b5563;
   color: white;

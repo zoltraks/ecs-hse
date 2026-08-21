@@ -16,6 +16,7 @@ const App = {
     timerInterval: null,
     timeRemaining: 0,
     timerPaused: false,
+    cheatMode: false,
     practiceSection: null,
     testLabel: '',
     revealed: new Set(),
@@ -30,6 +31,7 @@ const App = {
     } else {
       this.showScreen('home');
     }
+    this.updateCheatButton();
   },
 
   // ===== State Persistence =====
@@ -46,6 +48,7 @@ const App = {
       endTime: this.state.endTime,
       timeRemaining: this.state.timeRemaining,
       timerPaused: this.state.timerPaused,
+      cheatMode: this.state.cheatMode,
       practiceSection: this.state.practiceSection,
       testLabel: this.state.testLabel,
       savedAt: Date.now(),
@@ -75,6 +78,7 @@ const App = {
       this.state.endTime = data.endTime || null;
       this.state.timeRemaining = data.timeRemaining || 0;
       this.state.timerPaused = data.timerPaused || false;
+      this.state.cheatMode = data.cheatMode || false;
       this.state.practiceSection = data.practiceSection || null;
       this.state.testLabel = data.testLabel || '';
       this.state.savedAt = data.savedAt || null;
@@ -142,6 +146,51 @@ const App = {
     document.querySelector('.logo-title').textContent = title;
   },
 
+  toggleCheatMode() {
+    if (!this.state.cheatMode) {
+      // Activating cheat mode — confirm first with a discouraging warning
+      this.showModal(
+        'Enable Cheater mode?',
+        'Cheater mode lets you reveal correct answers and pause the timer during a test. ' +
+        'The real ECS HSE assessment does not offer any of these options. ' +
+        'Relying on it will not prepare you for the actual test. ' +
+        'Are you sure you want to enable it?',
+        () => {
+          this.state.cheatMode = true;
+          this.updateCheatButton();
+          this.updateRevealButtonVisibility();
+          this.saveState();
+        }
+      );
+    } else {
+      // Deactivating — no confirmation needed
+      this.state.cheatMode = false;
+      this.updateCheatButton();
+      this.updateRevealButtonVisibility();
+      this.saveState();
+    }
+  },
+
+  updateCheatButton() {
+    const btn = document.getElementById('cheat-btn');
+    if (!btn) return;
+    if (this.state.cheatMode) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  },
+
+  updateRevealButtonVisibility() {
+    const revealBtn = document.getElementById('reveal-btn');
+    if (!revealBtn) return;
+    if (this.state.cheatMode) {
+      revealBtn.classList.remove('hidden');
+    } else {
+      revealBtn.classList.add('hidden');
+    }
+  },
+
   showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(name + '-screen').classList.add('active');
@@ -152,6 +201,14 @@ const App = {
       this.setLogoTitle(LOGO_TITLE_DEFAULT);
     }
 
+    // Cheater button: visible only on the home screen
+    const cheatBtn = document.getElementById('cheat-btn');
+    if (name === 'home') {
+      cheatBtn.classList.remove('hidden');
+    } else {
+      cheatBtn.classList.add('hidden');
+    }
+
     // Timer visibility: show only in full test mode
     const timerDisplay = document.getElementById('timer-display');
     if (name === 'test' && this.state.mode === 'full') {
@@ -159,6 +216,9 @@ const App = {
     } else {
       timerDisplay.classList.add('hidden');
     }
+
+    // Reveal button: visible only in test screen when cheat mode is on
+    this.updateRevealButtonVisibility();
 
     window.scrollTo(0, 0);
     this.saveState();
@@ -370,8 +430,9 @@ const App = {
   },
 
   toggleTimerPause() {
-    // Only meaningful in full test mode
+    // Only meaningful in full test mode, and only allowed in cheat mode
     if (this.state.mode !== 'full' || this.state.screen !== 'test') return;
+    if (!this.state.cheatMode) return;
     this.state.timerPaused = !this.state.timerPaused;
     if (this.state.timerPaused) {
       this.stopTimer();
@@ -430,6 +491,7 @@ const App = {
 
     // Toggle Reveal button state: magenta when answer is revealed, teal when idle.
     const revealBtn = document.getElementById('reveal-btn');
+    this.updateRevealButtonVisibility();
     if (isRevealed) {
       revealBtn.classList.add('reveal-active');
     } else {
