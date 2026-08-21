@@ -127,8 +127,22 @@ body {
   min-width: 0;
 }
 
+.progress-text-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .progress-text {
   font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.progress-qid {
+  font-size: 13px;
+  font-weight: 600;
   color: var(--text-muted);
   white-space: nowrap;
 }
@@ -312,21 +326,30 @@ body {
 }
 
 .btn-teal {
-  background: #0d9488;
+  background: #4b5563;
   color: white;
 }
 
 .btn-teal:hover {
-  background: #0f766e;
+  background: #374151;
 }
 
-.btn-magenta {
+.btn-reveal {
   background: #c026d3;
   color: white;
 }
 
-.btn-magenta:hover {
+.btn-reveal:hover {
   background: #a21caf;
+}
+
+/* Active state: answer is revealed, click again to hide */
+.btn-reveal.reveal-active {
+  background: #0d9488;
+}
+
+.btn-reveal.reveal-active:hover {
+  background: #0f766e;
 }
 
 .btn-danger {
@@ -592,6 +615,18 @@ body {
   background: #c026d3;
   color: white;
   border-color: #c026d3;
+}
+
+/* Mixed state: option is both selected (blue) and revealed (magenta) -> purple blend */
+.option-item.selected.revealed {
+  border-color: #6d3ed7;
+  background: #eae9fe;
+}
+
+.option-item.selected.revealed .option-letter {
+  background: #6d3ed7;
+  color: white;
+  border-color: #6d3ed7;
 }
 
 .option-text {
@@ -1109,6 +1144,10 @@ body {
 
 .modal p {
   color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.modal p:last-child {
   margin-bottom: 20px;
 }
 

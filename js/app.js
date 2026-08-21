@@ -391,6 +391,15 @@ const App = {
 
     // Render options
     const isRevealed = this.state.revealed.has(this.state.currentIndex);
+
+    // Toggle Reveal button state: magenta when answer is revealed, teal when idle.
+    const revealBtn = document.getElementById('reveal-btn');
+    if (isRevealed) {
+      revealBtn.classList.add('reveal-active');
+    } else {
+      revealBtn.classList.remove('reveal-active');
+    }
+
     const optionsList = document.getElementById('options-list');
     optionsList.innerHTML = '';
     for (const letter of ['A', 'B', 'C', 'D']) {
@@ -425,11 +434,24 @@ const App = {
       `Question ${this.state.currentIndex + 1} of ${this.state.questions.length}`;
     document.getElementById('progress-bar').style.width = progress + '%';
 
+    // Show the current question's bank id (e.g. Q1.1) on the right of the row.
+    const qidEl = document.getElementById('progress-qid');
+    if (q.id) {
+      qidEl.textContent = 'Q' + q.id;
+      qidEl.classList.remove('hidden');
+    } else {
+      qidEl.classList.add('hidden');
+    }
+
     this.renderQuestionNav();
   },
 
   selectAnswer(letter) {
-    this.state.answers[this.state.currentIndex] = letter;
+    if (this.state.answers[this.state.currentIndex] === letter) {
+      delete this.state.answers[this.state.currentIndex];
+    } else {
+      this.state.answers[this.state.currentIndex] = letter;
+    }
     this.renderQuestion();
     this.saveState();
   },
@@ -749,7 +771,16 @@ const App = {
   // ===== Modal =====
   showModal(title, body, onConfirm) {
     document.getElementById('modal-title').textContent = title;
-    document.getElementById('modal-body').textContent = body;
+    const bodyEl = document.getElementById('modal-body');
+    bodyEl.innerHTML = '';
+    // Split the body into one paragraph per sentence so multi-sentence
+    // messages read as separate lines instead of a single block.
+    const sentences = body.split(/(?<=\.)\s+/).map(s => s.trim()).filter(Boolean);
+    sentences.forEach(s => {
+      const p = document.createElement('p');
+      p.textContent = s;
+      bodyEl.appendChild(p);
+    });
     document.getElementById('modal-overlay').classList.remove('hidden');
 
     const confirmBtn = document.getElementById('modal-confirm');

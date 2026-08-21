@@ -101,7 +101,7 @@
               <button class="btn btn-danger" onclick="App.confirmQuitTest()">Quit</button>
             </div>
             <div class="test-header-right">
-              <button id="reveal-btn" class="btn btn-magenta" onclick="App.toggleReveal()">Reveal</button>
+              <button id="reveal-btn" class="btn btn-reveal" onclick="App.toggleReveal()">Reveal</button>
               <button id="flag-btn" class="btn btn-warning" onclick="App.toggleFlag()">Flag</button>
               <button class="btn btn-success" onclick="App.showReview()">Review</button>
             </div>
@@ -109,7 +109,10 @@
 
           <div class="test-status-bar">
             <div id="progress-display" class="progress-display">
-              <span id="progress-text">Question 1 of 50</span>
+              <div class="progress-text-row">
+                <span id="progress-text">Question 1 of 50</span>
+                <span id="progress-qid" class="progress-qid hidden"></span>
+              </div>
               <div class="progress-bar-container">
                 <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
               </div>
@@ -231,7 +234,7 @@
     <div id="modal-overlay" class="modal-overlay hidden">
       <div class="modal">
         <h3 id="modal-title"></h3>
-        <p id="modal-body"></p>
+        <div id="modal-body"></div>
         <div class="modal-actions">
           <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
           <button id="modal-confirm" class="btn btn-primary">Confirm</button>
