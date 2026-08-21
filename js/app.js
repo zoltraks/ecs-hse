@@ -226,15 +226,39 @@ const App = {
 
   goHome() {
     if (this.state.screen === 'test') {
-      this.showModal(
-        'Leave Test?',
-        'Your test progress will be lost. Are you sure you want to leave?',
-        () => {
-          this.stopTimer();
-          this.clearState();
-          this.showScreen('home');
-        }
-      );
+      if (this.state.mode === 'all') {
+        this.showModal(
+          'Leave All Questions?',
+          'Your answers will be saved so you can come back later. ' +
+          'Use Clear to discard all answers and start fresh next time. ' +
+          'What would you like to do?',
+          () => {
+            this.stopTimer();
+            this.showScreen('home');
+          },
+          {
+            confirmLabel: 'Leave',
+            extraAction: {
+              label: 'Clear',
+              handler: () => {
+                this.stopTimer();
+                this.clearState();
+                this.showScreen('home');
+              },
+            },
+          }
+        );
+      } else {
+        this.showModal(
+          'Leave Test?',
+          'Your test progress will be lost. Are you sure you want to leave?',
+          () => {
+            this.stopTimer();
+            this.clearState();
+            this.showScreen('home');
+          }
+        );
+      }
     } else {
       if (this.state.screen === 'results') {
         this.clearState();
@@ -297,6 +321,16 @@ const App = {
   },
 
   startAllQuestions() {
+    // If an "all" session was saved with answers (from a previous Leave), resume it
+    if (this.state.mode === 'all' && this.state.questions.length > 0 &&
+        Object.keys(this.state.answers).length > 0) {
+      this.setLogoTitle('All Questions');
+      document.getElementById('total-q-num').textContent = this.state.questions.length;
+      this.renderQuestionNav();
+      this.renderQuestion();
+      this.showScreen('test');
+      return;
+    }
     this.state.mode = 'all';
     // All questions ordered by topic (section then question number), with shuffled answers
     const sorted = [...QUESTIONS].sort((a, b) => {
@@ -633,15 +667,41 @@ const App = {
 
   // ===== Submit & Results =====
   confirmQuitTest() {
-    this.showModal(
-      'Quit Test?',
-      'Your progress will be lost. Are you sure you want to quit?',
-      () => {
-        this.stopTimer();
-        this.clearState();
-        this.showScreen('home');
-      }
-    );
+    if (this.state.mode === 'all') {
+      // All Questions: offer Leave (keep answers) and Clear (discard answers)
+      this.showModal(
+        'Quit All Questions?',
+        'Your answers will be saved so you can come back later. ' +
+        'Use Clear to discard all answers and start fresh next time. ' +
+        'What would you like to do?',
+        () => {
+          // Leave — keep state so user can resume later
+          this.stopTimer();
+          this.showScreen('home');
+        },
+        {
+          confirmLabel: 'Leave',
+          extraAction: {
+            label: 'Clear',
+            handler: () => {
+              this.stopTimer();
+              this.clearState();
+              this.showScreen('home');
+            },
+          },
+        }
+      );
+    } else {
+      this.showModal(
+        'Quit Test?',
+        'Your progress will be lost. Are you sure you want to quit?',
+        () => {
+          this.stopTimer();
+          this.clearState();
+          this.showScreen('home');
+        }
+      );
+    }
   },
 
   submitTest() {
@@ -867,7 +927,8 @@ const App = {
   },
 
   // ===== Modal =====
-  showModal(title, body, onConfirm) {
+  showModal(title, body, onConfirm, opts) {
+    opts = opts || {};
     document.getElementById('modal-title').textContent = title;
     const bodyEl = document.getElementById('modal-body');
     bodyEl.innerHTML = '';
@@ -883,15 +944,31 @@ const App = {
 
     const confirmBtn = document.getElementById('modal-confirm');
     const cancelBtn = document.getElementById('modal-cancel');
+    const extraBtn = document.getElementById('modal-extra');
+
+    // Confirm button label
+    confirmBtn.textContent = opts.confirmLabel || 'Confirm';
+
+    // Optional extra action button (e.g. "Clear" alongside "Leave")
+    if (opts.extraAction) {
+      extraBtn.textContent = opts.extraAction.label;
+      extraBtn.classList.remove('hidden');
+    } else {
+      extraBtn.classList.add('hidden');
+    }
 
     const close = () => {
       document.getElementById('modal-overlay').classList.add('hidden');
       confirmBtn.onclick = null;
       cancelBtn.onclick = null;
+      extraBtn.onclick = null;
     };
 
     confirmBtn.onclick = () => { close(); onConfirm(); };
     cancelBtn.onclick = close;
+    if (opts.extraAction) {
+      extraBtn.onclick = () => { close(); opts.extraAction.handler(); };
+    }
   },
 
   // ===== Utility =====
