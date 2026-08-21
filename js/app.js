@@ -15,6 +15,7 @@ const App = {
     endTime: null,
     timerInterval: null,
     timeRemaining: 0,
+    timerPaused: false,
     practiceSection: null,
     testLabel: '',
     revealed: new Set(),
@@ -44,6 +45,7 @@ const App = {
       startTime: this.state.startTime,
       endTime: this.state.endTime,
       timeRemaining: this.state.timeRemaining,
+      timerPaused: this.state.timerPaused,
       practiceSection: this.state.practiceSection,
       testLabel: this.state.testLabel,
       savedAt: Date.now(),
@@ -72,6 +74,7 @@ const App = {
       this.state.startTime = data.startTime || null;
       this.state.endTime = data.endTime || null;
       this.state.timeRemaining = data.timeRemaining || 0;
+      this.state.timerPaused = data.timerPaused || false;
       this.state.practiceSection = data.practiceSection || null;
       this.state.testLabel = data.testLabel || '';
       this.state.savedAt = data.savedAt || null;
@@ -93,8 +96,8 @@ const App = {
   restoreScreen() {
     const screen = this.state.screen;
     if (screen === 'test' && this.state.questions.length > 0) {
-      // Adjust timer for elapsed time while page was closed
-      if (this.state.mode === 'full' && this.state.savedAt) {
+      // Adjust timer for elapsed time while page was closed (only if not paused)
+      if (this.state.mode === 'full' && this.state.savedAt && !this.state.timerPaused) {
         const elapsed = Math.floor((Date.now() - this.state.savedAt) / 1000);
         this.state.timeRemaining = Math.max(0, this.state.timeRemaining - elapsed);
         if (this.state.timeRemaining <= 0) {
@@ -108,7 +111,13 @@ const App = {
       this.setLogoTitle(this.state.testLabel || 'Test');
       document.getElementById('total-q-num').textContent = this.state.questions.length;
       if (this.state.mode === 'full') {
-        this.startTimer();
+        if (this.state.timerPaused) {
+          // Stay paused — update display without starting the interval
+          this.updateTimerDisplay();
+          this.applyPauseState();
+        } else {
+          this.startTimer();
+        }
       }
       this.renderQuestionNav();
       this.renderQuestion();
@@ -305,6 +314,7 @@ const App = {
     this.state.endTime = null;
     this.state.testLabel = label;
     this.state.practiceSection = null;
+    this.state.timerPaused = false;
 
     this.setLogoTitle(label);
     document.getElementById('total-q-num').textContent = this.state.questions.length;
@@ -312,6 +322,7 @@ const App = {
     if (this.state.mode === 'full') {
       this.state.timeRemaining = ASSESSMENT_CONFIG.timeLimitMinutes * 60;
       this.startTimer();
+      this.applyPauseState();
     } else {
       this.stopTimer();
     }
@@ -355,6 +366,31 @@ const App = {
       display.classList.add('danger');
     } else if (this.state.timeRemaining <= 300) {
       display.classList.add('warning');
+    }
+  },
+
+  toggleTimerPause() {
+    // Only meaningful in full test mode
+    if (this.state.mode !== 'full' || this.state.screen !== 'test') return;
+    this.state.timerPaused = !this.state.timerPaused;
+    if (this.state.timerPaused) {
+      this.stopTimer();
+    } else {
+      this.startTimer();
+    }
+    this.applyPauseState();
+    this.saveState();
+  },
+
+  applyPauseState() {
+    const display = document.getElementById('timer-display');
+    const testContainer = document.querySelector('.test-container');
+    if (this.state.timerPaused) {
+      display.classList.add('paused');
+      testContainer.classList.add('paused');
+    } else {
+      display.classList.remove('paused');
+      testContainer.classList.remove('paused');
     }
   },
 

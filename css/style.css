@@ -101,6 +101,8 @@ body {
   background: var(--bg);
   border-radius: var(--radius-sm);
   white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
 }
 
 .timer-display.warning {
@@ -112,6 +114,12 @@ body {
   color: var(--danger);
   background: var(--danger-light);
   animation: pulse 1s infinite;
+}
+
+.timer-display.paused {
+  color: #1e293b;
+  background: #e2e8f0;
+  animation: none;
 }
 
 @keyframes pulse {
@@ -450,6 +458,18 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+/* Paused state: disable all interaction except the timer (which resumes) */
+.test-container.paused {
+  pointer-events: none;
+}
+
+.test-container.paused .test-header,
+.test-container.paused .test-nav-row,
+.test-container.paused .question-card,
+.test-container.paused .question-nav {
+  opacity: 0.5;
 }
 
 .test-header {
