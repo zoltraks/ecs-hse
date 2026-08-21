@@ -21,6 +21,7 @@ const App = {
   },
 
   init() {
+    this.renderHomeStats();
     this.renderTopicsList();
     this.renderPracticeTopics();
     if (this.loadState() && this.state.screen !== 'home') {
@@ -174,6 +175,26 @@ const App = {
   },
 
   // ===== Home Screen =====
+  renderHomeStats() {
+    const total = QUESTIONS.length;
+    const topicCount = Object.keys(SECTIONS).length;
+    const { totalQuestions, timeLimitMinutes, passMark } = ASSESSMENT_CONFIG;
+    const setText = (id, text) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    };
+    setText('info-total-questions', totalQuestions);
+    setText('info-time-limit', `${timeLimitMinutes} min`);
+    setText('info-pass-mark', `${passMark}/${totalQuestions}`);
+    setText('info-bank-count', total);
+    setText('desc-total-questions', totalQuestions);
+    setText('desc-topic-count', topicCount);
+    setText('desc-time-limit', timeLimitMinutes);
+    setText('desc-bank-count', total);
+    setText('desc-bank-count-2', total);
+    setText('desc-topic-count-2', topicCount);
+  },
+
   renderTopicsList() {
     const container = document.getElementById('topics-list');
     container.innerHTML = '';
@@ -238,7 +259,10 @@ const App = {
   },
 
   shuffleOptions(q) {
-    // Shuffle the answer options while tracking the correct one
+    // Shuffle the answer options while tracking the correct one by reference.
+    // Carrying the original letter with each option avoids the ambiguity that
+    // arises when two options share the same text (matching by text would then
+    // pick the wrong one).
     const opts = [
       { letter: 'A', text: q.options.A },
       { letter: 'B', text: q.options.B },
@@ -247,19 +271,14 @@ const App = {
     ];
     const shuffled = this.shuffle(opts);
     const newOptions = {};
-    const correctText = q.options[q.rightAnswer];
+    let newRightAnswer = null;
     shuffled.forEach((o, i) => {
       const letter = ['A', 'B', 'C', 'D'][i];
       newOptions[letter] = o.text;
-    });
-    // Find new letter for the correct answer
-    let newRightAnswer = null;
-    for (const [letter, text] of Object.entries(newOptions)) {
-      if (text === correctText) {
+      if (o.letter === q.rightAnswer) {
         newRightAnswer = letter;
-        break;
       }
-    }
+    });
     return {
       ...q,
       options: newOptions,
@@ -312,7 +331,7 @@ const App = {
       this.saveState();
       if (this.state.timeRemaining <= 0) {
         this.stopTimer();
-        this.submitTest(false);
+        this.submitTest();
       }
     }, 1000);
   },
@@ -505,10 +524,7 @@ const App = {
     );
   },
 
-  submitTest(confirmed) {
-    if (!confirmed) {
-      // Auto-submit from timer
-    }
+  submitTest() {
     this.stopTimer();
     this.state.endTime = Date.now();
     this.showResults();

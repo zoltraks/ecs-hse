@@ -38,22 +38,22 @@
           <div class="info-cards">
             <div class="info-card">
               <div class="info-card-icon">📝</div>
-              <div class="info-card-value">50</div>
+              <div class="info-card-value" id="info-total-questions">50</div>
               <div class="info-card-label">Questions per test</div>
             </div>
             <div class="info-card">
               <div class="info-card-icon">⏱</div>
-              <div class="info-card-value">30 min</div>
+              <div class="info-card-value" id="info-time-limit">30 min</div>
               <div class="info-card-label">Time limit</div>
             </div>
             <div class="info-card">
               <div class="info-card-icon">✅</div>
-              <div class="info-card-value">43/50</div>
+              <div class="info-card-value" id="info-pass-mark">43/50</div>
               <div class="info-card-label">Pass mark (86%)</div>
             </div>
             <div class="info-card">
               <div class="info-card-icon">📚</div>
-              <div class="info-card-value">327</div>
+              <div class="info-card-value" id="info-bank-count">327</div>
               <div class="info-card-label">Total question bank</div>
             </div>
           </div>
@@ -62,7 +62,7 @@
             <div class="action-card primary" onclick="App.startTest()">
               <div class="action-card-icon">🚀</div>
               <h2>Full Test</h2>
-              <p>50 random questions from all 11 topics, 30-minute timer. Simulates the real assessment.</p>
+              <p><span id="desc-total-questions">50</span> random questions from all <span id="desc-topic-count">11</span> topics, <span id="desc-time-limit">30</span>-minute timer. Simulates the real assessment.</p>
               <button class="btn btn-primary">Begin Test</button>
             </div>
             <div class="action-card" onclick="App.startQuickTest()">
@@ -74,20 +74,20 @@
             <div class="action-card" onclick="App.startAllQuestions()">
               <div class="action-card-icon">📚</div>
               <h2>All Questions</h2>
-              <p>All 327 questions in topic order, no timer. Answers are shuffled for a full practice run.</p>
+              <p>All <span id="desc-bank-count">327</span> questions in topic order, no timer. Answers are shuffled for a full practice run.</p>
               <button class="btn btn-primary">Check All</button>
             </div>
             <div class="action-card" onclick="App.showScreen('practice')">
               <div class="action-card-icon">📖</div>
               <h2>Practice Topics</h2>
-              <p>Browse and study all 327 questions organised by topic, with answers and explanations.</p>
+              <p>Browse and study all <span id="desc-bank-count-2">327</span> questions organised by topic, with answers and explanations.</p>
               <button class="btn btn-primary">Browse Topics</button>
             </div>
           </div>
 
           <div class="topics-overview">
             <h3>Assessment Topics</h3>
-            <p class="topics-intro">The real assessment draws questions from these 11 topics in the proportions shown:</p>
+            <p class="topics-intro">The real assessment draws questions from these <span id="desc-topic-count-2">11</span> topics in the proportions shown:</p>
             <div id="topics-list" class="topics-list"></div>
           </div>
         </div>
@@ -149,7 +149,7 @@
           <div id="review-grid" class="review-grid"></div>
           <div class="review-footer">
             <button class="btn btn-secondary" onclick="App.backToTest()">Back to Test</button>
-            <button class="btn btn-primary" onclick="App.submitTest(true)">Submit Test</button>
+            <button class="btn btn-primary" onclick="App.submitTest()">Submit Test</button>
           </div>
         </div>
       </section>

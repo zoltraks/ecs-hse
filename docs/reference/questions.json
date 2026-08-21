@@ -1083,10 +1083,10 @@
     "sectionName": "Reporting Accidents",
     "question": "If a person at work suffers an injury (other than a specified injury) due to an accident at work, it is reportable under RIDDOR if they are incapacitated for work for:",
     "options": {
-      "A": "Over day",
-      "B": "Over days",
+      "A": "Over 1 day",
+      "B": "Over 7 days",
       "C": "Over half a day",
-      "D": "Over days"
+      "D": "Over 2 days"
     },
     "rightAnswer": "B",
     "explanation": "An over-seven-day injury is one which is not a specified injury but results in the injured person being away from work or unable to do the full range of their normal duties for more than seven days (including any days they wouldn’t normally be expected to work such as weekends, rest days or holidays) not counting the day of the injury itself."
@@ -1125,10 +1125,10 @@
     "sectionName": "Reporting Accidents",
     "question": "Following a reportable dangerous occurrence when must the enforcing authority be informed?",
     "options": {
-      "A": "Within days",
-      "B": "Within hours",
+      "A": "Within 5 days",
+      "B": "Within 48 hours",
       "C": "Without delay",
-      "D": "Within hours"
+      "D": "Within 24 hours"
     },
     "rightAnswer": "C",
     "explanation": "The enforcing authority must be notified by the quickest practicable means."
@@ -1209,10 +1209,10 @@
     "sectionName": "Reporting Accidents",
     "question": "The collapse of scaffolding is only notifiable to the enforcing authority as a reportable dangerous occurrence when the scaffolding is which one of the following?",
     "options": {
-      "A": "Over metres in height",
+      "A": "Over 15 metres in height",
       "B": "Any height",
-      "C": "Over metres in height",
-      "D": "Over metres in height"
+      "C": "Over 10 metres in height",
+      "D": "Over 5 metres in height"
     },
     "rightAnswer": "D",
     "explanation": "This is one of the requirements of RIDDOR."
@@ -1224,9 +1224,9 @@
     "question": "If there is a fatal accident on site, when must the Health and Safety Executive be informed?",
     "options": {
       "A": "Without delay",
-      "B": "Within days",
-      "C": "Within days",
-      "D": "Within days"
+      "B": "Within 10 days",
+      "C": "Within 7 days",
+      "D": "Within 5 days"
     },
     "rightAnswer": "A",
     "explanation": "The enforcing authority must be notified by the quickest practicable means."
@@ -1630,9 +1630,9 @@
     "question": "Which one of the following must apply to any hard hat provided?",
     "options": {
       "A": "It is CE or UKCA marked",
-      "B": "It is less than years old",
-      "C": "It is less than year old",
-      "D": "It is less than years old"
+      "B": "It is less than 5 years old",
+      "C": "It is less than 1 year old",
+      "D": "It is less than 2 years old"
     },
     "rightAnswer": "A",
     "explanation": "All PPE should be CE – marked, indicating that it meets the basic health and safety requirements."
@@ -2007,13 +2007,13 @@
     "sectionName": "Health and Hygiene",
     "question": "What are the lower and upper action values with regard to daily personal noise exposure, as defined in the Control of Noise at Work Regulations 2005?",
     "options": {
-      "A": "dB(A) and dB(A)",
-      "B": "dB(A) and dB(A)",
-      "C": "dB(A) and dB(A)",
-      "D": "dB(A) and 85dB(A)"
+      "A": "85 dB(A) and 90 dB(A)",
+      "B": "80 dB(A) and 85 dB(A)",
+      "C": "70 dB(A) and 80 dB(A)",
+      "D": "75 dB(A) and 85dB(A)"
     },
     "rightAnswer": "B",
-    "explanation": "Daily personal noise exposure is the average noise level experienced by an individual over an hour period."
+    "explanation": "Daily personal noise exposure is the average noise level experienced by an individual over an 8 hour period."
   },
   {
     "id": "5.18",
@@ -2021,13 +2021,13 @@
     "sectionName": "Health and Hygiene",
     "question": "At or above what level of daily personal noise exposure does an employer have to provide hearing protection if it is requested by an employee?",
     "options": {
-      "A": "dB(A)",
-      "B": "dB(A)",
-      "C": "dB(A)",
-      "D": "dB(A)"
+      "A": "90 dB(A)",
+      "B": "95 dB(A)",
+      "C": "80 dB(A)",
+      "D": "85 dB(A)"
     },
     "rightAnswer": "C",
-    "explanation": "This is one of the duties of employers under the Control of Noise at Work Regulations 2005 when the lower exposure action value of dB(A) is reached or exceeded."
+    "explanation": "This is one of the duties of employers under the Control of Noise at Work Regulations 2005 when the lower exposure action value of 80 dB(A) is reached or exceeded."
   },
   {
     "id": "5.19",
@@ -2693,13 +2693,13 @@
     "sectionName": "Fire and Emergency",
     "question": "Which one of the following is associated with a Higher Risk Building (HRBs) in England?",
     "options": {
-      "A": "At least metres in height or seven storeys",
-      "B": "At least metres in height or seven storeys",
-      "C": "At least metres in height or six storeys",
-      "D": "At least metres in height or six storeys"
+      "A": "At least 18 metres in height or seven storeys",
+      "B": "At least 15 metres in height or seven storeys",
+      "C": "At least 15 metres in height or six storeys",
+      "D": "At least 18 metres in height or six storeys"
     },
     "rightAnswer": "A",
-    "explanation": "At least meters in height or seven storeys is the height at which the Building Safety Regulator regime will apply in England."
+    "explanation": "At least 18 meters in height or seven storeys is the height at which the Building Safety Regulator regime will apply in England."
   },
   {
     "id": "6.40",
@@ -2889,10 +2889,10 @@
     "sectionName": "Work at Height",
     "question": "Ladders should be set at a slope of approximately:",
     "options": {
-      "A": "out for every up",
-      "B": "out for every up",
-      "C": "out for every up",
-      "D": "out for every up"
+      "A": "1 out for every 3 up",
+      "B": "4 out for every 1 up",
+      "C": "1 out for every 1 up",
+      "D": "1 out for every 4 up"
     },
     "rightAnswer": "D",
     "explanation": ""
@@ -3211,10 +3211,10 @@
     "sectionName": "Work at Height",
     "question": "Prior to moving a mobile tower scaffold, the platform height should reduced to a maximum of:",
     "options": {
-      "A": "metres",
-      "B": "metres",
-      "C": "metres",
-      "D": "metres\n\n \n   WORK EQUIPMENT"
+      "A": "2 metres",
+      "B": "3 metres",
+      "C": "4 metres",
+      "D": "5 metres"
     },
     "rightAnswer": "C",
     "explanation": "This figure is quoted in guidance published by the HSE and PASMA. Checks should also be made that there are no obstructions overhead, the ground is firm, level and free from potholes, it is not too windy and there are no people or materials on the tower."
@@ -3435,8 +3435,8 @@
     "sectionName": "Work Equipment",
     "question": "What is the preferred nominal voltage for portable hand tools on construction sites?",
     "options": {
-      "A": "volts",
-      "B": "volts",
+      "A": "12 volts",
+      "B": "24 volts",
       "C": "110 volts",
       "D": "230 volts"
     },
@@ -3533,9 +3533,9 @@
     "sectionName": "Work Equipment",
     "question": "To operate a powered hand tool you must be:",
     "options": {
-      "A": "years old or over",
-      "B": "years old or over",
-      "C": "years old or over",
+      "A": "16 years old or over",
+      "B": "18 years old or over",
+      "C": "21 years old or over",
       "D": "Trained and competent"
     },
     "rightAnswer": "D",
@@ -4037,9 +4037,9 @@
     "sectionName": "Electrotechnical",
     "question": "Electrical installations on construction sites should be periodically inspected and tested:",
     "options": {
-      "A": "Every months",
+      "A": "Every 3 months",
       "B": "Every year",
-      "C": "Every months",
+      "C": "Every 6 months",
       "D": "Every month"
     },
     "rightAnswer": "A",

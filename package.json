@@ -1,0 +1,12 @@
+{
+  "name": "ecs-hse-test",
+  "version": "1.0.0",
+  "description": "Practice app for the ECS Health, Safety & Environmental Awareness Assessment",
+  "private": true,
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
