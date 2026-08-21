@@ -811,13 +811,13 @@ const App = {
         if (letter === q.rightAnswer) cls += ' correct-answer';
         if (letter === userAnswer && !isCorrect) cls += ' user-incorrect';
         if (letter === userAnswer && isCorrect) cls += ' user-correct';
-        let prefix = '';
-        if (letter === q.rightAnswer) prefix = '✓ ';
-        if (letter === userAnswer && !isCorrect) prefix = '✗ ';
+        let suffix = '';
+        if (letter === q.rightAnswer) suffix = ' ✓';
+        if (letter === userAnswer && !isCorrect) suffix = ' ✗';
         optionsHtml += `
           <div class="${cls}">
-            <span class="dr-option-letter">${prefix}${letter}.</span>
-            <span>${this.escapeHtml(q.options[letter])}</span>
+            <span class="dr-option-letter">${letter}.</span>
+            <span>${this.escapeHtml(q.options[letter])}${suffix}</span>
           </div>
         `;
       }
