@@ -150,7 +150,7 @@ const App = {
     if (!this.state.cheatMode) {
       // Activating cheat mode — confirm first with a discouraging warning
       this.showModal(
-        'Enable Cheater mode?',
+        'Become a Cheater',
         'Cheater mode lets you reveal correct answers and pause the timer during a test. ' +
         'The real ECS HSE assessment does not offer any of these options. ' +
         'Relying on it will not prepare you for the actual test. ' +

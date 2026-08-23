@@ -16,6 +16,7 @@ The following files contain rules and guidelines for working in this repository:
 - **[`docs/GUIDELINES.md`](GUIDELINES.md)**: This document.
 - **[`docs/STYLE.md`](STYLE.md)**: Markdown text style conventions.
 - **[`docs/TABLE.md`](TABLE.md)**: Markdown table formatting rules.
+- **[`docs/html-spa-vanilla-development.md`](html-spa-vanilla-development.md)**: HTML single page application development standards.
 
 Files in `docs/reference/` are source material, not rules.
 
@@ -121,6 +122,20 @@ Before considering a task complete, verify the work.
 - Run `node --check server.mjs` to verify the server syntax.
 - Start the server with `npm start` and test in a browser.
 - For data changes, run a validation script to check for duplicate options and invalid answers.
+
+## Browser Preview
+
+A browser preview in VS Code or a compatible IDE such as Devin is a proxy to the development server.
+
+It is not a standalone server.
+
+Start the development server first.
+
+Run `npm start`.
+
+Then open the browser preview for `http://localhost:8080`.
+
+The preview will not work if the server stops.
 
 ## Documentation Style
 

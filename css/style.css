@@ -1170,8 +1170,9 @@ body {
   background: var(--card-bg);
   border-radius: var(--radius);
   padding: 28px;
-  max-width: 400px;
   width: 90%;
+  min-width: 730px;
+  max-width: 50%;
   box-shadow: var(--shadow-lg);
 }
 
@@ -1275,5 +1276,11 @@ body {
     flex-direction: column;
     gap: 10px;
     align-items: stretch;
+  }
+
+  .modal {
+    width: 95%;
+    max-width: none;
+    min-width: 0;
   }
 }

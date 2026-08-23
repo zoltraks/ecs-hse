@@ -27,6 +27,10 @@ npm start
 
 Open `http://localhost:8080` in a browser.
 
+A browser preview in an IDE such as VS Code or Devin requires the server to be running.
+
+Open the preview for `http://localhost:8080` after starting the server.
+
 ## Features
 
 - **Full Test**: 50 questions drawn proportionally from 11 topics, 30-minute timer, 86% pass mark.
