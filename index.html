@@ -11,14 +11,14 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-content">
-        <div class="logo" onclick="App.goHome()">
+        <div class="logo" onclick="App.goHome()" role="button" aria-label="Go to home screen" tabindex="0">
           <span class="logo-icon">⚡</span>
           <div class="logo-text">
             <span class="logo-title">ECS HSE Test</span>
             <span class="logo-subtitle">Health, Safety & Environmental Assessment</span>
           </div>
         </div>
-        <div id="timer-display" class="timer-display hidden" onclick="App.toggleTimerPause()" title="Click to pause/resume">
+        <div id="timer-display" class="timer-display hidden" onclick="App.toggleTimerPause()" role="button" aria-label="Timer, click to pause or resume" title="Click to pause/resume" tabindex="0">
           <span class="timer-icon">⏱</span>
           <span id="timer-value" class="timer-value">30:00</span>
         </div>
@@ -32,7 +32,7 @@
       <section id="home-screen" class="screen active">
         <div class="home-container">
           <div class="hero">
-            <h1>ECS Health, Safety & Environmental Assessment</h1>
+            <h1 tabindex="-1">ECS Health, Safety & Environmental Assessment</h1>
             <p class="hero-subtitle">Practice for the ECS HSE Awareness Assessment with the official question bank</p>
           </div>
 
@@ -60,25 +60,25 @@
           </div>
 
           <div class="action-cards">
-            <div class="action-card primary" onclick="App.startTest()">
+            <div class="action-card primary" onclick="App.startTest()" role="button" tabindex="0">
               <div class="action-card-icon">🚀</div>
               <h2>Full Test</h2>
               <p><span id="desc-total-questions">50</span> random questions from all <span id="desc-topic-count">11</span> topics, <span id="desc-time-limit">30</span>-minute timer. Simulates the real assessment.</p>
               <button class="btn btn-primary">Begin Test</button>
             </div>
-            <div class="action-card" onclick="App.startQuickTest()">
+            <div class="action-card" onclick="App.startQuickTest()" role="button" tabindex="0">
               <div class="action-card-icon">⚡</div>
               <h2>Quick Quiz</h2>
               <p>20 random questions, no timer. Great for a quick knowledge check.</p>
               <button class="btn btn-primary">Start Quiz</button>
             </div>
-            <div class="action-card" onclick="App.startAllQuestions()">
+            <div class="action-card" onclick="App.startAllQuestions()" role="button" tabindex="0">
               <div class="action-card-icon">📚</div>
               <h2>All Questions</h2>
               <p>All <span id="desc-bank-count">327</span> questions in topic order, no timer. Answers are shuffled for a full practice run.</p>
               <button class="btn btn-primary">Check All</button>
             </div>
-            <div class="action-card" onclick="App.showScreen('practice')">
+            <div class="action-card" onclick="App.showScreen('practice')" role="button" tabindex="0">
               <div class="action-card-icon">📖</div>
               <h2>Practice Topics</h2>
               <p>Browse and study all <span id="desc-bank-count-2">327</span> questions organised by topic, with answers and explanations.</p>
@@ -148,7 +148,7 @@
       <!-- Review Screen -->
       <section id="review-screen" class="screen">
         <div class="review-container">
-          <h2>Review Answers</h2>
+          <h2 tabindex="-1">Review Answers</h2>
           <p class="review-intro">Click any question to jump to it. Flagged questions are highlighted.</p>
           <div id="review-grid" class="review-grid"></div>
           <div class="review-footer">
@@ -163,7 +163,7 @@
         <div class="results-container">
           <div id="result-banner" class="result-banner">
             <div id="result-icon" class="result-icon"></div>
-            <h1 id="result-title"></h1>
+            <h1 id="result-title" tabindex="-1"></h1>
             <div id="result-score" class="result-score"></div>
             <div id="result-percentage" class="result-percentage"></div>
           </div>
@@ -217,7 +217,7 @@
             </div>
           </div>
           <div id="practice-topics" class="practice-topics">
-            <h2>Practice Topics</h2>
+            <h2 tabindex="-1">Practice Topics</h2>
             <div id="practice-topics-grid" class="practice-topics-grid"></div>
           </div>
           <div id="practice-content" class="practice-content hidden">
@@ -232,7 +232,7 @@
     </main>
 
     <!-- Modal -->
-    <div id="modal-overlay" class="modal-overlay hidden">
+    <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div class="modal">
         <h3 id="modal-title"></h3>
         <div id="modal-body"></div>

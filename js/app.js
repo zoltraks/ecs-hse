@@ -1,6 +1,10 @@
+'use strict';
+
 // ===== ECS HSE Test Application =====
 
-const STORAGE_KEY = 'ecs-hse-test-state';
+const STORAGE_KEY = 'ecs-hse-test-state-v1';
+const STORAGE_KEY_LEGACY = 'ecs-hse-test-state';
+const STORAGE_VERSION = 1;
 const LOGO_TITLE_DEFAULT = 'ECS HSE Test';
 
 const App = {
@@ -52,6 +56,7 @@ const App = {
       practiceSection: this.state.practiceSection,
       testLabel: this.state.testLabel,
       savedAt: Date.now(),
+      version: STORAGE_VERSION,
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -62,11 +67,15 @@ const App = {
 
   loadState() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return false;
+      let raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        raw = localStorage.getItem(STORAGE_KEY_LEGACY);
+        if (!raw) return false;
+      }
       const data = JSON.parse(raw);
       if (!data || !data.screen) return false;
       if (!data.questions || data.questions.length === 0) return false;
+      if (data.version !== undefined && data.version !== STORAGE_VERSION) return false;
       this.state.screen = data.screen;
       this.state.mode = data.mode || null;
       this.state.questions = data.questions || [];
@@ -92,6 +101,7 @@ const App = {
   clearState() {
     try {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY_LEGACY);
     } catch (e) {
       // ignore
     }
@@ -221,6 +231,10 @@ const App = {
     this.updateRevealButtonVisibility();
 
     window.scrollTo(0, 0);
+
+    const heading = document.querySelector('#' + name + '-screen h1, #' + name + '-screen h2, #' + name + '-screen h3');
+    if (heading) heading.focus();
+
     this.saveState();
   },
 
@@ -296,13 +310,18 @@ const App = {
       const item = document.createElement('div');
       item.className = 'topic-item';
       item.innerHTML = `
-        <span class="topic-item-name">${info.name}</span>
+        <span class="topic-item-name">${this.escapeHtml(info.name)}</span>
         <span class="topic-item-count">
           <span class="bank-count">${bankCount}</span>
           <span class="test-count">(${info.assessmentCount} in test)</span>
         </span>
       `;
+      item.setAttribute('role', 'button');
+      item.setAttribute('tabindex', '0');
       item.onclick = () => this.showPracticeSection(parseInt(sec));
+      item.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.showPracticeSection(parseInt(sec)); }
+      };
       container.appendChild(item);
     }
   },
@@ -500,7 +519,13 @@ const App = {
       if (this.state.flagged.has(i)) item.classList.add('flagged');
       if (i === this.state.currentIndex) item.classList.add('current');
       item.textContent = i + 1;
+      item.setAttribute('role', 'button');
+      item.setAttribute('tabindex', '0');
+      item.setAttribute('aria-label', 'Question ' + (i + 1));
       item.onclick = () => this.goToQuestion(i);
+      item.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.goToQuestion(i); }
+      };
       nav.appendChild(item);
     });
   },
@@ -520,7 +545,6 @@ const App = {
       flagIndicator.classList.add('hidden');
     }
 
-    // Render options
     const isRevealed = this.state.revealed.has(this.state.currentIndex);
 
     // Toggle Reveal button state: magenta when answer is revealed, teal when idle.
@@ -534,24 +558,32 @@ const App = {
 
     const optionsList = document.getElementById('options-list');
     optionsList.innerHTML = '';
+    optionsList.setAttribute('role', 'radiogroup');
+    optionsList.setAttribute('aria-labelledby', 'question-text');
     for (const letter of ['A', 'B', 'C', 'D']) {
       const item = document.createElement('div');
       item.className = 'option-item';
-      if (this.state.answers[this.state.currentIndex] === letter) {
+      const isSelected = this.state.answers[this.state.currentIndex] === letter;
+      if (isSelected) {
         item.classList.add('selected');
       }
       if (isRevealed && letter === q.rightAnswer) {
         item.classList.add('revealed');
       }
+      item.setAttribute('role', 'radio');
+      item.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+      item.setAttribute('tabindex', '0');
       item.innerHTML = `
         <div class="option-letter">${letter}</div>
         <div class="option-text">${this.escapeHtml(q.options[letter])}</div>
       `;
       item.onclick = () => this.selectAnswer(letter);
+      item.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectAnswer(letter); }
+      };
       optionsList.appendChild(item);
     }
 
-    // Update nav buttons (top and bottom)
     const isFirst = this.state.currentIndex === 0;
     const isLast = this.state.currentIndex === this.state.questions.length - 1;
     document.getElementById('prev-btn').disabled = isFirst;
@@ -560,7 +592,6 @@ const App = {
     document.getElementById('next-btn').textContent = nextLabel;
     document.getElementById('next-btn-top').textContent = nextLabel;
 
-    // Update progress
     const progress = ((this.state.currentIndex + 1) / this.state.questions.length) * 100;
     document.getElementById('progress-text').textContent =
       `Question ${this.state.currentIndex + 1} of ${this.state.questions.length}`;
@@ -644,10 +675,21 @@ const App = {
       if (this.state.answers[i] !== undefined) item.classList.add('answered');
       if (this.state.flagged.has(i)) item.classList.add('flagged');
       item.textContent = i + 1;
+      item.setAttribute('role', 'button');
+      item.setAttribute('tabindex', '0');
+      item.setAttribute('aria-label', 'Question ' + (i + 1));
       item.onclick = () => {
         this.state.currentIndex = i;
         this.showScreen('test');
         this.renderQuestion();
+      };
+      item.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.state.currentIndex = i;
+          this.showScreen('test');
+          this.renderQuestion();
+        }
       };
       grid.appendChild(item);
     });
@@ -729,7 +771,6 @@ const App = {
     const passMark = this.state.mode === 'full' ? ASSESSMENT_CONFIG.passMark : Math.ceil(total * 0.86);
     const passed = correct >= passMark;
 
-    // Banner
     const banner = document.getElementById('result-banner');
     banner.classList.remove('pass', 'fail');
     banner.classList.add(passed ? 'pass' : 'fail');
@@ -740,7 +781,6 @@ const App = {
     document.getElementById('result-percentage').textContent =
       `${percentage}% ${this.state.mode === 'full' ? `(pass mark: ${passMark}/${total})` : ''}`;
 
-    // Stats
     document.getElementById('stat-correct').textContent = correct;
     document.getElementById('stat-incorrect').textContent = incorrect;
     document.getElementById('stat-unanswered').textContent = unanswered;
@@ -750,10 +790,7 @@ const App = {
     const secs = elapsed % 60;
     document.getElementById('stat-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
 
-    // Topic breakdown
     this.renderTopicBreakdown();
-
-    // Detailed review
     this.renderDetailedReview();
 
     this.showScreen('results');
@@ -780,7 +817,7 @@ const App = {
       const item = document.createElement('div');
       item.className = 'topic-breakdown-item';
       item.innerHTML = `
-        <div class="topic-breakdown-name">${stat.name}</div>
+        <div class="topic-breakdown-name">${this.escapeHtml(stat.name)}</div>
         <div class="topic-breakdown-bar-container">
           <div class="topic-breakdown-bar correct" style="width: ${pct}%"></div>
         </div>
@@ -854,10 +891,15 @@ const App = {
       const card = document.createElement('div');
       card.className = 'practice-topic-card';
       card.innerHTML = `
-        <div class="practice-topic-name">${info.name}</div>
+        <div class="practice-topic-name">${this.escapeHtml(info.name)}</div>
         <div class="practice-topic-meta">${bankCount} questions in bank</div>
       `;
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
       card.onclick = () => this.showPracticeSection(parseInt(sec));
+      card.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.showPracticeSection(parseInt(sec)); }
+      };
       container.appendChild(card);
     }
   },
@@ -929,6 +971,7 @@ const App = {
   // ===== Modal =====
   showModal(title, body, onConfirm, opts) {
     opts = opts || {};
+    const overlay = document.getElementById('modal-overlay');
     document.getElementById('modal-title').textContent = title;
     const bodyEl = document.getElementById('modal-body');
     bodyEl.innerHTML = '';
@@ -940,16 +983,14 @@ const App = {
       p.textContent = s;
       bodyEl.appendChild(p);
     });
-    document.getElementById('modal-overlay').classList.remove('hidden');
+    overlay.classList.remove('hidden');
 
     const confirmBtn = document.getElementById('modal-confirm');
     const cancelBtn = document.getElementById('modal-cancel');
     const extraBtn = document.getElementById('modal-extra');
 
-    // Confirm button label
     confirmBtn.textContent = opts.confirmLabel || 'Confirm';
 
-    // Optional extra action button (e.g. "Clear" alongside "Leave")
     if (opts.extraAction) {
       extraBtn.textContent = opts.extraAction.label;
       extraBtn.classList.remove('hidden');
@@ -957,18 +998,60 @@ const App = {
       extraBtn.classList.add('hidden');
     }
 
+    const trigger = document.activeElement;
+    document.body.classList.add('scroll-locked');
+
+    const focusable = [cancelBtn, extraBtn, confirmBtn].filter(b => !b.classList.contains('hidden'));
+
+    const onEscape = (e) => {
+      if (e.key === 'Escape') close();
+    };
+
+    const onKeydown = (e) => {
+      if (e.key === 'Tab') {
+        const idx = focusable.indexOf(document.activeElement);
+        if (e.shiftKey) {
+          e.preventDefault();
+          focusable[(idx - 1 + focusable.length) % focusable.length].focus();
+        } else {
+          e.preventDefault();
+          focusable[(idx + 1) % focusable.length].focus();
+        }
+      } else if (e.key === 'Enter') {
+        if (document.activeElement === confirmBtn) {
+          close();
+          onConfirm();
+        }
+      }
+    };
+
+    const onBackdrop = (e) => {
+      if (e.target === overlay) close();
+    };
+
     const close = () => {
-      document.getElementById('modal-overlay').classList.add('hidden');
+      overlay.classList.add('hidden');
+      document.body.classList.remove('scroll-locked');
+      document.removeEventListener('keydown', onEscape);
+      overlay.removeEventListener('keydown', onKeydown);
+      overlay.removeEventListener('click', onBackdrop);
       confirmBtn.onclick = null;
       cancelBtn.onclick = null;
       extraBtn.onclick = null;
+      if (trigger && typeof trigger.focus === 'function') trigger.focus();
     };
+
+    document.addEventListener('keydown', onEscape);
+    overlay.addEventListener('keydown', onKeydown);
+    overlay.addEventListener('click', onBackdrop);
 
     confirmBtn.onclick = () => { close(); onConfirm(); };
     cancelBtn.onclick = close;
     if (opts.extraAction) {
       extraBtn.onclick = () => { close(); opts.extraAction.handler(); };
     }
+
+    if (focusable.length > 0) focusable[0].focus();
   },
 
   // ===== Utility =====

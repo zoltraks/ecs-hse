@@ -51,7 +51,10 @@ const server = createServer((req, res) => {
 
   try {
     const data = readFileSync(filePath);
-    res.writeHead(200, { 'Content-Type': mime + '; charset=utf-8' });
+    res.writeHead(200, {
+      'Content-Type': mime + '; charset=utf-8',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    });
     res.end(data);
   } catch (e) {
     res.writeHead(500, { 'Content-Type': 'text/plain' });

@@ -4,7 +4,8 @@
   "description": "Practice app for the ECS Health, Safety & Environmental Awareness Assessment",
   "private": true,
   "scripts": {
-    "start": "node server.mjs"
+    "start": "node server.mjs",
+    "check": "node --check js/app.js && node --check server.mjs"
   },
   "engines": {
     "node": ">=18"
