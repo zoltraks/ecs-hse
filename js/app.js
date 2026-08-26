@@ -127,6 +127,7 @@ const App = {
     this.renderHomeStats();
     this.renderTopicsList();
     this.renderPracticeTopics();
+    this.updateCheatButton();
 
     const screen = this.state.screen;
     if (screen === 'test') {
@@ -381,6 +382,7 @@ const App = {
   updateCheatButton() {
     const btn = document.getElementById('cheat-btn');
     if (!btn) return;
+    btn.textContent = I18n.t('modal_cheater_btn');
     if (this.state.cheatMode) {
       btn.classList.add('active');
     } else {
@@ -589,10 +591,12 @@ const App = {
     ];
     const shuffled = this.shuffle(opts);
     const newOptions = {};
+    const originalLetters = {};
     let newRightAnswer = null;
     shuffled.forEach((o, i) => {
       const letter = ['A', 'B', 'C', 'D'][i];
       newOptions[letter] = o.text;
+      originalLetters[letter] = o.letter;
       if (o.letter === q.rightAnswer) {
         newRightAnswer = letter;
       }
@@ -602,6 +606,7 @@ const App = {
       options: newOptions,
       rightAnswer: newRightAnswer,
       originalRightAnswer: q.rightAnswer,
+      originalLetters,
     };
   },
 

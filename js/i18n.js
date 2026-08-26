@@ -233,11 +233,25 @@ window.I18n = {
     if (!qt) return q;
     const translated = qt[q.id];
     if (!translated) return q;
+
+    let translatedOptions = q.options;
+    if (translated.options) {
+      if (q.originalLetters) {
+        translatedOptions = {};
+        for (const letter of ['A', 'B', 'C', 'D']) {
+          const origLetter = q.originalLetters[letter];
+          translatedOptions[letter] = translated.options[origLetter] || q.options[letter];
+        }
+      } else {
+        translatedOptions = translated.options;
+      }
+    }
+
     return {
       ...q,
       sectionName: this.tSectionName(q.section) || q.sectionName,
       question: translated.question || q.question,
-      options: translated.options || q.options,
+      options: translatedOptions,
       explanation: translated.explanation || q.explanation,
     };
   },
