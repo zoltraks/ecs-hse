@@ -12,8 +12,9 @@ Before making any changes, read [`docs/GUIDELINES.md`](docs/GUIDELINES.md).
 
 It contains development rules with a focus on AI assisted development.
 
-It references two style documents:
+It references the development standard and two style documents:
 
+- [`docs/standard/html-vanilla-app-development.md`](docs/standard/html-vanilla-app-development.md) -- HTML vanilla application development standard.
 - [`docs/STYLE.md`](docs/STYLE.md) -- Markdown text style conventions.
 - [`docs/TABLE.md`](docs/TABLE.md) -- Markdown table formatting rules.
 
@@ -56,6 +57,7 @@ ecs-test/
     GUIDELINES.md         -- Development guidelines
     STYLE.md              -- Markdown text style conventions
     TABLE.md              -- Markdown table formatting rules
+    standard/             -- Development standard specifications
     reference/            -- Source PDF and extracted data
 ```
 

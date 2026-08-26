@@ -1,19 +1,5 @@
 # Markdown Text Style
 
-## Document Information
-
-**Version**: 1.0
-
-**Date**: 2026-08-21
-
-**Author**: Project
-
-## Version History
-
-| Version | Date       | Author  | Description |
-| ------- | ---------- | ------- | ----------- |
-| 1.0     | 2026-08-21 | Project | Initial     |
-
 ## Purpose
 
 This document defines the text formatting and prose style for Markdown documents in this project.
@@ -27,10 +13,14 @@ For table formatting rules, see `TABLE.md`.
 Use a consistent top-to-bottom layout for every document.
 
 1. **H1 title** -- plain, descriptive title.
-2. **Document Information** -- version, date, and author metadata.
-3. **Version History** -- table of changes.
-4. **Purpose** -- one paragraph stating what the document covers.
-5. **Main sections** -- H2 (`##`) for major topics, H3 (`###`) for subtopics.
+2. **Purpose** -- one paragraph stating what the document covers.
+3. **Main sections** -- H2 (`##`) for major topics, H3 (`###`) for subtopics.
+
+**Document Information** and **Version History** sections are optional.
+
+Do not add these sections to a document unless asked.
+
+If a document already contains them, update them on every change.
 
 Do not use H4 or deeper headings.
 
@@ -54,7 +44,7 @@ Do not hard-wrap text at a fixed column width.
 
 Let each sentence occupy one logical line.
 
-A sentence may be long when the thought is long; the editor or renderer will soft-wrap the display.
+A sentence may be long when the thought is long, the editor or renderer will soft-wrap the display.
 
 Hard-wrap only when the source itself needs a forced line break, such as inside a code block or a diagram.
 
@@ -125,6 +115,34 @@ Use bold text for key term definitions: **Term**: definition.
 Use italics sparingly.
 
 Do not overuse emphasis.
+
+## Semicolons
+
+Do not use the semicolon character in prose.
+
+Join two closely related clauses with a comma instead.
+
+Split the clauses into separate sentences when they express separate thoughts.
+
+This rule does not apply to code blocks, inline code, or file paths.
+
+### Correct
+
+```markdown
+State lives in JavaScript objects, the DOM only displays it.
+
+Naming carries the meaning, comments carry the reason.
+
+Begin every script file with `'use strict';` unless it is an ES module.
+```
+
+### Incorrect
+
+```markdown
+State lives in JavaScript objects; the DOM only displays it.
+
+Naming carries the meaning; comments carry the reason.
+```
 
 ## Tables
 

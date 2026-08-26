@@ -1,12 +1,6 @@
 # Markdown Table Formatting Guide
 
-## Document Information
-
-**Version**: 1.2
-
-**Date**: 2026-06-26
-
-**Author**: Filip Golewski
+## Purpose
 
 This guide describes the formatting conventions for Markdown tables.
 
@@ -62,7 +56,53 @@ Calculate the column width as the maximum character width of all cells in that c
 
 Measure the width as the length of the cell string between the cell delimiters.
 
-Include all Markdown formatting characters, backticks, asterisks, spaces, and punctuation in the width measurement.
+The width is the **source text** character count, not the rendered character count.
+
+This is the most important rule in this guide.
+
+Count every character that appears in the plain-text Markdown source, including all formatting markers.
+
+Do not strip, interpret, or collapse any characters before measuring.
+
+Do not measure the width of what the cell would look like after a Markdown renderer processes it.
+
+A Markdown renderer hides backticks, asterisks, and other formatting markers from the reader, but those markers are still present in the source text and must be counted.
+
+The table is formatted for plain-text readability first, and a Markdown renderer second.
+
+In plain-text view, every character is visible, so every character must be counted.
+
+**Characters That Must Be Counted**
+
+The following characters are part of the cell content and must be included in the width measurement.
+
+- Backticks around inline code (e.g., the cell `` `some.value` `` has 13 characters, not 11).
+
+- Double backticks around code containing backticks (e.g., the cell `` `` `00` `` `` has 8 characters, not 4).
+
+- Asterisks for emphasis (e.g., the cell `*italic*` has 9 characters, not 7).
+
+- Double asterisks for bold (e.g., the cell `**bold**` has 10 characters, not 4).
+
+- Underscores for emphasis (e.g., the cell `_under_` has 8 characters, not 5).
+
+- Triple backticks, pipe characters inside code spans, and any other literal characters.
+
+- Spaces, punctuation, and all other visible characters.
+
+**Common Mistake**
+
+The most common formatting mistake is measuring the **rendered** width instead of the **source** width.
+
+For example, the cell `` `config.settings.json` `` contains 22 characters in the source text, including the two backticks.
+
+A Markdown renderer displays only `config.settings.json`, which is 20 characters.
+
+If the formatter uses 20 instead of 22, the column will be too narrow and the pipes will not align in plain text.
+
+Always count the source text, never the rendered text.
+
+**Formatting Elements Commonly Found in Cells**
 
 The following formatting elements commonly appear in cells and are included in the width.
 
@@ -73,6 +113,18 @@ The following formatting elements commonly appear in cells and are included in t
 - Bold markers around emphasized text (e.g., `**bold text**`).
 
 - Single quotes around ASCII character literals (e.g., `'TEXT ').
+
+**Worked Example**
+
+Consider a cell containing `` `getValue` ``.
+
+The source text between the delimiters is the string `` `getValue` `` including both backtick characters.
+
+The character count is 10: one backtick, 8 letters, and one backtick.
+
+The rendered text is `getValue` which is 8 characters.
+
+The correct column width contribution is 10, not 8.
 
 ### Compacting
 
@@ -98,7 +150,9 @@ When asked to create or fix a Markdown table, follow this checklist.
 
 - Identify all cells in the table, including the header row.
 
-- Measure the width of each cell in characters, including formatting markers and backticks.
+- Measure the width of each cell in source-text characters, including all formatting markers such as backticks, asterisks, and underscores.
+
+- Do not use the rendered width; always use the source-text width.
 
 - Determine the maximum width for each column from all cells in that column.
 
@@ -145,6 +199,20 @@ Identify the separator row as the row whose cells contain only hyphens.
 For each column, calculate the maximum width of all cells.
 
 Measure the width as the length of the cell string in characters.
+
+The length must be the **source text** length, not the rendered length.
+
+Use the string length function directly on the raw cell content after trimming leading and trailing spaces.
+
+Do not strip backticks, asterisks, underscores, or any other formatting markers before measuring.
+
+Do not parse or interpret Markdown formatting before measuring.
+
+Do not use the visible text length that a Markdown renderer would produce.
+
+For example, in Python use `len(cell)`, in JavaScript use `cell.length`, and in C# use `cell.Length`.
+
+These functions return the source character count, which is the correct measurement.
 
 Include the header cell width in the maximum calculation.
 
@@ -272,4 +340,38 @@ Note that the Description column remains unchanged because its widest cell alrea
 Note that cells containing multiple inline code spans are not padded inside the code spans.
 
 Only the overall cell width is padded to match the column.
+
+### Source Width Example
+
+The following example demonstrates the difference between source-text width and rendered width.
+
+The table contains backtick-wrapped code spans in the Endpoint column.
+
+The cell `` `api/configuration` `` has 19 source characters but only 17 rendered characters.
+
+The correct table uses the source-text width of 19 for the Endpoint column.
+
+```markdown
+| Method | Endpoint              |
+|--------|-----------------------|
+| POST   | `api/login`           |
+| GET    | `api/status`          |
+| POST   | `api/configuration`   |
+```
+
+The incorrect table below uses the rendered width of 17.
+
+The last row overflows the column because the cell content is wider than the calculated width.
+
+The trailing pipe on the last row does not align with the pipes above it.
+
+```markdown
+| Method | Endpoint            |
+|--------|---------------------|
+| POST   | `api/login`         |
+| GET    | `api/status`        |
+| POST   | `api/configuration` |
+```
+
+Always use the source-text character count to prevent this misalignment.
 
