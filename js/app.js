@@ -5,7 +5,7 @@
 const STORAGE_KEY = 'ecs-hse-test-state-v1';
 const STORAGE_KEY_LEGACY = 'ecs-hse-test-state';
 const STORAGE_VERSION = 1;
-const LOGO_TITLE_DEFAULT = 'ECS HSE Test';
+const LOGO_TITLE_KEY = 'app_title';
 
 const App = {
   state: {
@@ -27,15 +27,215 @@ const App = {
   },
 
   init() {
+    this.renderUI();
     this.renderHomeStats();
     this.renderTopicsList();
     this.renderPracticeTopics();
+    this.updateLanguageFlag();
+    window.addEventListener('localechange', () => this.onLocaleChange());
     if (this.loadState() && this.state.screen !== 'home') {
       this.restoreScreen();
     } else {
       this.showScreen('home');
     }
     this.updateCheatButton();
+  },
+
+  // ===== Scroll Lock =====
+  lockScroll() {
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = scrollbarWidth + 'px';
+    }
+    document.body.classList.add('scroll-locked');
+  },
+
+  unlockScroll() {
+    document.body.classList.remove('scroll-locked');
+    document.body.style.paddingRight = '';
+  },
+
+  // ===== Language =====
+  updateLanguageFlag() {
+    const flagEl = document.getElementById('lang-flag');
+    if (flagEl) flagEl.textContent = LANGUAGES[I18n.locale].flag;
+  },
+
+  openLanguageModal() {
+    const overlay = document.getElementById('lang-modal-overlay');
+    document.getElementById('lang-modal-title').textContent = I18n.t('lang_title');
+    document.getElementById('lang-modal-close').textContent = I18n.t('lang_close');
+
+    const body = document.getElementById('lang-modal-body');
+    body.innerHTML = '';
+    for (const [code, info] of Object.entries(LANGUAGES)) {
+      const option = document.createElement('div');
+      option.className = 'lang-option' + (code === I18n.locale ? ' active' : '');
+      option.setAttribute('role', 'button');
+      option.setAttribute('tabindex', '0');
+      option.setAttribute('aria-pressed', code === I18n.locale ? 'true' : 'false');
+      option.innerHTML = `
+        <span class="lang-option-flag">${info.flag}</span>
+        <span class="lang-option-name">${this.escapeHtml(info.name)}</span>
+        ${code === I18n.locale ? '<span class="lang-option-check">✓</span>' : ''}
+      `;
+      option.onclick = () => { this.selectLanguage(code); this.closeLanguageModal(); };
+      option.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectLanguage(code); this.closeLanguageModal(); }
+      };
+      body.appendChild(option);
+    }
+
+    overlay.classList.remove('hidden');
+    this.lockScroll();
+
+    const closeBtn = document.getElementById('lang-modal-close');
+    const trigger = document.activeElement;
+
+    const onEscape = (e) => { if (e.key === 'Escape') close(); };
+    const onBackdrop = (e) => { if (e.target === overlay) close(); };
+
+    const close = () => {
+      overlay.classList.add('hidden');
+      this.unlockScroll();
+      document.removeEventListener('keydown', onEscape);
+      overlay.removeEventListener('click', onBackdrop);
+      closeBtn.onclick = null;
+      if (trigger && typeof trigger.focus === 'function') trigger.focus();
+    };
+
+    document.addEventListener('keydown', onEscape);
+    overlay.addEventListener('click', onBackdrop);
+    closeBtn.onclick = close;
+    closeBtn.focus();
+  },
+
+  closeLanguageModal() {
+    const overlay = document.getElementById('lang-modal-overlay');
+    overlay.classList.add('hidden');
+    this.unlockScroll();
+  },
+
+  selectLanguage(code) {
+    if (code === I18n.locale) return;
+    I18n.setLocale(code);
+  },
+
+  onLocaleChange() {
+    this.updateLanguageFlag();
+    this.renderUI();
+    this.renderHomeStats();
+    this.renderTopicsList();
+    this.renderPracticeTopics();
+
+    const screen = this.state.screen;
+    if (screen === 'test') {
+      this.renderQuestion();
+    } else if (screen === 'review') {
+      this.showReview();
+    } else if (screen === 'results') {
+      this.showResults();
+    } else if (screen === 'practice') {
+      if (this.state.practiceSection !== null) {
+        this.showPracticeSection(this.state.practiceSection);
+      }
+    }
+  },
+
+  renderUI() {
+    const setText = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+    setText('modal-cancel', I18n.t('modal_cancel'));
+    setText('modal-confirm', I18n.t('modal_confirm'));
+
+    document.querySelector('.logo-title').textContent = I18n.t('app_title');
+    document.querySelector('.logo-subtitle').textContent = I18n.t('app_subtitle');
+    document.querySelector('.logo').setAttribute('aria-label', I18n.t('logo_aria'));
+    document.getElementById('timer-display').setAttribute('aria-label', I18n.t('timer_pause_resume'));
+    document.getElementById('lang-btn').setAttribute('aria-label', I18n.t('lang_title'));
+
+    const heroTitle = document.querySelector('#home-screen .hero h1');
+    if (heroTitle) heroTitle.textContent = I18n.t('home_hero_title');
+    const heroSubtitle = document.querySelector('#home-screen .hero-subtitle');
+    if (heroSubtitle) heroSubtitle.textContent = I18n.t('home_hero_subtitle');
+
+    setText('info-total-questions-label', I18n.t('home_info_questions_per_test'));
+    setText('info-time-limit-label', I18n.t('home_info_time_limit'));
+    setText('info-pass-mark-label', I18n.t('home_info_pass_mark'));
+    setText('info-bank-count-label', I18n.t('home_info_total_bank'));
+
+    const infoLabels = document.querySelectorAll('.info-card-label');
+    if (infoLabels.length >= 4) {
+      infoLabels[0].textContent = I18n.t('home_info_questions_per_test');
+      infoLabels[1].textContent = I18n.t('home_info_time_limit');
+      infoLabels[2].textContent = I18n.t('home_info_pass_mark');
+      infoLabels[3].textContent = I18n.t('home_info_total_bank');
+    }
+
+    const actionCards = document.querySelectorAll('.action-card h2');
+    if (actionCards.length >= 4) {
+      actionCards[0].textContent = I18n.t('home_action_full_test');
+      actionCards[1].textContent = I18n.t('home_action_quick_quiz');
+      actionCards[2].textContent = I18n.t('home_action_all_questions');
+      actionCards[3].textContent = I18n.t('home_action_practice');
+    }
+
+    const actionDescs = document.querySelectorAll('.action-card p');
+    if (actionDescs.length >= 4) {
+      actionDescs[0].innerHTML = I18n.tf('home_action_full_test_desc', ASSESSMENT_CONFIG.totalQuestions, Object.keys(SECTIONS).length, ASSESSMENT_CONFIG.timeLimitMinutes);
+      actionDescs[1].textContent = I18n.t('home_action_quick_quiz_desc');
+      actionDescs[2].innerHTML = I18n.tf('home_action_all_questions_desc', QUESTIONS.length);
+      actionDescs[3].innerHTML = I18n.tf('home_action_practice_desc', QUESTIONS.length);
+    }
+
+    const actionBtns = document.querySelectorAll('.action-card .btn');
+    if (actionBtns.length >= 4) {
+      actionBtns[0].textContent = I18n.t('home_action_full_test_btn');
+      actionBtns[1].textContent = I18n.t('home_action_quick_quiz_btn');
+      actionBtns[2].textContent = I18n.t('home_action_all_questions_btn');
+      actionBtns[3].textContent = I18n.t('home_action_practice_btn');
+    }
+
+    const topicsTitle = document.querySelector('.topics-overview h3');
+    if (topicsTitle) topicsTitle.textContent = I18n.t('home_topics_title');
+    const topicsIntro = document.querySelector('.topics-intro');
+    if (topicsIntro) topicsIntro.innerHTML = I18n.tf('home_topics_intro', Object.keys(SECTIONS).length);
+
+    setText('test-quit-btn', I18n.t('test_quit'));
+    setText('reveal-btn', I18n.t('test_reveal'));
+    setText('flag-btn', I18n.t('test_flag'));
+    setText('review-btn', I18n.t('test_review'));
+    setText('prev-btn', I18n.t('test_previous'));
+    setText('prev-btn-top', I18n.t('test_previous'));
+    setText('next-btn', I18n.t('test_next'));
+    setText('next-btn-top', I18n.t('test_next'));
+
+    const reviewTitle = document.querySelector('#review-screen h2');
+    if (reviewTitle) reviewTitle.textContent = I18n.t('review_title');
+    setText('review-back-btn', I18n.t('review_back'));
+    setText('review-submit-btn', I18n.t('review_submit'));
+
+    const resultsPerfTitle = document.querySelector('.results-breakdown h3');
+    if (resultsPerfTitle) resultsPerfTitle.textContent = I18n.t('results_performance_title');
+    const resultsDetailTitle = document.querySelector('.results-review h3');
+    if (resultsDetailTitle) resultsDetailTitle.textContent = I18n.t('results_detailed_title');
+    const reviewHint = document.querySelector('.review-hint');
+    if (reviewHint) reviewHint.textContent = I18n.t('results_detailed_hint');
+
+    setText('retake-btn', I18n.t('results_retake'));
+    setText('home-btn', I18n.t('results_home'));
+
+    const statLabels = document.querySelectorAll('.stat-label');
+    if (statLabels.length >= 4) {
+      statLabels[0].textContent = I18n.t('results_stat_correct');
+      statLabels[1].textContent = I18n.t('results_stat_incorrect');
+      statLabels[2].textContent = I18n.t('results_stat_unanswered');
+      statLabels[3].textContent = I18n.t('results_stat_time');
+    }
+
+    const practiceH2 = document.querySelector('#practice-topics h2');
+    if (practiceH2) practiceH2.textContent = I18n.t('practice_topics_title');
+    setText('practice-quit-btn', I18n.t('practice_quit'));
+    setText('all-topics-btn', I18n.t('practice_back'));
   },
 
   // ===== State Persistence =====
@@ -153,18 +353,15 @@ const App = {
 
   // ===== Screen Management =====
   setLogoTitle(title) {
-    document.querySelector('.logo-title').textContent = title;
+    document.querySelector('.logo-title').textContent = title || I18n.t(LOGO_TITLE_KEY);
   },
 
   toggleCheatMode() {
     if (!this.state.cheatMode) {
       // Activating cheat mode — confirm first with a discouraging warning
       this.showModal(
-        'Become a Cheater',
-        'Cheater mode lets you reveal correct answers and pause the timer during a test. ' +
-        'The real ECS HSE assessment does not offer any of these options. ' +
-        'Relying on it will not prepare you for the actual test. ' +
-        'Are you sure you want to enable it?',
+        I18n.t('modal_cheater_title'),
+        I18n.t('modal_cheater_body'),
         () => {
           this.state.cheatMode = true;
           this.updateCheatButton();
@@ -208,7 +405,7 @@ const App = {
 
     // Reset logo title to default unless we're in a test (test title set by beginTest)
     if (name !== 'test') {
-      this.setLogoTitle(LOGO_TITLE_DEFAULT);
+      this.setLogoTitle(I18n.t(LOGO_TITLE_KEY));
     }
 
     // Cheater button: visible only on the home screen
@@ -242,18 +439,16 @@ const App = {
     if (this.state.screen === 'test') {
       if (this.state.mode === 'all') {
         this.showModal(
-          'Leave All Questions?',
-          'Your answers will be saved so you can come back later. ' +
-          'Use Clear to discard all answers and start fresh next time. ' +
-          'What would you like to do?',
+          I18n.t('modal_leave_all_title'),
+          I18n.t('modal_leave_all_body'),
           () => {
             this.stopTimer();
             this.showScreen('home');
           },
           {
-            confirmLabel: 'Leave',
+            confirmLabel: I18n.t('modal_leave_all_leave'),
             extraAction: {
-              label: 'Clear',
+              label: I18n.t('modal_leave_all_clear'),
               handler: () => {
                 this.stopTimer();
                 this.clearState();
@@ -264,8 +459,8 @@ const App = {
         );
       } else {
         this.showModal(
-          'Leave Test?',
-          'Your test progress will be lost. Are you sure you want to leave?',
+          I18n.t('modal_leave_test_title'),
+          I18n.t('modal_leave_test_body'),
           () => {
             this.stopTimer();
             this.clearState();
@@ -308,12 +503,13 @@ const App = {
     for (const [sec, info] of Object.entries(SECTIONS)) {
       const bankCount = QUESTIONS.filter(q => q.section === parseInt(sec)).length;
       const item = document.createElement('div');
+      const sectionName = I18n.tSectionName(sec) || info.name;
       item.className = 'topic-item';
       item.innerHTML = `
-        <span class="topic-item-name">${this.escapeHtml(info.name)}</span>
+        <span class="topic-item-name">${this.escapeHtml(sectionName)}</span>
         <span class="topic-item-count">
           <span class="bank-count">${bankCount}</span>
-          <span class="test-count">(${info.assessmentCount} in test)</span>
+          <span class="test-count">(${info.assessmentCount} ${I18n.t('home_topic_in_test')})</span>
         </span>
       `;
       item.setAttribute('role', 'button');
@@ -330,20 +526,20 @@ const App = {
   startTest() {
     this.state.mode = 'full';
     this.state.questions = this.selectQuestions(ASSESSMENT_CONFIG.totalQuestions, true);
-    this.beginTest('Full Test');
+    this.beginTest(I18n.t('test_label_full'));
   },
 
   startQuickTest() {
     this.state.mode = 'quick';
     this.state.questions = this.selectQuestions(20, false);
-    this.beginTest('Quick Quiz');
+    this.beginTest(I18n.t('test_label_quick'));
   },
 
   startAllQuestions() {
     // If an "all" session was saved with answers (from a previous Leave), resume it
     if (this.state.mode === 'all' && this.state.questions.length > 0 &&
         Object.keys(this.state.answers).length > 0) {
-      this.setLogoTitle('All Questions');
+      this.setLogoTitle(I18n.t('test_label_all'));
       document.getElementById('total-q-num').textContent = this.state.questions.length;
       this.renderQuestionNav();
       this.renderQuestion();
@@ -359,7 +555,7 @@ const App = {
       return aNum - bNum;
     });
     this.state.questions = sorted.map(q => this.shuffleOptions(q));
-    this.beginTest('All Questions');
+    this.beginTest(I18n.t('test_label_all'));
   },
 
   selectQuestions(count, proportional) {
@@ -531,8 +727,9 @@ const App = {
   },
 
   renderQuestion() {
-    const q = this.state.questions[this.state.currentIndex];
-    if (!q) return;
+    const rawQ = this.state.questions[this.state.currentIndex];
+    if (!rawQ) return;
+    const q = I18n.getTranslatedQuestion(rawQ);
 
     document.getElementById('current-q-num').textContent = this.state.currentIndex + 1;
     document.getElementById('question-section-tag').textContent = q.sectionName;
@@ -588,13 +785,13 @@ const App = {
     const isLast = this.state.currentIndex === this.state.questions.length - 1;
     document.getElementById('prev-btn').disabled = isFirst;
     document.getElementById('prev-btn-top').disabled = isFirst;
-    const nextLabel = isLast ? 'Review' : 'Next';
+    const nextLabel = isLast ? I18n.t('test_review') : I18n.t('test_next');
     document.getElementById('next-btn').textContent = nextLabel;
     document.getElementById('next-btn-top').textContent = nextLabel;
 
     const progress = ((this.state.currentIndex + 1) / this.state.questions.length) * 100;
     document.getElementById('progress-text').textContent =
-      `Question ${this.state.currentIndex + 1} of ${this.state.questions.length}`;
+      I18n.tf('test_question_of', this.state.currentIndex + 1, this.state.questions.length);
     document.getElementById('progress-bar').style.width = progress + '%';
 
     // Show the current question's bank id (e.g. Q1.1) on the right of the row.
@@ -697,7 +894,7 @@ const App = {
     const answered = Object.keys(this.state.answers).length;
     const total = this.state.questions.length;
     const reviewIntro = document.querySelector('.review-intro');
-    reviewIntro.textContent = `${answered} of ${total} questions answered. Click any question to jump to it.`;
+    reviewIntro.textContent = I18n.tf('review_intro', answered, total);
 
     this.showScreen('review');
   },
@@ -712,19 +909,17 @@ const App = {
     if (this.state.mode === 'all') {
       // All Questions: offer Leave (keep answers) and Clear (discard answers)
       this.showModal(
-        'Quit All Questions?',
-        'Your answers will be saved so you can come back later. ' +
-        'Use Clear to discard all answers and start fresh next time. ' +
-        'What would you like to do?',
+        I18n.t('modal_quit_all_title'),
+        I18n.t('modal_quit_all_body'),
         () => {
           // Leave — keep state so user can resume later
           this.stopTimer();
           this.showScreen('home');
         },
         {
-          confirmLabel: 'Leave',
+          confirmLabel: I18n.t('modal_quit_all_leave'),
           extraAction: {
-            label: 'Clear',
+            label: I18n.t('modal_quit_all_clear'),
             handler: () => {
               this.stopTimer();
               this.clearState();
@@ -735,8 +930,8 @@ const App = {
       );
     } else {
       this.showModal(
-        'Quit Test?',
-        'Your progress will be lost. Are you sure you want to quit?',
+        I18n.t('modal_quit_test_title'),
+        I18n.t('modal_quit_test_body'),
         () => {
           this.stopTimer();
           this.clearState();
@@ -776,10 +971,10 @@ const App = {
     banner.classList.add(passed ? 'pass' : 'fail');
 
     document.getElementById('result-icon').textContent = passed ? '🎉' : '📚';
-    document.getElementById('result-title').textContent = passed ? 'Passed!' : 'Not Passed';
+    document.getElementById('result-title').textContent = passed ? I18n.t('results_passed') : I18n.t('results_not_passed');
     document.getElementById('result-score').textContent = `${correct} / ${total}`;
-    document.getElementById('result-percentage').textContent =
-      `${percentage}% ${this.state.mode === 'full' ? `(pass mark: ${passMark}/${total})` : ''}`;
+    const pctNote = this.state.mode === 'full' ? ' ' + I18n.tf('results_pass_mark_note', passMark, total) : '';
+    document.getElementById('result-percentage').textContent = `${percentage}%${pctNote}`;
 
     document.getElementById('stat-correct').textContent = correct;
     document.getElementById('stat-incorrect').textContent = incorrect;
@@ -802,7 +997,8 @@ const App = {
 
     // Group by section
     const sectionStats = {};
-    this.state.questions.forEach((q, i) => {
+    this.state.questions.forEach((rawQ, i) => {
+      const q = I18n.getTranslatedQuestion(rawQ);
       if (!sectionStats[q.section]) {
         sectionStats[q.section] = { name: q.sectionName, correct: 0, total: 0 };
       }
@@ -831,7 +1027,8 @@ const App = {
     const container = document.getElementById('detailed-review');
     container.innerHTML = '';
 
-    this.state.questions.forEach((q, i) => {
+    this.state.questions.forEach((rawQ, i) => {
+      const q = I18n.getTranslatedQuestion(rawQ);
       const userAnswer = this.state.answers[i];
       const isCorrect = userAnswer === q.rightAnswer;
       const isUnanswered = userAnswer === undefined;
@@ -839,7 +1036,7 @@ const App = {
       const item = document.createElement('div');
       item.className = 'detailed-review-item ' + (isUnanswered ? 'unanswered' : (isCorrect ? 'correct' : 'incorrect'));
 
-      let statusText = isUnanswered ? 'Unanswered' : (isCorrect ? 'Correct' : 'Incorrect');
+      let statusText = isUnanswered ? I18n.t('results_status_unanswered') : (isCorrect ? I18n.t('results_status_correct') : I18n.t('results_status_incorrect'));
       let statusClass = isUnanswered ? 'unanswered' : (isCorrect ? 'correct' : 'incorrect');
 
       let optionsHtml = '';
@@ -863,14 +1060,14 @@ const App = {
       if (q.explanation) {
         explanationHtml = `
           <div class="dr-explanation">
-            <span class="dr-explanation-label">Explanation: </span>${this.escapeHtml(q.explanation)}
+            <span class="dr-explanation-label">${I18n.t('results_explanation_label')}</span>${this.escapeHtml(q.explanation)}
           </div>
         `;
       }
 
       item.innerHTML = `
         <div class="dr-header">
-          <span class="dr-number">Question ${i + 1}</span>
+          <span class="dr-number">${I18n.tf('results_question_label', i + 1)}</span>
           <span class="dr-status ${statusClass}">${statusText}</span>
         </div>
         <div class="dr-section-tag" style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">${q.sectionName}</div>
@@ -889,10 +1086,11 @@ const App = {
     for (const [sec, info] of Object.entries(SECTIONS)) {
       const bankCount = QUESTIONS.filter(q => q.section === parseInt(sec)).length;
       const card = document.createElement('div');
+      const sectionName = I18n.tSectionName(sec) || info.name;
       card.className = 'practice-topic-card';
       card.innerHTML = `
-        <div class="practice-topic-name">${this.escapeHtml(info.name)}</div>
-        <div class="practice-topic-meta">${bankCount} questions in bank</div>
+        <div class="practice-topic-name">${this.escapeHtml(sectionName)}</div>
+        <div class="practice-topic-meta">${I18n.tf('practice_questions_in_bank', bankCount)}</div>
       `;
       card.setAttribute('role', 'button');
       card.setAttribute('tabindex', '0');
@@ -923,13 +1121,15 @@ const App = {
     const content = document.getElementById('practice-content');
     content.classList.remove('hidden');
 
-    document.getElementById('practice-topic-title').textContent = info.name;
-    document.getElementById('practice-count').textContent = `${questions.length} questions`;
+    const sectionName = I18n.tSectionName(section) || info.name;
+    document.getElementById('practice-topic-title').textContent = sectionName;
+    document.getElementById('practice-count').textContent = I18n.tf('practice_questions_count', questions.length);
 
     const container = document.getElementById('practice-questions');
     container.innerHTML = '';
 
-    questions.forEach((q, i) => {
+    questions.forEach((rawQ, i) => {
+      const q = I18n.getTranslatedQuestion(rawQ);
       const item = document.createElement('div');
       item.className = 'practice-question';
 
@@ -951,7 +1151,7 @@ const App = {
       if (q.explanation) {
         explanationHtml = `
           <div class="practice-q-explanation">
-            <strong>Explanation:</strong> ${this.escapeHtml(q.explanation)}
+            <strong>${I18n.t('practice_explanation_label')}</strong> ${this.escapeHtml(q.explanation)}
           </div>
         `;
       }
@@ -989,7 +1189,7 @@ const App = {
     const cancelBtn = document.getElementById('modal-cancel');
     const extraBtn = document.getElementById('modal-extra');
 
-    confirmBtn.textContent = opts.confirmLabel || 'Confirm';
+    confirmBtn.textContent = opts.confirmLabel || I18n.t('modal_confirm');
 
     if (opts.extraAction) {
       extraBtn.textContent = opts.extraAction.label;
@@ -999,7 +1199,7 @@ const App = {
     }
 
     const trigger = document.activeElement;
-    document.body.classList.add('scroll-locked');
+    this.lockScroll();
 
     const focusable = [cancelBtn, extraBtn, confirmBtn].filter(b => !b.classList.contains('hidden'));
 
@@ -1031,7 +1231,7 @@ const App = {
 
     const close = () => {
       overlay.classList.add('hidden');
-      document.body.classList.remove('scroll-locked');
+      this.unlockScroll();
       document.removeEventListener('keydown', onEscape);
       overlay.removeEventListener('keydown', onKeydown);
       overlay.removeEventListener('click', onBackdrop);

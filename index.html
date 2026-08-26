@@ -18,11 +18,16 @@
             <span class="logo-subtitle">Health, Safety & Environmental Assessment</span>
           </div>
         </div>
-        <div id="timer-display" class="timer-display hidden" onclick="App.toggleTimerPause()" role="button" aria-label="Timer, click to pause or resume" title="Click to pause/resume" tabindex="0">
-          <span class="timer-icon">⏱</span>
-          <span id="timer-value" class="timer-value">30:00</span>
+        <div class="header-right">
+          <div id="timer-display" class="timer-display hidden" onclick="App.toggleTimerPause()" role="button" aria-label="Timer, click to pause or resume" title="Click to pause/resume" tabindex="0">
+            <span class="timer-icon">⏱</span>
+            <span id="timer-value" class="timer-value">30:00</span>
+          </div>
+          <button id="cheat-btn" class="btn btn-cheat hidden" onclick="App.toggleCheatMode()">Cheater</button>
+          <button id="lang-btn" class="lang-btn" onclick="App.openLanguageModal()" role="button" aria-label="Select language" tabindex="0">
+            <span id="lang-flag" class="lang-flag">🇬🇧</span>
+          </button>
         </div>
-        <button id="cheat-btn" class="btn btn-cheat hidden" onclick="App.toggleCheatMode()">Cheater</button>
       </div>
     </header>
 
@@ -99,12 +104,12 @@
         <div class="test-container">
           <div class="test-header">
             <div class="test-header-left">
-              <button class="btn btn-danger" onclick="App.confirmQuitTest()">Quit</button>
+              <button id="test-quit-btn" class="btn btn-danger" onclick="App.confirmQuitTest()">Quit</button>
             </div>
             <div class="test-header-right">
               <button id="reveal-btn" class="btn btn-reveal" onclick="App.toggleReveal()">Reveal</button>
               <button id="flag-btn" class="btn btn-warning" onclick="App.toggleFlag()">Flag</button>
-              <button class="btn btn-success" onclick="App.showReview()">Review</button>
+              <button id="review-btn" class="btn btn-success" onclick="App.showReview()">Review</button>
             </div>
           </div>
 
@@ -152,8 +157,8 @@
           <p class="review-intro">Click any question to jump to it. Flagged questions are highlighted.</p>
           <div id="review-grid" class="review-grid"></div>
           <div class="review-footer">
-            <button class="btn btn-secondary" onclick="App.backToTest()">Back to Test</button>
-            <button class="btn btn-primary" onclick="App.submitTest()">Submit Test</button>
+            <button id="review-back-btn" class="btn btn-secondary" onclick="App.backToTest()">Back to Test</button>
+            <button id="review-submit-btn" class="btn btn-primary" onclick="App.submitTest()">Submit Test</button>
           </div>
         </div>
       </section>
@@ -188,8 +193,8 @@
           </div>
 
           <div class="results-actions">
-            <button class="btn btn-primary" onclick="App.startTest()">Retake Test</button>
-            <button class="btn btn-secondary" onclick="App.goHome()">Home</button>
+            <button id="retake-btn" class="btn btn-primary" onclick="App.startTest()">Retake Test</button>
+            <button id="home-btn" class="btn btn-secondary" onclick="App.goHome()">Home</button>
           </div>
 
           <div class="results-breakdown">
@@ -210,7 +215,7 @@
         <div class="practice-container">
           <div class="practice-header">
             <div class="practice-header-left">
-              <button class="btn btn-danger" onclick="App.goHome()">Quit</button>
+              <button id="practice-quit-btn" class="btn btn-danger" onclick="App.goHome()">Quit</button>
             </div>
             <div class="practice-header-right">
               <button id="all-topics-btn" class="btn btn-success hidden" onclick="App.showPracticeTopics()">Back</button>
@@ -231,6 +236,17 @@
       </section>
     </main>
 
+    <!-- Language Modal -->
+    <div id="lang-modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="lang-modal-title">
+      <div class="modal lang-modal">
+        <h3 id="lang-modal-title"></h3>
+        <div id="lang-modal-body" class="lang-modal-body"></div>
+        <div class="lang-modal-actions">
+          <button id="lang-modal-close" class="btn btn-primary"></button>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal -->
     <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div class="modal">
@@ -248,6 +264,12 @@
   </div>
 
   <script src="js/questions-data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/translations/pl.js"></script>
+  <script src="js/translations/de.js"></script>
+  <script src="js/translations/es.js"></script>
+  <script src="js/translations/it.js"></script>
+  <script src="js/translations/fr.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
