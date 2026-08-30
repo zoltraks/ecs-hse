@@ -2,9 +2,13 @@
 
 // ===== Internationalization Module =====
 
+const FLAG_GB = '<svg viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg"><clipPath id="flag-uk-clip"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path d="M0,0v30h60V0z" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" clip-path="url(#flag-uk-clip)" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></svg>';
+
+const FLAG_PL = '<svg viewBox="0 0 16 10" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="5" fill="#fff"/><rect y="5" width="16" height="5" fill="#d4213d"/></svg>';
+
 window.LANGUAGES = {
-  en: { name: 'English', flag: '🇬🇧' },
-  pl: { name: 'Polski', flag: '🇵🇱' },
+  en: { name: 'English', flag: FLAG_GB },
+  pl: { name: 'Polski', flag: FLAG_PL },
 };
 
 const LOCALE_KEY = 'ecs-hse-locale';

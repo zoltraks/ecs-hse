@@ -58,7 +58,10 @@ const App = {
   // ===== Language =====
   updateLanguageFlag() {
     const flagEl = document.getElementById('lang-flag');
-    if (flagEl) flagEl.textContent = LANGUAGES[I18n.locale].flag;
+    if (!flagEl) return;
+    const svg = LANGUAGES[I18n.locale].flag;
+    flagEl.innerHTML = '';
+    flagEl.style.backgroundImage = 'url("data:image/svg+xml;utf8,' + encodeURIComponent(svg) + '")';
   },
 
   openLanguageModal() {

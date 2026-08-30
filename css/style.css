@@ -1358,8 +1358,13 @@ body.scroll-locked {
 }
 
 .lang-flag {
-  font-size: 22px;
-  line-height: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .lang-modal {
@@ -1408,8 +1413,15 @@ body.scroll-locked {
 }
 
 .lang-option-flag {
-  font-size: 24px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.lang-option-flag svg {
+  display: block;
+  width: 26px;
+  height: 18px;
+  border-radius: 2px;
 }
 
 .lang-option-name {
