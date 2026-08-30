@@ -6,7 +6,9 @@ This document defines development standards for single page applications built w
 
 It applies to applications that run in the browser with no framework, no bundler, and no build step.
 
-The standard covers three application types and three source layouts, and stays general so it can be applied to unrelated projects.
+The standard covers three application models and four source layouts, and stays general so it can be applied to unrelated projects.
+
+It is written to be executed directly by an AI coding agent such as Devin, Antigravity, or Claude Code, and to be read without effort by a human reviewer.
 
 For CSS architecture, layout systems, and design tokens, maintain a separate CSS development standard and add only the rules specific to a frameworkless application here.
 
@@ -24,12 +26,175 @@ This standard does not apply to compiled single page applications.
 
 For those, use a framework-specific development standard.
 
+## How To Use This Standard
+
+This section is the entry point for an agent.
+
+Read it before reading anything else in this document.
+
+### Order Of Operations
+
+Follow these steps in order at the start of every task that touches application code.
+
+1. Read the project rules file, such as `AGENTS.md`, `README.md`, or `docs/GUIDELINES.md`, because a project rule overrides this standard.
+2. Determine the application model and the source layout using the Agent Intake Protocol below.
+3. Confirm the model with the user when the repository is ambiguous or empty.
+4. Apply the sections of this standard that match the confirmed model and layout.
+5. Verify the change against the Definition of Done before reporting the task complete.
+
+### Precedence
+
+When two rules conflict, apply the first matching source in this list.
+
+| Rank | Source                                    | Example                                        |
+|------|-------------------------------------------|------------------------------------------------|
+| 1    | An explicit instruction from the user     | "Keep everything in one file"                  |
+| 2    | The project rules file                    | `AGENTS.md`, `docs/GUIDELINES.md`              |
+| 3    | The existing convention in the repository | Double quotes in JavaScript across every file  |
+| 4    | This standard                             | Single quotes in JavaScript                    |
+| 5    | General web development best practice     | Anything not covered by the four sources above |
+
+Never silently reformat existing code to match this standard.
+
+Bring a deviation to the user as a proposal, not as an unrequested edit.
+
+### Non-Negotiable Rules
+
+These rules hold in every model and every layout, including the single-file layout and including a throwaway prototype.
+
+- **No native dialogs.** `window.alert`, `window.confirm`, and `window.prompt` are inadmissible in application code.
+- **Responsive.** The application adapts to viewport width, viewport height, and orientation, with no horizontal page scroll at any supported size.
+- **Reactive.** The interface answers user input within the interaction budget and never blocks the main thread while data loads.
+- **One source of truth.** State lives in JavaScript, the DOM is a projection of it.
+- **Escape everything.** No value reaches `innerHTML` without passing through the escape helper.
+- **Readable source.** The code is formatted, indented, and logically divided, whatever the layout.
+- **Lowest workable complexity.** Choose the smallest structure that solves the problem, and grow only when a real boundary appears.
+- **Keyboard and screen reader parity.** Every action reachable with a pointer is reachable with a keyboard.
+
+A violation of any of these rules is a defect, not a style preference.
+
+## Agent Intake Protocol
+
+The agent must know two things before it writes a single line: the application model and the source layout.
+
+These two answers determine the render surface, the file structure, the loop model, and most of the remaining rules.
+
+There is no profile file to maintain.
+
+The repository itself is the record of the decision, so the agent derives the answers from the files that exist and asks only when the files cannot answer.
+
+### Detection First
+
+Inspect the repository before asking anything.
+
+Apply the detection table below and form a conclusion.
+
+| Signal Found In The Repository                                    | Inferred Layout     | Confidence |
+|-------------------------------------------------------------------|---------------------|------------|
+| A single `.html` file with inline `<style>` and inline `<script>` | Single File         | High       |
+| `index.html` plus one `css/` file plus one `js/` file             | Minimal             | High       |
+| `index.html` plus several files under `css/` and `js/`            | Modular             | High       |
+| `src/index.html` with `css/` and `js/` inside `src/`              | Modular With `src/` | High       |
+| An empty repository or documentation only                         | Undetermined        | None       |
+
+| Signal Found In The Repository                           | Inferred Model |
+|----------------------------------------------------------|----------------|
+| Forms, tables, record lists, `localStorage` persistence  | Application    |
+| A `<canvas>` element and a `requestAnimationFrame` loop  | Game           |
+| Generated SVG frames, a frame counter, playback controls | Presentation   |
+
+Also detect the following secondary decisions, because each of them is a project-wide contract.
+
+| Decision           | Detect By                                                      |
+|--------------------|----------------------------------------------------------------|
+| Module system      | `<script type="module">` versus ordered classic `<script>`     |
+| Organization       | A single namespace object versus one class per file            |
+| Modal mechanism    | A `<dialog>` element versus a `.modal-overlay` div             |
+| Quote style        | The dominant quote character in existing JavaScript            |
+| Indentation        | The dominant indent width in existing source                   |
+| Locale support     | The presence of an `i18n` module or a translations directory   |
+| Persistence        | The presence of a `localStorage` key constant                  |
+| Development server | The presence of `server.js`, `server.mjs`, or a `start` script |
+
+### Existing Project
+
+When detection reaches a confident conclusion, state it and ask for a single confirmation.
+
+Do not run the full questionnaire against a repository that already answers it.
+
+Use one short message in the following shape.
+
+```text
+Detected: Application model, Minimal layout, classic scripts, namespace object,
+overlay-div modals, double quotes, two-space indent, i18n present, localStorage present.
+Continuing on that basis unless you say otherwise.
+```
+
+Ask a targeted question only for a decision that detection could not resolve and that the task actually depends on.
+
+Never ask about a decision that has no bearing on the requested change.
+
+### New Project
+
+When the repository is empty, or the task is to start a new application, ask the intake questions before writing code.
+
+Ask them as one grouped set, not one at a time.
+
+Ask only the questions in the first table, and derive everything else from the answers and from the defaults in this standard.
+
+| Question            | Options                                               | Default If Declined |
+|---------------------|-------------------------------------------------------|---------------------|
+| Application model   | Application, Game, Presentation                       | Application         |
+| Source layout       | Single File, Minimal, Modular, Modular With `src/`    | Minimal             |
+| Distribution        | Static host, Opened from the file system, Both        | Static host         |
+| Persistence         | None, `localStorage`, `localStorage` plus JSON export | `localStorage`      |
+| Languages           | One, Several                                          | One                 |
+| Offline requirement | Not required, Must work with no network               | Not required        |
+
+The answers cascade into the secondary decisions without further questions.
+
+| Answer                                | Consequence                                                              |
+|---------------------------------------|--------------------------------------------------------------------------|
+| Distribution includes the file system | Classic scripts, no ES modules, no `fetch` of local data                 |
+| Distribution is a static host only    | ES modules are permitted, and the project states that choice in the docs |
+| Source layout is Single File          | No development server, no package manifest, no external asset            |
+| Offline requirement is set            | Every third-party library is vendored, no CDN reference survives         |
+| Languages is Several                  | An i18n module is created before the first user-facing string is written |
+| Model is Game                         | Canvas render surface, one `requestAnimationFrame` loop, keyboard parity |
+| Model is Presentation                 | SVG render surface, a frame counter, no per-frame hardcoded coordinates  |
+
+### Asking Well
+
+Present the questions as a compact numbered list with the default marked.
+
+State that the user may answer with a single line, such as `Application, Single File, static host, localStorage, one language, offline`.
+
+Do not block on an answer that the task does not need.
+
+Do not re-ask a question that a previous answer in the same session already resolved.
+
+### Recording The Decision
+
+Do not create a profile file, a decision log, or a settings file to store the answers.
+
+Create the file structure that the answers imply, and let that structure be the record.
+
+State the resulting structure in `README.md` so a human reader sees the same conclusion the agent will detect later.
+
+A future session re-derives the model from the repository using the detection table, which is why the layouts in this standard are deliberately distinguishable from each other.
+
 ## Documentation
+
+Consult these sources rather than guessing at browser behavior.
 
 - [MDN HTML Reference](https://developer.mozilla.org/en-US/docs/Web/HTML)
 - [MDN CSS Reference](https://developer.mozilla.org/en-US/docs/Web/CSS)
 - [MDN JavaScript Reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [MDN Web APIs](https://developer.mozilla.org/en-US/docs/Web/API)
+- [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/)
+- [WCAG 2.2](https://www.w3.org/TR/WCAG22/)
+- [Web Vitals](https://web.dev/articles/vitals)
+- [Baseline Web Platform Status](https://webstatus.dev/)
 - [Can I Use](https://caniuse.com/)
 
 ## Core Technologies
@@ -43,31 +208,93 @@ Add a third-party library only when the alternative is significantly more code.
 
 When a library is added, load it lazily and provide a fallback for the case where the load fails.
 
-## Application Types
+## Platform Baseline
 
-A vanilla application falls into one of three types, and the type shapes the rest of the choices.
+A frameworkless application is viable today because the platform absorbed most of what a framework used to provide.
 
-| Type         | Primary Content                      | Render Surface        | Typical Interaction            |
+Prefer a platform feature over hand-written code whenever the platform feature exists.
+
+The table below lists the features this standard assumes, grouped by how safe they are to depend on.
+
+**Widely available**, meaning safe to use with no fallback.
+
+| Feature                            | Replaces                                     |
+|------------------------------------|----------------------------------------------|
+| `<dialog>` and `showModal()`       | A hand-written modal with a focus trap       |
+| CSS custom properties              | A preprocessor variable                      |
+| CSS Grid and Flexbox               | A layout framework                           |
+| Container queries and `@container` | A width-observing script                     |
+| `:has()`                           | A parent-marking class toggled by JavaScript |
+| Cascade layers and `@layer`        | Specificity arithmetic                       |
+| CSS nesting                        | A preprocessor                               |
+| `clamp()`, `min()`, `max()`        | A resize handler that computes a font size   |
+| `color-mix()`                      | A hand-maintained tint and shade palette     |
+| ES modules and dynamic `import()`  | A bundler                                    |
+| Import maps                        | A module resolver                            |
+| Custom elements and `<template>`   | A component abstraction                      |
+| `AbortController`                  | Manual listener bookkeeping                  |
+| `ResizeObserver`                   | A polled `resize` handler                    |
+| `IntersectionObserver`             | A polled `scroll` handler                    |
+| `matchMedia`                       | A width comparison in JavaScript             |
+| `structuredClone()`                | `JSON.parse(JSON.stringify(value))`          |
+| `requestAnimationFrame`            | `setInterval` for animation                  |
+
+**Newly available**, meaning usable with a documented fallback.
+
+| Feature                   | Fallback                                            |
+|---------------------------|-----------------------------------------------------|
+| Popover API               | A positioned element with an outside-click listener |
+| View Transitions API      | An immediate swap with no transition                |
+| Navigation API            | The History API                                     |
+| CSS anchor positioning    | A computed position from `getBoundingClientRect`    |
+| Declarative shadow DOM    | An imperative `attachShadow` call                   |
+| `scheduler.yield()`       | `await new Promise(r => setTimeout(r, 0))`          |
+| `requestIdleCallback()`   | `setTimeout` with a short delay                     |
+| `<dialog closedby="any">` | A click listener that compares the event target     |
+
+Guard a newly available feature at the point of use, never through user agent sniffing.
+
+```javascript
+function withViewTransition(update) {
+  if (!document.startViewTransition) return update();
+  return document.startViewTransition(update);
+}
+```
+
+Verify the current status of any feature before depending on it, and record the decision in the project documentation when the choice is not obvious.
+
+Web components are worth their cost when the project needs style encapsulation or a component that must outlive the current file layout.
+
+They are not worth their cost in a single-file tool with a handful of screens.
+
+## Application Models
+
+A vanilla application falls into one of three models, and the model shapes the rest of the choices.
+
+| Model        | Primary Content                      | Render Surface        | Typical Interaction            |
 |--------------|--------------------------------------|-----------------------|--------------------------------|
 | Application  | Records, forms, dashboards, editors  | DOM                   | Clicks, typing, drag and drop  |
 | Game         | A continuous or stepped visual scene | Canvas, sometimes DOM | Pointer, keyboard, real-time   |
 | Presentation | A sequence of discrete visual frames | SVG, sometimes DOM    | Step navigation, auto-playback |
 
-The type determines the render surface, the loop model, and the accessibility strategy.
+The model determines the render surface, the loop model, and the accessibility strategy.
 
 A single application may combine surfaces, for example a canvas game with a DOM control bar.
 
 Keep the dominant surface as the primary one and treat the other as a companion.
 
+The model is independent of the source layout, so any model can be built in any layout.
+
 ## Source Layouts
 
-Choose one of three layouts before writing any code.
+Choose one of four layouts before writing any code.
 
-| Layout  | Use Case                                          | Structure                                        |
-|---------|---------------------------------------------------|--------------------------------------------------|
-| Modular | Application with several distinct subsystems      | `index.html`, split `css/`, split `js/`          |
-| Minimal | Small application with one group of screens       | `index.html`, one stylesheet, one script         |
-| Inline  | Prototype, design demo, or a required single file | one `.html` with inline `<style>` and `<script>` |
+| Layout              | Use Case                                             | Structure                                        |
+|---------------------|------------------------------------------------------|--------------------------------------------------|
+| Single File         | One distributable file, offline tool, demo, embed    | one `.html` with inline `<style>` and `<script>` |
+| Minimal             | Small application with one group of screens          | `index.html`, one stylesheet, one script         |
+| Modular             | Application with several distinct subsystems         | `index.html`, split `css/`, split `js/`          |
+| Modular With `src/` | Large application that separates source from tooling | `src/index.html`, `runtime/`, `docs/`            |
 
 Pick the smallest layout that fits the application.
 
@@ -77,42 +304,45 @@ Splitting a two hundred line script across six files adds ceremony and removes n
 
 Grow the layout only when a real boundary appears, such as a second subsystem or a second developer.
 
-### Modular Layout
+The layout is a project-wide contract.
 
-Use this layout when the application has several distinct subsystems.
+An agent must not migrate a project from one layout to another as a side effect of an unrelated task.
+
+### Single File Layout
+
+The whole application lives in one `.html` file.
+
+Markup, style definitions, images, and logic are all inline, and the file has no external asset of any kind.
+
+This layout is selectable for a new project and must be preserved during further development of a project that already uses it.
+
+It is not the recommended default, because a split layout gives better caching, cleaner diffs, per-file linting, and a stricter security posture.
+
+Select it when one of the following is true.
+
+- The application must be distributed as one file that is mailed, embedded, or carried on a memory stick.
+- The application must run by double-clicking the file with no server and no network.
+- The application is a small tool, a demo, or an embed where a directory of assets is disproportionate.
+- The user has asked for it.
+
+Convenience alone is not a reason to select it, and neither is an unwillingness to create a second file.
 
 ```plaintext
 project-root/
-  package.json            -- npm scripts and metadata, no runtime dependencies
-  README.md               -- overview, quick start, feature list
-  .gitignore
-  runtime/
-    server.js             -- static development server
-  src/
-    index.html            -- single entry document
-    css/
-      variables.css       -- design tokens on :root
-      layout.css          -- structure, grid, regions
-      components.css      -- reusable components
-      interactive.css     -- states, drag, modal, tooltip
-    js/
-      model.js            -- domain types, no DOM access
-      data.js             -- initial or generated data
-      i18n.js             -- translation dictionary and locale
-      renderer.js         -- DOM generation
-      persistence.js      -- localStorage and import/export
-      app.js              -- bootstrap and wiring, loaded last
+  app-name.html           -- markup, inline <style>, inline images, inline <script>
+  README.md               -- overview and purpose
   docs/
-    GUIDELINES.md         -- project rules
-    ARCHITECTURE.md       -- module boundaries and data flow
-    TESTING.md            -- manual verification checklist
 ```
+
+Every other rule in this standard applies to this layout unchanged.
+
+The Single File Applications section describes how the file is divided, how images are embedded, and where its limits are.
 
 ### Minimal Layout
 
 Use this layout when the application is small enough that one script stays readable.
 
-The `src/` directory collapses into the project root, all styles live in one stylesheet, and all logic lives in one script.
+All styles live in one stylesheet and all logic lives in one script.
 
 ```plaintext
 project-root/
@@ -136,28 +366,57 @@ Keep the token block at the top of `style.css` and the `@media` rules at the bot
 
 A generated data file stays separate even in this layout, because it is not hand-edited.
 
-### Inline Layout
+A translations directory is the one other admissible split, because one file per locale keeps a diff reviewable.
 
-Use this layout only when the project specification requires a single distributable file.
+### Modular Layout
 
-A file that must be mailed, embedded, or opened from a memory stick with no other asset is a valid reason.
-
-Convenience is not a valid reason.
+Use this layout when the application has several distinct subsystems.
 
 ```plaintext
 project-root/
-  app-name.html           -- markup, inline <style>, inline <script>
-  README.md               -- overview and purpose
+  index.html              -- single entry document
+  package.json            -- npm scripts and metadata
+  README.md               -- overview, quick start, feature list
+  server.mjs              -- static development server
+  css/
+    variables.css         -- design tokens on :root
+    layout.css            -- structure, grid, regions
+    components.css        -- reusable components
+    interactive.css       -- states, drag, modal, tooltip
+  js/
+    model.js              -- domain types, no DOM access
+    data.js               -- initial or generated data
+    i18n.js               -- translation dictionary and locale
+    renderer.js           -- DOM generation
+    persistence.js        -- localStorage and import/export
+    app.js                -- bootstrap and wiring, loaded last
   docs/
 ```
 
-The same section order applies inside the file as across the split layouts.
+### Modular With `src/` Layout
 
-Place the token block first in `<style>`, then layout, then components, then state rules.
+Use this layout when the project has enough tooling that separating source from tooling is worth an extra directory level.
 
-Place the `<script>` block at the end of `<body>` and keep the same internal order the split files would have used.
+The distinguishing feature is that the deployable artifact is exactly the `src/` directory.
 
-Mark each region with a banner comment so the file stays navigable.
+```plaintext
+project-root/
+  package.json            -- npm scripts and metadata, no runtime dependencies
+  README.md               -- overview, quick start, feature list
+  .gitignore
+  runtime/
+    server.js             -- static development server
+  src/
+    index.html            -- single entry document
+    css/
+    js/
+  docs/
+    GUIDELINES.md         -- project rules
+    ARCHITECTURE.md       -- module boundaries and data flow
+    TESTING.md            -- manual verification checklist
+```
+
+Deployment is a copy of `src/` and nothing else.
 
 ### Scaling Between Layouts
 
@@ -165,16 +424,177 @@ Move to the next layout up when any of the following becomes true.
 
 - A single script passes roughly one thousand lines.
 - A single stylesheet passes roughly one thousand lines.
-- An inline document passes roughly fifteen hundred lines.
+- A single-file document passes roughly fifteen hundred lines.
 - Two subsystems start editing the same file for unrelated reasons.
 
 Splitting later is cheap because there is no build step to reconfigure.
+
+Never move down a layout, because collapsing files loses history and gains nothing.
+
+Propose the move and wait for approval, because a layout change touches every path in the project.
 
 ### Shared Rules
 
 The bootstrap script is always loaded last and is always the only entry point.
 
 Never place application source inside `docs/`.
+
+## Single File Applications
+
+This section applies only to the Single File layout.
+
+It exists because a one-file application is the layout most likely to decay into an unreadable wall of text, and the standard refuses that outcome.
+
+The absence of files is not an absence of structure.
+
+### Internal Order
+
+The file has the same logical divisions a split layout would have, expressed as ordered regions rather than as files.
+
+Keep the regions in this order and never interleave them.
+
+| Order | Region        | Location           | Content                                          |
+|-------|---------------|--------------------|--------------------------------------------------|
+| 1     | Document head | `<head>`           | Doctype, charset, viewport, title, meta          |
+| 2     | Style         | `<style>` in head  | Tokens, reset, layout, components, states, media |
+| 3     | Icon sprite   | Start of `<body>`  | One hidden `<svg>` holding every `<symbol>`      |
+| 4     | Shell markup  | `<body>`           | Header, main, screens, overlays                  |
+| 5     | Templates     | End of markup      | `<template>` elements for repeated structures    |
+| 6     | Data          | `<script>` in body | Constants, generated data, translation tables    |
+| 7     | Logic         | `<script>` in body | State, rendering, events, bootstrap              |
+
+Place the style block in `<head>` so the browser paints once instead of repainting after a late stylesheet.
+
+Place both script blocks at the end of `<body>` so the markup parses before the logic runs.
+
+Keep data and logic in two separate `<script>` blocks even though one would work, because that boundary is what makes the file splittable later.
+
+### Region Banners
+
+Mark every region and every subsection with a banner comment, because the file has no directory tree to navigate by.
+
+A banner is the only navigation aid the reader has, so make it greppable and make it unique.
+
+```html
+<!-- ============================================================
+     REGION 4  SHELL MARKUP
+     ============================================================ -->
+```
+
+```css
+/* ============================================================
+   2.1  DESIGN TOKENS
+   ============================================================ */
+```
+
+```javascript
+/* ============================================================
+   7.3  RENDERING
+   ============================================================ */
+```
+
+Number the banners to match the internal order table, so the file reads the same way in every project that uses this layout.
+
+A reviewer can then refer to a location as "region 7.3" in a task or a comment.
+
+### Division Inside The Blocks
+
+Divide the style block in the same order a split stylesheet would use.
+
+Divide the script block in the same order split scripts would use.
+
+| Order | Style Subsection | Script Subsection |
+|-------|------------------|-------------------|
+| 1     | Tokens           | Constants         |
+| 2     | Reset            | State             |
+| 3     | Layout           | Helpers           |
+| 4     | Components       | Persistence       |
+| 5     | States           | Rendering         |
+| 6     | Media queries    | Events            |
+| 7     |                  | Bootstrap         |
+
+Declare exactly one namespace object or one bootstrap function, and attach nothing else to the global scope.
+
+Sharing one scope is a property of the layout, not a licence to use it.
+
+Pass collaborators explicitly, exactly as a split layout would have to.
+
+Do not use `<script type="module">` in this layout when the file must open over `file://`, because module loading is blocked on that scheme.
+
+### Inline Images
+
+Every image is inline, and there are three admissible techniques.
+
+| Technique             | Use For                                 | Notes                                        |
+|-----------------------|-----------------------------------------|----------------------------------------------|
+| Inline SVG `<symbol>` | Icons, flags, logos, diagrams           | The default, scales cleanly, styles with CSS |
+| CSS gradient or shape | Backgrounds, dividers, decorative fills | Costs no extra bytes and no decode           |
+| `data:` URI           | A small raster that cannot be vector    | Last resort, base64 inflates size by a third |
+
+Declare the icon sprite once as a hidden `<svg>` and reference each icon by fragment.
+
+```html
+<svg aria-hidden="true" focusable="false" width="0" height="0" style="position: absolute">
+  <symbol id="icon-search" viewBox="0 0 24 24">
+    <path d="M10 2a8 8 0 105.3 14l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0010 2z" fill="currentColor" />
+  </symbol>
+</svg>
+```
+
+```html
+<button class="btn" aria-label="Search">
+  <svg class="icon" width="20" height="20" aria-hidden="true"><use href="#icon-search" /></svg>
+</button>
+```
+
+Draw icons with `fill="currentColor"` so one CSS colour rule restyles the whole set.
+
+A sprite keeps every icon in one region instead of scattering path data through the markup.
+
+Keep any `data:` URI under roughly five kilobytes.
+
+A raster larger than that inflates the parse cost of the document and belongs in a split layout.
+
+### Limits
+
+The single-file layout has a working range, and beyond it the layout stops paying for itself.
+
+| Limit                           | Threshold             | Action When Exceeded         |
+|---------------------------------|-----------------------|------------------------------|
+| Total document length           | Roughly 1500 lines    | Consider the Minimal layout  |
+| Total file size                 | Roughly 500 kilobytes | Move data or images out      |
+| Inline raster asset             | Roughly 5 kilobytes   | Replace with SVG or move out |
+| Distinct subsystems in the file | Two                   | Move to the Minimal layout   |
+
+A generated data table is the usual reason a single file grows past its limit.
+
+Moving only the data into one adjacent `.js` file is the smallest useful step and is preferable to a full split.
+
+State that deviation in `README.md`, because the layout is then Minimal with one script, not Single File.
+
+### Staying Upgradable
+
+Write the single file so that splitting it later is a copy operation, not a rewrite.
+
+- Keep each region contiguous, so a region becomes a file by cutting it whole.
+- Keep the style subsections in cascade order, so they become `variables.css`, `layout.css`, `components.css`, and `interactive.css` in that order.
+- Keep data separate from logic, so the data block becomes `data.js`.
+- Reference icons by fragment, so moving the sprite to `sprite.svg` changes only the `href` prefix.
+- Keep translation tables in their own subsection, so they become `i18n.js`.
+
+### Accepted Trade-Offs
+
+The single-file layout buys portability and pays for it in five places.
+
+| Trade-Off                       | Consequence                                      | Mitigation                                                  |
+|---------------------------------|--------------------------------------------------|-------------------------------------------------------------|
+| No per-asset caching            | A one-character edit re-downloads the whole file | Acceptable for an offline or portable tool                  |
+| Inline `<script>` and `<style>` | A strict Content Security Policy blocks them     | Ship source hashes, see the Content Security Policy section |
+| Larger diffs                    | A style change and a logic change share one file | Region banners keep the diff locatable                      |
+| No per-file linting             | A tool cannot lint one concern in isolation      | Run `node --check` on an extracted copy of the script block |
+| One parse before first paint    | A large file delays the first meaningful paint   | Respect the size limits above                               |
+
+Name the trade-off out loud in `README.md` rather than pretending it does not exist.
 
 ## Naming Conventions
 
@@ -200,7 +620,7 @@ Do not use a leading underscore to mark a method as private.
 | Artifact         | Convention           | Example                    |
 |------------------|----------------------|----------------------------|
 | HTML entry point | `index.html`         | `src/index.html`           |
-| Stylesheet       | `kebab-case.css`     | `css/variables.css`        |
+| Stylesheet       | `kebab-case.css`     | `css/style.css`            |
 | Module script    | `kebab-case.js`      | `js/item-list-renderer.js` |
 | Generated data   | `kebab-case-data.js` | `js/catalog-data.js`       |
 | Static server    | `server.js`          | `runtime/server.js`        |
@@ -357,6 +777,10 @@ Every z-index value comes from a `--z-` token.
 
 ### Responsive Design
 
+Responsive is a requirement, not a feature.
+
+The application adapts to viewport width, viewport height, and orientation, and produces no horizontal page scroll at any supported size.
+
 Every application defines at least one breakpoint.
 
 Place all `@media` rules at the end of the file they belong to.
@@ -379,6 +803,98 @@ This preserves the largest comfortable mobile size on desktop and prevents a vis
 Below the breakpoint the component fills the viewport.
 
 Above the breakpoint the component is capped and floored, and the desktop `min-width` equals the maximum mobile width measured at the breakpoint.
+
+### Fluid Before Breakpoints
+
+Reach for a fluid value before reaching for a breakpoint.
+
+A breakpoint is a step change, and a step change is only correct when the layout genuinely rearranges.
+
+| Need                             | Fluid Technique                        |
+|----------------------------------|----------------------------------------|
+| Type that scales with the screen | `clamp()` on `font-size`               |
+| A column count that adapts       | `repeat(auto-fit, minmax(16rem, 1fr))` |
+| A width that never overflows     | `min(100%, 60rem)`                     |
+| Spacing that grows with the page | `clamp()` on `padding`                 |
+
+```css
+.card-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+h1 {
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+```
+
+A component that must respond to its container rather than to the viewport uses a container query.
+
+This is the correct tool for a card that appears both in a wide main region and in a narrow sidebar.
+
+```css
+.card { container-type: inline-size; }
+
+@container (min-width: 24rem) {
+  .card-inner { grid-template-columns: auto 1fr; }
+}
+```
+
+### Orientation and Viewport Height
+
+A width breakpoint alone does not describe a phone held sideways.
+
+A landscape phone is wide and short, so a layout tuned only for width will push its actions off the bottom of the screen.
+
+```css
+@media (orientation: landscape) and (max-height: 480px) {
+  .app-header { position: static; }
+  .hero { display: none; }
+}
+```
+
+Use `dvh` rather than `vh` for a full-height region, because mobile browser toolbars change the visible height while the user scrolls.
+
+```css
+.app { min-height: 100dvh; }
+```
+
+Never set a fixed pixel height on a region that contains text.
+
+### Input Modality
+
+Adapt to the pointer, not only to the width, because a large touch screen and a small laptop are different problems.
+
+```css
+@media (pointer: coarse) {
+  .btn { min-height: 44px; }
+}
+
+@media (hover: none) {
+  .tooltip-on-hover { display: none; }
+}
+```
+
+Every interactive target is at least 24 by 24 CSS pixels, and 44 by 44 where a coarse pointer is expected.
+
+A hover-only affordance must have a tap-reachable or keyboard-reachable equivalent.
+
+### Preventing Overflow
+
+Horizontal page scroll is a defect.
+
+The recurring causes are few, and each has a standard fix.
+
+| Cause                                   | Fix                                                 |
+|-----------------------------------------|-----------------------------------------------------|
+| A flex or grid child refusing to shrink | `min-width: 0` on the child                         |
+| A long unbroken string                  | `overflow-wrap: anywhere` on the text container     |
+| A wide table                            | A scroll container with `overflow: auto` around it  |
+| A fixed pixel width                     | `max-width: 100%` or a `min()` expression           |
+| An oversized image                      | `max-width: 100%` and `height: auto` from the reset |
+
+Test at the narrowest supported width before considering a layout change complete.
 
 ### Motion
 
@@ -692,17 +1208,175 @@ Show the user a message for any failure that changes what they can do.
 
 ### User Feedback
 
-Application messages are custom components.
+Every message, warning, error, confirmation, and prompt is a component the application owns.
 
-Never call `window.alert`, `window.confirm`, or `window.prompt`.
+`window.alert`, `window.confirm`, and `window.prompt` are inadmissible, with no exception for a prototype, a demo, or an internal tool.
 
-These block the main thread, cannot be styled, and break the visual identity of the application.
+See the Messages and Dialogs section for the required mechanism.
 
-Use a modal overlay with a centered dialog for a blocking question.
+## Reactivity
 
-Use a transient toast for a non-blocking confirmation.
+Reactive means the interface answers the user immediately and never makes the user wait for something the application could have hidden, deferred, or cancelled.
 
-A prototype or a quick internal tool may relax this rule, but a production application must not.
+It does not mean a reactivity framework, and it does not mean a virtual DOM.
+
+### Interaction Budget
+
+Treat these numbers as the contract between the application and the user.
+
+| Budget          | Target | Meaning                                              |
+|-----------------|--------|------------------------------------------------------|
+| Visual feedback | 100 ms | Some visible change acknowledges the input           |
+| Interaction     | 200 ms | The interaction completes and the next frame paints  |
+| Task slice      | 50 ms  | No single JavaScript task runs longer than this      |
+| Content ready   | 2.5 s  | The main content of the first screen is visible      |
+| Layout shift    | None   | Content never moves under a pointer or a reading eye |
+
+A handler that cannot finish inside the interaction budget must acknowledge the input first and continue afterwards.
+
+### Acknowledge Then Work
+
+Split a slow action into an immediate acknowledgement and a deferred body.
+
+The user sees the state change in the current frame, and the work happens in the next one.
+
+```javascript
+function onGenerate() {
+  setBusy(true);
+  requestAnimationFrame(() => {
+    buildLargeReport();
+    setBusy(false);
+  });
+}
+```
+
+Disable the control that started the work, so a second click cannot queue a second run.
+
+Re-enable it in the same function that clears the busy state, never in a separate path.
+
+### Breaking Long Work
+
+A loop over a large collection is the usual cause of a frozen interface.
+
+Yield back to the browser at least every fifty milliseconds so input events can be processed.
+
+```javascript
+async function processAll(items, handle) {
+  let deadline = performance.now() + 50;
+  for (const item of items) {
+    handle(item);
+    if (performance.now() < deadline) continue;
+    await yieldToBrowser();
+    deadline = performance.now() + 50;
+  }
+}
+
+function yieldToBrowser() {
+  if (globalThis.scheduler?.yield) return scheduler.yield();
+  return new Promise(resolve => setTimeout(resolve, 0));
+}
+```
+
+Show progress while a chunked task runs, because a task worth chunking is a task worth reporting.
+
+### Batching DOM Work
+
+Read every measurement first, then write every change, because interleaving them forces the browser to recalculate layout on each read.
+
+```javascript
+const heights = rows.map(row => row.offsetHeight);
+rows.forEach((row, i) => { row.style.height = `${heights[i]}px`; });
+```
+
+Coalesce repeated updates into one animation frame rather than running them per event.
+
+```javascript
+let scheduled = false;
+
+function scheduleRender() {
+  if (scheduled) return;
+  scheduled = true;
+  requestAnimationFrame(() => {
+    scheduled = false;
+    render();
+  });
+}
+```
+
+Build a list off-document in a `DocumentFragment` and insert it once, rather than appending inside the loop.
+
+Prefer a targeted update over a full re-render when only one value changed.
+
+Setting `textContent` on one element is always cheaper than rebuilding a container.
+
+### Rate Limiting Input
+
+Match the technique to the event.
+
+| Event                      | Technique | Typical Delay |
+|----------------------------|-----------|---------------|
+| Typing in a search field   | Debounce  | 250 ms        |
+| Scroll or pointer movement | Throttle  | One frame     |
+| Window resize              | Debounce  | 150 ms        |
+| A submit button            | Neither   | Disable it    |
+
+Debounce delays until the input stops, and throttle limits the rate while the input continues.
+
+Using the wrong one produces either a laggy field or a flooded handler.
+
+### Asynchronous Data
+
+Every request that can be superseded carries an `AbortSignal`.
+
+Abort the previous request before starting a new one, otherwise a slow earlier response can overwrite a fast later one.
+
+```javascript
+let inFlight = null;
+
+async function search(term) {
+  inFlight?.abort();
+  inFlight = new AbortController();
+  try {
+    const response = await fetch(`/api/search?q=${encodeURIComponent(term)}`, { signal: inFlight.signal });
+    if (!response.ok) throw new Error(`Search failed with status ${response.status}`);
+    renderResults(await response.json());
+  } catch (error) {
+    if (error.name === 'AbortError') return;
+    Dialogs.alert('Search failed', 'The results could not be loaded. Please try again.');
+  }
+}
+```
+
+Never leave a rejected promise unhandled, and never report an abort as an error.
+
+Give every request a timeout, because a request that never settles leaves the interface in a permanent loading state.
+
+### Loading States
+
+An empty region is not a loading state.
+
+| Situation                | Treatment                                               |
+|--------------------------|---------------------------------------------------------|
+| Under 200 ms expected    | Show nothing, the result arrives before a spinner would |
+| A known result shape     | A skeleton matching the final layout                    |
+| An unknown result shape  | A spinner with a label                                  |
+| A long or countable task | A progress indicator with a count                       |
+| No result                | An empty state explaining what to do next               |
+| A failure                | An inline message or a modal with a retry action        |
+
+Reserve the final dimensions of the region before the data arrives, so the content does not shift when it does.
+
+A skeleton whose size differs from the real content is worse than no skeleton at all.
+
+### Optimistic Updates
+
+Apply an update to the interface immediately when the operation is local, reversible, and almost always succeeds.
+
+Toggling a flag, reordering a list, and marking an item are good candidates.
+
+Keep the previous value and restore it if the operation fails, then explain the failure.
+
+Do not apply an optimistic update to a destructive or irreversible action.
 
 ## Application Shell
 
@@ -855,9 +1529,168 @@ Never write a literal `z-index` value in a rule.
 
 ### Reusable Modal
 
-Declare the modal once in the entry document and reuse it for every confirmation.
+Declare the modal once in the entry document and reuse it for every message.
 
 Do not create a second modal for a second message.
+
+The Messages and Dialogs section defines the two admissible mechanisms and the behavior both must implement.
+
+### Drawer
+
+A drawer edits one record while its list stays visible behind.
+
+Build it as a head, a body, and a foot, and let only the body scroll.
+
+The fixed head and foot keep the title and the save action visible however long the record is.
+
+A drawer follows the same required behavior as a modal, except that it does not have to trap focus when the list behind it stays interactive.
+
+### Dropdown
+
+Close a dropdown from a listener on the document and stop the propagation of clicks inside the panel.
+
+Register the document listener on the next tick, otherwise the click that opened the panel closes it immediately.
+
+## Messages and Dialogs
+
+Every message the application shows to the user is a component the application owns and styles.
+
+This section is a hard rule, not a recommendation.
+
+### Native Dialogs Are Inadmissible
+
+Never call `window.alert`, `window.confirm`, or `window.prompt` in application code.
+
+They block the main thread, so the application stops responding while one is open.
+
+They cannot be styled, so they break the visual identity of the application.
+
+They cannot be translated, so a multilingual application shows a browser-language button label next to its own text.
+
+They are suppressed in some embedded and cross-origin contexts, so the message silently never appears.
+
+They cannot carry a third action, a form field with validation, or a scrolling body.
+
+This rule has no exception for a prototype, a demo, an internal tool, or a debugging path.
+
+Use `console.log`, `console.warn`, and `console.error` for developer diagnostics, and a component for anything the user is meant to read.
+
+### Message Taxonomy
+
+Pick the component from the intent of the message, not from convenience.
+
+| Intent                                             | Component | Blocking | Dismissed By                       |
+|----------------------------------------------------|-----------|----------|------------------------------------|
+| Report a completed action                          | Toast     | No       | Timeout                            |
+| Report a recoverable problem                       | Inline    | No       | The user fixing the field          |
+| State something the user must read                 | Modal     | Yes      | An acknowledge button, Escape      |
+| Ask a yes or no question                           | Modal     | Yes      | A confirm or cancel button, Escape |
+| Ask for a value                                    | Modal     | Yes      | A submit or cancel button, Escape  |
+| Report a failure that changes what the user can do | Modal     | Yes      | An acknowledge button, Escape      |
+
+A field-level validation error belongs beside the field, not in a modal.
+
+A modal that only says "Saved" is a toast written in the wrong component.
+
+### One Message API
+
+Expose one small API and route every message through it.
+
+The three functions mirror the three native calls they replace, and each returns a promise so the calling code reads sequentially.
+
+```javascript
+const Dialogs = {
+  alert(title, message) { /* resolves to undefined */ },
+  confirm(title, message) { /* resolves to true or false */ },
+  prompt(title, label, initial) { /* resolves to a string or null */ },
+  toast(message) { /* returns nothing */ },
+};
+```
+
+```javascript
+async function deleteRecord(id) {
+  const ok = await Dialogs.confirm('Delete record', 'This cannot be undone.');
+  if (!ok) return;
+  Store.remove(id);
+  Dialogs.toast('Record deleted');
+}
+```
+
+A single API means the mechanism can change without touching a single caller.
+
+### Mechanism
+
+Two mechanisms are admissible, and a project picks one and applies it to every dialog.
+
+| Mechanism       | Element                 | Suits                                                                                           |
+|-----------------|-------------------------|-------------------------------------------------------------------------------------------------|
+| Native dialog   | `<dialog>`              | A new project with no legacy dialog code                                                        |
+| Overlay element | A `div` with an overlay | A project that already uses it, or one needing full control over the backdrop and the animation |
+
+Neither mechanism is preferred by this standard.
+
+Record the choice by using it consistently, because a mixed codebase is the failure this rule exists to prevent.
+
+### Native Dialog Mechanism
+
+`<dialog>` with `showModal()` provides the top layer, the `::backdrop` pseudo-element, the inert background, the initial focus, the focus trap, and Escape dismissal.
+
+That removes most of the code the overlay mechanism has to write by hand.
+
+```html
+<dialog id="app-dialog" aria-labelledby="app-dialog-title">
+  <h2 id="app-dialog-title"></h2>
+  <div class="dialog-body"></div>
+  <form method="dialog" class="dialog-actions">
+    <button value="cancel" class="btn btn--secondary"></button>
+    <button value="confirm" class="btn btn--primary" autofocus></button>
+  </form>
+</dialog>
+```
+
+```css
+#app-dialog {
+  max-width: min(90vw, 32rem);
+  max-height: 90vh;
+  padding: var(--space-lg);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-lg);
+  overscroll-behavior: contain;
+}
+
+#app-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
+
+#app-dialog .dialog-body { overflow-y: auto; }
+```
+
+```javascript
+function confirmDialog(title, message) {
+  const dialog = document.getElementById('app-dialog');
+  dialog.querySelector('#app-dialog-title').textContent = title;
+  dialog.querySelector('.dialog-body').textContent = message;
+  dialog.showModal();
+  return new Promise(resolve => {
+    dialog.addEventListener('close', () => resolve(dialog.returnValue === 'confirm'), { once: true });
+  });
+}
+```
+
+A button inside `<form method="dialog">` closes the dialog and sets `returnValue` to its `value`, so no click handler is needed for the actions.
+
+Escape fires `close` with an empty `returnValue`, which the code above correctly reads as a cancel.
+
+Two behaviors are still the application's responsibility.
+
+- **Scroll lock**, because the page behind the dialog can still scroll. Set `overscroll-behavior: contain` on the dialog and add a body scroll lock class.
+- **Backdrop dismissal**, because light dismiss is not universally available. Add a click listener that compares the event target to the dialog element itself.
+
+Use `addEventListener` with `{ once: true }` so the listener cannot accumulate across repeated opens.
+
+### Overlay Element Mechanism
+
+The overlay mechanism builds the same behavior from an ordinary element.
 
 Center the dialog with flexbox on the overlay rather than with offsets and transforms.
 
@@ -876,7 +1709,7 @@ Center the dialog with flexbox on the overlay rather than with offsets and trans
   display: flex;
   flex-direction: column;
   width: 90%;
-  max-width: 50%;
+  max-width: min(90vw, 32rem);
   max-height: 90vh;
   padding: var(--space-lg);
   background: var(--bg-card);
@@ -885,37 +1718,58 @@ Center the dialog with flexbox on the overlay rather than with offsets and trans
 }
 
 .modal-body { overflow-y: auto; }
-```
 
-The `max-height` and the scrolling body are mandatory.
-
-Without them a long message grows the dialog past the viewport and the action buttons become unreachable.
-
-### Modal Behavior
-
-One open function owns the whole lifecycle and returns the page to its previous state on close.
-
-Assign the message with `textContent`, because a modal usually reports a value the user just typed.
-
-Lock the page behind the overlay so a scroll gesture does not move the content underneath.
-
-```css
 body.scroll-locked { overflow: hidden; }
 ```
 
+Mark the overlay with `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` pointing at the title, because none of that is implied by a `div`.
+
+One open function owns the whole lifecycle and returns the page to its previous state on close.
+
+The function must implement every behavior the native mechanism provides for free.
+
+- Store `document.activeElement` on open and restore focus to it on close.
+- Move focus into the dialog on open, to the primary action or the first focusable element.
+- Keep `Tab` and `Shift+Tab` inside the dialog while it is open.
+- Close on Escape, and detach the Escape listener in `close`.
+- Close on a backdrop click, comparing the event target to the overlay itself.
+- Add and remove the body scroll lock class.
+- Mark the content behind the overlay `inert` so a screen reader does not read it.
+
 Detach every listener in `close`, otherwise each open call leaves another Escape handler on the document.
 
-Compare `e.target` to the overlay itself, otherwise a click inside the dialog closes it.
+An `AbortController` removes every listener in one call and makes that impossible to forget.
 
-Trap focus inside an open modal and restore focus to the trigger on close.
+```javascript
+const controller = new AbortController();
+const { signal } = controller;
+document.addEventListener('keydown', onEscape, { signal });
+overlay.addEventListener('click', onBackdrop, { signal });
+// close():
+controller.abort();
+```
 
-### Drawer
+### Required Behavior
 
-A drawer edits one record while its list stays visible behind.
+Both mechanisms must satisfy every row of this table.
 
-Build it as a head, a body, and a foot, and let only the body scroll.
+| Behavior         | Requirement                                                        |
+|------------------|--------------------------------------------------------------------|
+| Accessible name  | `aria-labelledby` points at the visible title                      |
+| Initial focus    | Focus moves into the dialog on open                                |
+| Focus trap       | `Tab` never reaches the content behind the dialog                  |
+| Focus restore    | Focus returns to the triggering control on close                   |
+| Escape           | Closes the dialog and resolves as a cancel                         |
+| Backdrop click   | Closes the dialog, a click inside it does not                      |
+| Scroll lock      | The page behind the dialog does not scroll                         |
+| Maximum height   | `max-height: 90vh` with a scrolling body                           |
+| Text assignment  | The message is assigned with `textContent`, never with `innerHTML` |
+| Single instance  | One declared dialog is reused, never cloned per message            |
+| Listener cleanup | Every listener added on open is removed on close                   |
 
-The fixed head and foot keep the title and the save action visible however long the record is.
+The maximum height and the scrolling body are mandatory.
+
+Without them a long message grows the dialog past the viewport and the action buttons become unreachable.
 
 ### Toast
 
@@ -923,13 +1777,19 @@ A toast reports a completed action and never asks a question.
 
 Clear the previous timer, otherwise a second toast is hidden early by the first timeout.
 
-Keep `pointer-events: none` so the hidden toast never intercepts a click.
+Keep `pointer-events: none` while hidden so the toast never intercepts a click.
 
-### Dropdown
+Give the toast container `role="status"` and `aria-live="polite"` so the message is announced without stealing focus.
 
-Close a dropdown from a listener on the document and stop the propagation of clicks inside the panel.
+Never use a toast for an error the user must act on, because a message that disappears cannot be acted on.
 
-Register the document listener on the next tick, otherwise the click that opened the panel closes it immediately.
+### Inline Messages
+
+An inline message sits next to the control it describes.
+
+Reserve its height so the layout does not jump when the message appears.
+
+Associate it with its control through `aria-describedby` and mark the control `aria-invalid="true"`.
 
 ## Forms
 
@@ -1030,6 +1890,8 @@ Raise the minimum height on a coarse pointer rather than at a width breakpoint, 
   }
 }
 ```
+
+The absolute floor is 24 by 24 CSS pixels for every pointer type, as stated in the Input Modality section.
 
 ### Custom Choice Controls
 
@@ -1218,6 +2080,14 @@ Accessibility is part of the definition of done, not a later pass.
 - Keep a visible focus outline, never set `outline: none` without a replacement.
 - Announce the current screen by moving focus to its heading after a screen switch.
 - Verify text contrast against the background for every token pair.
+- Keep every interactive target at 24 by 24 CSS pixels or larger.
+- Keep the focused control fully visible, never covered by a sticky header or a toolbar.
+- Announce an asynchronous result through a live region rather than only through a visual change.
+- Respect the reduced motion preference.
+
+Build a non-native widget from the matching WAI-ARIA Authoring Practices pattern rather than from an invented set of attributes.
+
+Copy the roles, the states, and the keyboard interactions from the pattern in full, because a partial implementation is often worse than a plain `<div>`.
 
 Do not hide the system cursor unless the application is a full-screen visual experience.
 
@@ -1414,6 +2284,86 @@ The tab state is part of the application state and is persisted.
 
 Switching tabs does not stop playback, only navigating away from the detail screen does.
 
+## Security
+
+A vanilla application has a small attack surface, and that is exactly why the few remaining risks must be handled explicitly.
+
+### Injection
+
+The only injection vector in a typical vanilla application is an untrusted value reaching `innerHTML`.
+
+Untrusted means anything the application did not author, which includes user input, imported JSON, URL parameters, and stored state from a previous session.
+
+Escape every such value, and prefer `textContent` whenever markup is not required.
+
+Never build an event handler attribute from a value.
+
+Never pass a value to `eval`, to `new Function`, or to `setTimeout` as a string.
+
+Validate an imported file before applying it, and reject a payload whose shape or version does not match.
+
+### Content Security Policy
+
+A Content Security Policy is the second line of defence, and its cost depends entirely on the source layout.
+
+| Layout      | Inline Script | Inline Style | Policy Approach                            |
+|-------------|---------------|--------------|--------------------------------------------|
+| Modular     | None          | None         | `script-src 'self'` and `style-src 'self'` |
+| Minimal     | None          | None         | `script-src 'self'` and `style-src 'self'` |
+| Single File | Required      | Required     | Source hashes for each inline block        |
+
+A split layout can adopt a strict policy at no cost, so it should.
+
+```http
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; object-src 'none'
+```
+
+The single-file layout cannot use `'self'` for its own script and style, and it cannot use a nonce either, because a static file cannot produce a fresh nonce per response.
+
+The correct mechanism is a source hash, one per inline block, computed over the exact bytes between the tags.
+
+```http
+Content-Security-Policy: default-src 'self'; script-src 'sha256-BASE64HASH'; style-src 'sha256-BASE64HASH'; img-src 'self' data:; base-uri 'none'; object-src 'none'
+```
+
+A hash changes whenever the block changes, including a whitespace change, so the policy is regenerated whenever the file is published.
+
+Never add `'unsafe-inline'` to escape this problem, because it disables the protection the policy exists to provide.
+
+Never allow the `data:` scheme in `script-src` or `style-src`, and allow it in `img-src` only because the single-file layout needs it for inline images.
+
+A file opened over `file://` receives no policy at all, which is a reason to keep an offline single-file tool free of any untrusted input rather than a reason to ignore the topic.
+
+### Third-Party Code
+
+Every third-party script is code the project did not review and cannot patch.
+
+Pin an exact version, never a range and never a `latest` tag.
+
+Add a Subresource Integrity hash to every remote script and stylesheet.
+
+```html
+<script src="https://cdn.example.com/lib@1.2.3/lib.min.js"
+        integrity="sha384-BASE64HASH"
+        crossorigin="anonymous"></script>
+```
+
+Vendor the file into the repository when the application must work offline, and record the origin and version beside it.
+
+Prefer a newly published version that has been available for at least a week, because a compromised package is often withdrawn within days.
+
+### Data Handling
+
+Never store a secret, a token, or a password in `localStorage`, because any script on the page can read it.
+
+Treat `localStorage` as public, unsynchronized, and erasable at any moment.
+
+Never log a user-entered value, and never send one anywhere the user did not ask for.
+
+Add `rel="noopener noreferrer"` to every link that opens in a new tab.
+
+Set `referrerpolicy="no-referrer"` on an outbound request that does not need the referrer.
+
 ## Development Server
 
 Every project in the modular or minimal layout ships a static server with zero npm dependencies.
@@ -1514,14 +2464,20 @@ Deployment is a copy of the source directory to any static host.
 
 Verify every change before considering it complete.
 
-| Check             | Command                           | Applies To           |
-|-------------------|-----------------------------------|----------------------|
-| JavaScript syntax | `node --check src/js/app.js`      | Every changed script |
-| Server start      | `npm start`                       | Every change         |
-| Console clean     | Browser developer tools           | Every change         |
-| Manual checklist  | Project checklist                 | Every change         |
-| Responsive layout | Device toolbar at each breakpoint | Every layout change  |
-| Keyboard path     | `Tab`, `Enter`, `Escape`          | Every new control    |
+| Check             | Command Or Method                        | Applies To            |
+|-------------------|------------------------------------------|-----------------------|
+| JavaScript syntax | `node --check js/app.js`                 | Every changed script  |
+| Server start      | `npm start`                              | Every change          |
+| Console clean     | Browser developer tools                  | Every change          |
+| Manual checklist  | Project checklist                        | Every change          |
+| Responsive layout | Device toolbar at each breakpoint        | Every layout change   |
+| Narrow width      | The narrowest supported width            | Every layout change   |
+| Landscape         | A short landscape viewport               | Every layout change   |
+| Keyboard path     | `Tab`, `Enter`, `Space`, `Escape`        | Every new control     |
+| Focus visibility  | Tab through the changed region           | Every new control     |
+| Interaction delay | Performance panel while using the change | Every new slow action |
+
+The single-file layout has no server and no manifest, so verify it by opening the file directly and by copying the script block into a scratch file for `node --check`.
 
 Maintain the verification checklist as a numbered list of manual steps that exercise the main flows.
 
@@ -1529,7 +2485,113 @@ Automated tests are optional.
 
 When they are added, extract the pure logic into a file with no DOM access and test that file with the Node test runner.
 
-## Formatting
+The Definition of Done section lists what the result of these checks must be.
+
+## Readability
+
+The source is read far more often than it is written, and an agent rewrites it far more often than a human does.
+
+Both facts point the same way: the code must be immediately legible, consistently formatted, and divided along lines a reader can predict.
+
+This applies identically in every layout, and it applies most strictly in the single-file layout, where nothing else provides structure.
+
+### Structural Simplicity
+
+Choose the least complex structure that solves the problem.
+
+Complexity is a cost paid on every future read, so it must be earned by a real requirement.
+
+| Prefer                    | Over                                    |
+|---------------------------|-----------------------------------------|
+| A plain object            | A class with one instance               |
+| A function                | A class with one method                 |
+| An array of descriptors   | A chain of `if` branches                |
+| A `switch` on a known set | A lookup object built at runtime        |
+| Direct DOM calls          | A general-purpose rendering abstraction |
+| One clear duplication     | An abstraction with three parameters    |
+| A named local variable    | A long inline expression                |
+
+Do not build an abstraction for a second case, build it for a third.
+
+Do not add a layer whose only purpose is to make a future change easier, because the future change is usually a different one.
+
+Do not add a configuration option that no caller passes.
+
+### Function Size and Shape
+
+A function fits on one screen, which is roughly forty lines.
+
+A function does one thing, and its name says which thing without an "and" in it.
+
+Return early to keep the main path at the lowest indentation level.
+
+```javascript
+function selectAnswer(questionId, optionIndex) {
+  if (this.state.submitted) return;
+  const question = this.findQuestion(questionId);
+  if (!question) return;
+  this.state.answers[questionId] = optionIndex;
+  this.saveState();
+  this.renderQuestion();
+}
+```
+
+Keep nesting at three levels or fewer inside a function.
+
+Extract a named helper when a block needs a comment to explain what it is doing, because the helper name is that comment.
+
+Keep the parameter count at four or fewer, and pass an options object beyond that.
+
+### Consistent Division
+
+Divide every file, and every region of a single file, in the same order.
+
+A reader who has read one file then knows the shape of every other file.
+
+| Position | Content                                     |
+|----------|---------------------------------------------|
+| 1        | The `'use strict'` directive or the imports |
+| 2        | Module constants                            |
+| 3        | State                                       |
+| 4        | Pure helpers with no DOM access             |
+| 5        | Persistence                                 |
+| 6        | Rendering                                   |
+| 7        | Event handlers                              |
+| 8        | Bootstrap                                   |
+
+Group related functions together and separate groups with one blank line and a section banner.
+
+Keep a function and the function it calls near each other, so following a call does not require a search.
+
+### Vertical Rhythm
+
+Use one blank line between functions and between logical groups inside a function.
+
+Do not stack blank lines.
+
+Do not separate a declaration from its first use with unrelated code.
+
+Declare a variable at the point where it is first needed, not at the top of the function.
+
+### Naming
+
+A name describes the role, not the type and not the implementation.
+
+| Kind                | Pattern                        | Example                       |
+|---------------------|--------------------------------|-------------------------------|
+| A boolean           | A predicate reading as a claim | `isVisible`, `hasAnswer`      |
+| A function          | A verb phrase                  | `renderQuestion`, `loadState` |
+| A collection        | A plural noun                  | `questions`, `flagged`        |
+| An event handler    | `on` plus the event            | `onLocaleChange`, `onSubmit`  |
+| A boolean parameter | Avoid it, take an enum instead | `mode: 'replace'`             |
+
+Do not abbreviate a name to save characters.
+
+Do not encode the type in the name, such as `strTitle` or `arrItems`.
+
+Do not reuse one name for two meanings in one file.
+
+### Formatting
 
 Use two-space indentation in HTML, CSS, and JavaScript.
 
@@ -1543,7 +2605,28 @@ Use `const` by default and `let` only when the binding is reassigned.
 
 Never use `var`.
 
-Keep a function short enough to read without scrolling.
+Keep a line under roughly 120 characters.
+
+Break a long chain or a long argument list across lines rather than letting the line wrap in the editor.
+
+Use a trailing comma in a multi-line literal, so adding an entry touches one line.
+
+Use one declaration per line in CSS, and keep the properties of a rule in a stable order.
+
+Never ship minified, generated, or machine-formatted source as hand-maintained code.
+
+### What Not To Leave Behind
+
+- Commented-out code.
+- A `console.log` added for debugging.
+- An unused variable, parameter, function, or CSS rule.
+- A `TODO` with no owner and no issue reference.
+- A duplicated block that was copied instead of extracted.
+- A magic number that is used more than once.
+
+An agent removes its own scaffolding before reporting a task complete.
+
+An agent does not remove someone else's scaffolding as an unrequested side effect.
 
 ## Comments
 
@@ -1574,6 +2657,155 @@ It may be a single file or a set of files, and the file names are chosen per pro
 
 Record the script load order in the project specification because that order is a real dependency contract.
 
+## Definition of Done
+
+A task is complete when every applicable row passes.
+
+An agent runs this list before reporting, and states which rows were checked and which do not apply.
+
+### Correctness
+
+- The changed script passes a syntax check.
+- The browser console is clean, with no error and no warning the change introduced.
+- The main flows still work, verified against the project checklist.
+- Restored state from a previous session still loads.
+
+### Structure
+
+- The change respects the project's source layout and did not migrate it.
+- The change respects the project's module system, organization pattern, and quote style.
+- No new global symbol was introduced outside the established pattern.
+- No file exceeds the scaling threshold for its layout without a stated reason.
+
+### Interface
+
+- The layout is correct at every project breakpoint, and at the narrowest supported width.
+- The layout is correct in landscape on a short viewport.
+- There is no horizontal page scroll at any tested size.
+- No content shifts after the first paint.
+
+### Interaction
+
+- Every new message goes through the message API, and no native dialog was added.
+- Every interactive element is reachable by `Tab` and activatable by `Enter` or `Space`.
+- `Escape` closes every dialog and dropdown the change touched.
+- Focus is visible on every control the change touched.
+- Every icon-only control has an accessible name.
+- Every long-running action acknowledges the input within the interaction budget.
+
+### Hygiene
+
+- Every value reaching `innerHTML` is escaped.
+- No debugging output, commented-out code, or unused declaration remains.
+- Comments explain reasons, not actions.
+- Documentation was updated when the change altered structure, load order, or a project rule.
+
+## Comparison With Market Practice
+
+This section records why the rules above are what they are.
+
+It compares the standard against the authoritative specifications, against widely cited reference projects, and against the way applications of this kind are actually built.
+
+An agent can follow the standard without reading this section.
+
+A reviewer who wants to challenge the standard should start here.
+
+### Where This Standard Agrees With The Field
+
+The following positions are settled, and this standard adopts them without qualification.
+
+| Position                                                 | Basis                                                 |
+|----------------------------------------------------------|-------------------------------------------------------|
+| A modal must trap focus, restore it, and close on Escape | The WAI-ARIA Authoring Practices modal dialog pattern |
+| An interactive target is at least 24 by 24 pixels        | WCAG 2.2 success criterion 2.5.8                      |
+| Focus must remain visible and unobscured                 | WCAG 2.2 success criteria 2.4.11 and 2.4.13           |
+| An interaction should complete within 200 ms             | The Core Web Vitals interaction threshold             |
+| A JavaScript task longer than 50 ms is a long task       | The Chrome long task definition                       |
+| Content must not shift after paint                       | The Core Web Vitals layout shift threshold            |
+| A custom radio group needs roles and arrow keys          | The WAI-ARIA Authoring Practices radio group pattern  |
+| Design tokens belong in custom properties                | Uniform practice across every current design system   |
+| Inline scripts require hashes under a strict policy      | The Content Security Policy specification             |
+
+### Where This Standard Is Stricter
+
+Three rules in this document are deliberately harder than common practice.
+
+**No native dialogs, with no exception.** Most style guides discourage `alert` and `confirm` and then permit them in a prototype. That exception is the reason they survive into production, because a prototype is where most production code comes from. This standard removes the exception.
+
+**Escape everything, including trusted data.** A common position is that generated or internal data does not need escaping. The problem is that trust is a property of the moment, and a data file that is generated today is hand-edited or imported tomorrow. A single unconditional rule is cheaper to enforce and cheaper to verify than a case-by-case judgement.
+
+**No layout migration as a side effect.** Tooling and agents both tend to "improve" structure while doing something else. This standard treats the source layout as a contract, because an unrequested reorganisation destroys review history and costs more than it saves.
+
+### Where This Standard Is Deliberately Looser
+
+**No mandated linter or formatter.** The field is split between StandardJS, an ESLint configuration, and Prettier, and the Google JavaScript style guide is no longer maintained. A no-build project should not acquire a toolchain to satisfy a preference, so this standard specifies the formatting outcome and leaves the tool to the project.
+
+**No mandated modal mechanism.** The native `<dialog>` element provides the top layer, the inert background, the focus trap, and Escape dismissal, which makes it the better starting point for new code. It is not made mandatory here, because a working overlay implementation that satisfies the required behavior table has no defect to fix, and rewriting it would be change for its own sake. What is mandatory is that a project uses one mechanism and not both.
+
+**No mandated state pattern.** A proxy-based store, a namespace object, and a set of collaborating classes are all defensible at this scale. The rule that matters is that state has one home and the DOM is a projection of it, and that rule is enforced regardless of pattern.
+
+### What The Reference Projects Show
+
+The reference implementations of this kind of application converge on a small number of habits.
+
+| Reference Kind                              | What It Demonstrates                                                            |
+|---------------------------------------------|---------------------------------------------------------------------------------|
+| The canonical vanilla to-do implementations | A complete application in a few hundred lines with no build step and no library |
+| Attribute-driven interactivity libraries    | That most dynamic behavior is markup-level, not application-level               |
+| Minimal drop-in reactivity libraries        | That a single script tag is an acceptable dependency boundary                   |
+| Long-lived single-file wiki applications    | That a one-file application can be maintained for many years at real scale      |
+| Single-file developer tools                 | That a directory of assets is disproportionate for a small focused utility      |
+| Single-file bundler output                  | That the format has mechanical limits, mostly around asset size and caching     |
+
+The most useful lesson from the single-file projects is that they succeed on discipline, not on size.
+
+They keep strict region ordering, heavy banner commenting, and one clear entry point, which is exactly what the Single File Applications section requires.
+
+### What Changed In The Platform
+
+The argument for a framework was once that the platform could not do the job.
+
+Most of the specific gaps that argument rested on have closed.
+
+| Former Gap                     | Closed By                                  |
+|--------------------------------|--------------------------------------------|
+| Component encapsulation        | Custom elements and shadow DOM             |
+| Scoped and themed styling      | Custom properties, cascade layers, nesting |
+| Component-level responsiveness | Container queries                          |
+| Parent and sibling selection   | `:has()`                                   |
+| Accessible modal behavior      | `<dialog>` and `showModal()`               |
+| Dependency resolution          | ES modules and import maps                 |
+| Code splitting                 | Dynamic `import()`                         |
+| Animated view changes          | The View Transitions API                   |
+| Routing                        | The History API and the Navigation API     |
+
+What the platform still does not provide is a declarative binding between state and markup.
+
+That single remaining gap is why this standard specifies rendering, escaping, and full re-render behavior in as much detail as it does.
+
+### Observations From Applications Of This Kind
+
+Reviewing working applications built to this pattern, the same defects recur, and the sections of this standard exist to prevent them.
+
+| Recurring Defect                                           | Section That Prevents It |
+|------------------------------------------------------------|--------------------------|
+| A modal with no Escape key, scroll lock, or focus trap     | Messages and Dialogs     |
+| A modal with no maximum height, so its buttons scroll away | Messages and Dialogs     |
+| A `z-index` literal that starts an escalation war          | Layer Order              |
+| `transition: all`, which animates unrelated changes        | Motion                   |
+| A missing reduced-motion block                             | Motion                   |
+| A reset that omits `font: inherit` on form controls        | Reset                    |
+| Trusted data interpolated without escaping                 | Escaping                 |
+| An unversioned storage key that cannot evolve              | Persistence              |
+| A clickable `div` with no role and no keyboard path        | Custom Choice Controls   |
+| Flicker during a full re-render on a locale change         | Full Re-renders          |
+| Emoji used as icons, rendering differently per system      | Locale Indicators        |
+| Comments that restate the code                             | Comments                 |
+
+None of these are exotic.
+
+They are the predictable cost of building without a framework, which is the cost this standard is written to pay down once rather than repeatedly.
+
 ## General Principles
 
 **Single Responsibility.** One file does one thing and its name says which thing.
@@ -1593,3 +2825,17 @@ Record the script load order in the project specification because that order is 
 **Design With Intent.** Commit to one aesthetic direction and express it through tokens, typography, and motion rather than through scattered one-off values.
 
 **Render Consistently.** Prefer vector graphics over emoji for icons that must look the same in every browser, and suppress transitions during a full re-render so the user never sees an intermediate layout state.
+
+**Prefer The Platform.** Reach for a browser feature before writing the code it would replace.
+
+**Simplest Structure That Works.** Complexity must be earned by a requirement, not anticipated for one.
+
+**Readable In Any Layout.** A single file is divided as rigorously as a directory tree, because the reader has nothing else to navigate by.
+
+**Answer Immediately.** Acknowledge input in the current frame, and do the slow part in the next one.
+
+**Fit Every Screen.** Width, height, orientation, and pointer type are all part of the requirement.
+
+**Detect Before Asking.** The repository records the decisions, so read it first and ask only what it cannot answer.
+
+**Change What Was Asked.** A layout, a convention, or a pattern is a contract, and changing one is a proposal, not a side effect.
