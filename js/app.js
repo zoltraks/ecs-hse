@@ -82,9 +82,9 @@ const App = {
         <span class="lang-option-name">${this.escapeHtml(info.name)}</span>
         ${code === I18n.locale ? '<span class="lang-option-check">✓</span>' : ''}
       `;
-      option.onclick = () => { this.selectLanguage(code); this.closeLanguageModal(); };
+      option.onclick = () => { this.selectLanguage(code); requestAnimationFrame(() => this.closeLanguageModal()); };
       option.onkeydown = (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectLanguage(code); this.closeLanguageModal(); }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectLanguage(code); requestAnimationFrame(() => this.closeLanguageModal()); }
       };
       body.appendChild(option);
     }
@@ -125,6 +125,7 @@ const App = {
   },
 
   onLocaleChange() {
+    document.body.classList.add('no-transition');
     this.updateLanguageFlag();
     this.renderUI();
     this.renderHomeStats();
@@ -144,6 +145,7 @@ const App = {
         this.showPracticeSection(this.state.practiceSection);
       }
     }
+    requestAnimationFrame(() => document.body.classList.remove('no-transition'));
   },
 
   renderUI() {

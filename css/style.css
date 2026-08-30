@@ -1243,6 +1243,10 @@ body.scroll-locked {
   overflow: hidden;
 }
 
+body.no-transition * {
+  transition: none !important;
+}
+
 /* ===== Focus ===== */
 .option-item:focus-visible,
 .qnav-item:focus-visible,

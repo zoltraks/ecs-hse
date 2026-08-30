@@ -505,6 +505,48 @@ Clear a container with `container.innerHTML = ''` before a full re-render.
 
 Cache a DOM query when the same element is read more than once.
 
+### Full Re-renders
+
+A full re-render replaces the text or markup of many elements at once.
+
+A language change is the typical trigger, because every visible label and every generated list must update.
+
+A full re-render can cause visible flicker when the browser paints intermediate layout states while the re-render is still in progress.
+
+Two techniques prevent the flicker.
+
+Suppress CSS transitions during the re-render so elements with `transition: all` do not animate property changes caused by the re-render.
+
+Add a class to the `body` before the re-render and remove it in the next `requestAnimationFrame`.
+
+```css
+body.no-transition * {
+  transition: none !important;
+}
+```
+
+```javascript
+onLocaleChange() {
+  document.body.classList.add('no-transition');
+  this.renderUI();
+  this.renderHomeStats();
+  requestAnimationFrame(() => document.body.classList.remove('no-transition'));
+}
+```
+
+Defer visibility changes to the next animation frame when a re-render happens behind a modal or an overlay.
+
+Closing the overlay in the same synchronous block as the re-render forces the browser to paint the new layout and hide the overlay in one frame.
+
+Deferring the close to `requestAnimationFrame` lets the new layout settle behind the overlay before the user sees it.
+
+```javascript
+option.onclick = () => {
+  this.selectLanguage(code);
+  requestAnimationFrame(() => this.closeLanguageModal());
+};
+```
+
 ### Escaping
 
 Every value that reaches `innerHTML` must be escaped.
@@ -1113,6 +1155,50 @@ Bind a single click listener on the container and read `dataset.lang` from the c
 
 Toggle an `active` class on the buttons to indicate the current locale.
 
+### Locale Indicators
+
+A locale indicator shows the active language as a flag or a symbol.
+
+Never use emoji flags such as the regional indicator sequences for GB or PL as a locale indicator.
+
+Flag emoji depend on operating system font support and render inconsistently across browsers.
+
+Embedded browser environments such as IDE previews lack the font fallback that draws flag emoji, and fall back to regional indicator letters.
+
+Use inline SVG flags instead, which render identically in every browser.
+
+Store each flag as an SVG string constant in `i18n.js` alongside the locale entry.
+
+```javascript
+const FLAG_GB = '<svg viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">...</svg>';
+
+window.LANGUAGES = {
+  en: { name: 'English', flag: FLAG_GB },
+};
+```
+
+Inject the SVG with `innerHTML` so the markup renders as an image, not as literal text.
+
+### Consistent Icon Sizing
+
+Flags and other icons have different native aspect ratios.
+
+Displaying them with a fixed height and `width: auto` produces inconsistent widths.
+
+Give every icon in a group the same fixed bounding box and let `preserveAspectRatio` fit each icon inside it.
+
+```css
+.lang-option-flag svg {
+  display: block;
+  width: 26px;
+  height: 18px;
+}
+```
+
+The default `preserveAspectRatio` value (`xMidYMid meet`) fits the entire icon inside the box and centers it.
+
+Use `xMidYMid slice` or a CSS `background-image` with `background-size: cover` when the icon must fill a shaped container such as a circle and crop the overflow.
+
 ### Script Load Order
 
 Load `i18n.js` before any module that calls `I18n.t()`.
@@ -1505,3 +1591,5 @@ Record the script load order in the project specification because that order is 
 **Progressive Enhancement.** The application degrades to a usable state when a lazy library or a storage API is unavailable.
 
 **Design With Intent.** Commit to one aesthetic direction and express it through tokens, typography, and motion rather than through scattered one-off values.
+
+**Render Consistently.** Prefer vector graphics over emoji for icons that must look the same in every browser, and suppress transitions during a full re-render so the user never sees an intermediate layout state.
