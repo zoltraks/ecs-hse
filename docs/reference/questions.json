@@ -61,7 +61,7 @@
     "sectionName": "General Health and Safety at Work",
     "question": "Prohibition Notice means:",
     "options": {
-      "A": "When you finish the work you must not start   again",
+      "A": "When you finish the work you must not start again",
       "B": "The work must stop immediately",
       "C": "Work is to stop for that day only",
       "D": "Work may continue until the end of the day"
@@ -221,7 +221,7 @@
       "D": "Suitable transport to work"
     },
     "rightAnswer": "C",
-    "explanation": "This is a specific requirement of Section of the Health and Safety at Work Act."
+    "explanation": "This is a specific requirement of Section 2 of the Health and Safety at Work Act."
   },
   {
     "id": "1.17",
@@ -263,7 +263,7 @@
       "D": "Unlimited fine and two years’ imprisonment"
     },
     "rightAnswer": "D",
-    "explanation": "A Lower Court can impose a fine of up to £20,000 and/or up to six months imprisonment for certain offences. The potential fine in a Higher Court, however, is unlimited and the term of imprisonment can be up to years."
+    "explanation": "A Lower Court can impose a fine of up to £20,000 and/or up to six months imprisonment for certain offences. The potential fine in a Higher Court, however, is unlimited and the term of imprisonment can be up to two years."
   },
   {
     "id": "1.20",
@@ -319,7 +319,7 @@
       "D": "Only the client is responsible for safety on site"
     },
     "rightAnswer": "B",
-    "explanation": "This is a legal requirement under Section of the Health & Safety at Work Act."
+    "explanation": "This is a legal requirement under Section 7 of the Health & Safety at Work Act."
   },
   {
     "id": "1.24",
@@ -445,7 +445,7 @@
       "D": "Things you must not do"
     },
     "rightAnswer": "A",
-    "explanation": "Blue and   white signs show   a ‘mandatory’ requirement."
+    "explanation": "Blue and white signs show a ‘mandatory’ requirement."
   },
   {
     "id": "1.33",
@@ -554,7 +554,7 @@
       "A": "Don’t report them",
       "B": "Know how to get help quickly",
       "C": "Report any unsafe conditions",
-      "D": "Know where the first-aid kit is kept\n\n \n   MANUAL HANDLING OPERATIONS"
+      "D": "Know where the first-aid kit is kept"
     },
     "rightAnswer": "C",
     "explanation": "Action to improve safety can only be taken if the risk is known about. Employees have a duty of care to other employees."
@@ -932,10 +932,10 @@
       "A": "Keep the heaviest side of the load away from you",
       "B": "Keep the heaviest side of the load on the strongest arm",
       "C": "Keep the heaviest side of the load towards you",
-      "D": "Keep the heaviest side of the load on the weakest arm\n\n \n   REPORTING ACCIDENTS"
+      "D": "Keep the heaviest side of the load on the weakest arm"
     },
     "rightAnswer": "C",
-    "explanation": "There is less risk of injury if a weight’ s centre of gravity is near the torso."
+    "explanation": "There is less risk of injury if a weight’s centre of gravity is near the torso."
   },
   {
     "id": "3.1",
@@ -955,7 +955,7 @@
     "id": "3.2",
     "section": 3,
     "sectionName": "Reporting Accidents",
-    "question": "Why should a serious accident be reported to the enfourcing authority?",
+    "question": "Why should a serious accident be reported to the enforcing authority?",
     "options": {
       "A": "It helps the site find out what caused it",
       "B": "It is legal requirement",
@@ -963,7 +963,7 @@
       "D": "So that the company will be held responsible"
     },
     "rightAnswer": "B",
-    "explanation": "Serious accidents (specified injuries or those resulting in an absence of over days) must be reported to the enforcing authority under the Reporting of Injuries, Diseases and Dangerous Occurrencs Regulations (RIDDOR)."
+    "explanation": "Serious accidents (specified injuries or those resulting in an absence of over 7 days) must be reported to the enforcing authority under the Reporting of Injuries, Diseases and Dangerous Occurrences Regulations (RIDDOR)."
   },
   {
     "id": "3.3",
@@ -988,10 +988,10 @@
       "A": "Accidents where the injured person wishes to make a claim",
       "B": "Fracture other than to fingers, thumbs or toes",
       "C": "All ‘near misses’ even if no one is hurt",
-      "D": "All accidents casing injury"
+      "D": "All accidents causing injury"
     },
     "rightAnswer": "B",
-    "explanation": "This is one of a number of reportable ‘specified injuries’ and must be reported to the enforcing authority under Reporting of injuries. Diseases and Dangerous Occurances Regulations (RIDDDOR)."
+    "explanation": "This is one of a number of reportable ‘specified injuries’ and must be reported to the enforcing authority under Reporting of Injuries, Diseases and Dangerous Occurrences Regulations (RIDDOR)."
   },
   {
     "id": "3.5",
@@ -1117,7 +1117,7 @@
       "D": "The client for the project"
     },
     "rightAnswer": "B",
-    "explanation": "Under RIDDOR. an employer has a legal duty to report certain work-related accidents, but to do this they will need to know that an accident has occurred."
+    "explanation": "Under RIDDOR, an employer has a legal duty to report certain work-related accidents, but to do this they will need to know that an accident has occurred."
   },
   {
     "id": "3.14",
@@ -1145,13 +1145,13 @@
       "D": "The main contractor’s diary"
     },
     "rightAnswer": "B",
-    "explanation": "All accidents should be recorded in the accident book (Bl 510)."
+    "explanation": "All accidents should be recorded in the accident book (BI 510)."
   },
   {
     "id": "3.16",
     "section": 3,
     "sectionName": "Reporting Accidents",
-    "question": "Which one of the following is classified as a reportable occupational disease under RIODOR?",
+    "question": "Which one of the following is classified as a reportable occupational disease under RIDDOR?",
     "options": {
       "A": "Mental disorder",
       "B": "Occupational asthma",
@@ -1159,7 +1159,7 @@
       "D": "Influenza"
     },
     "rightAnswer": "B",
-    "explanation": "Certain occupational diseases likely to have been caused or made worse by work are reportable under RIODOR. This would include occupational asthma where the person’ s work includes significant or regular exposure to a known respiratory sensitizer."
+    "explanation": "Certain occupational diseases likely to have been caused or made worse by work are reportable under RIDDOR. This would include occupational asthma where the person’s work includes significant or regular exposure to a known respiratory sensitizer."
   },
   {
     "id": "3.17",
@@ -1173,7 +1173,7 @@
       "D": "The site safety manager"
     },
     "rightAnswer": "B",
-    "explanation": "This is the procedure for recording accidents internally in the accident book (Bl 510)."
+    "explanation": "This is the procedure for recording accidents internally in the accident book (BI 510)."
   },
   {
     "id": "3.18",
@@ -1193,7 +1193,7 @@
     "id": "3.19",
     "section": 3,
     "sectionName": "Reporting Accidents",
-    "question": "You have suffered an accident at work which has made you incapable of your normal work for over days. Which of the following actions MUST be taken by your employer?",
+    "question": "You have suffered an accident at work which has made you incapable of your normal work for over 7 days. Which of the following actions MUST be taken by your employer?",
     "options": {
       "A": "The emergency services are asked to attend the site",
       "B": "The local hospital is informed",
@@ -1201,7 +1201,7 @@
       "D": "A deduction is made from your wages for days lost"
     },
     "rightAnswer": "C",
-    "explanation": "An over-seven-day injury is one which is not a specified injury but results in the injured person being away from work or unable to do the full range of their normal duties for more than seven days (including any days they wouldn’ t normally be expected to work such as weekends, rest days or holidays) not counting the day of the injury itself."
+    "explanation": "An over-seven-day injury is one which is not a specified injury but results in the injured person being away from work or unable to do the full range of their normal duties for more than seven days (including any days they wouldn’t normally be expected to work such as weekends, rest days or holidays) not counting the day of the injury itself."
   },
   {
     "id": "3.20",
@@ -1243,7 +1243,7 @@
       "D": "When an accident causes injury to an employee while at work"
     },
     "rightAnswer": "D",
-    "explanation": "An accident causing an injury to an employee at work should be recorded in the accident book (Bl 510)."
+    "explanation": "An accident causing an injury to an employee at work should be recorded in the accident book (BI 510)."
   },
   {
     "id": "3.23",
@@ -1257,7 +1257,7 @@
       "D": "Only accidents causing time off work"
     },
     "rightAnswer": "B",
-    "explanation": "An accident causing an injury to an employee at work should be recorded in the accident book (Bl 510)."
+    "explanation": "An accident causing an injury to an employee at work should be recorded in the accident book (BI 510)."
   },
   {
     "id": "3.24",
@@ -1271,7 +1271,7 @@
       "D": "Only if you need to go to hospital"
     },
     "rightAnswer": "C",
-    "explanation": "An accident causing an injury to an employee at work should be recorded in the accident book (Bl 510)."
+    "explanation": "An accident causing an injury to an employee at work should be recorded in the accident book (BI 510)."
   },
   {
     "id": "3.25",
@@ -1285,7 +1285,7 @@
       "D": "The severity of the accident may result in a compensation claim"
     },
     "rightAnswer": "C",
-    "explanation": "An accident causing an injury to an employee at work should be recorded in the accident book (Bl 510)."
+    "explanation": "An accident causing an injury to an employee at work should be recorded in the accident book (BI 510)."
   },
   {
     "id": "3.26",
@@ -1299,7 +1299,7 @@
       "D": "Your phone number"
     },
     "rightAnswer": "C",
-    "explanation": "The information to be entered in an accident book (Bl 510) includes when and where the accident happened, the name, address and occupation of the person who had the accident and details of how the accident happened and the injuries suffered."
+    "explanation": "The information to be entered in an accident book (BI 510) includes when and where the accident happened, the name, address and occupation of the person who had the accident and details of how the accident happened and the injuries suffered."
   },
   {
     "id": "3.27",
@@ -1380,7 +1380,7 @@
       "A": "Tell the inspector what your mates said you should say",
       "B": "Ask your supervisor what you should say to the inspector",
       "C": "Co-operate fully with the inspector and tell them exactly what you saw",
-      "D": "Don’t tell them anything\n\n \n   PERSONAL PROTECTIVE EQUIPMENT AT WORK"
+      "D": "Don’t tell them anything"
     },
     "rightAnswer": "C",
     "explanation": "This is good practice, but it can also be an offence to withhold important information from an inspector."
@@ -1421,7 +1421,7 @@
     "options": {
       "A": "Obtain new equipment when available",
       "B": "Report to your Supervisor without delay",
-      "C": "Reduce the amount of time you sue it",
+      "C": "Reduce the amount of time you use it",
       "D": "Carry on working"
     },
     "rightAnswer": "B",
@@ -1431,7 +1431,7 @@
     "id": "4.4",
     "section": 4,
     "sectionName": "Personal Protective Equipment at Work",
-    "question": "If personal protective equipment (PPE ) is defective, what should you do?",
+    "question": "If personal protective equipment (PPE) is defective, what should you do?",
     "options": {
       "A": "Complain to the Health and Safety Inspector",
       "B": "Get your workmate to mend it if possible",
@@ -1453,7 +1453,7 @@
       "D": "Safety helmet"
     },
     "rightAnswer": "C",
-    "explanation": "Wellingtons do not offer protection against the specific risks associated with the use of a cartridge-operated tool, although safety footwear must always be work when there is a risk of a foot injury."
+    "explanation": "Wellingtons do not offer protection against the specific risks associated with the use of a cartridge-operated tool, although safety footwear must always be worn when there is a risk of a foot injury."
   },
   {
     "id": "4.6",
@@ -1520,10 +1520,10 @@
       "A": "When they may be exposed to a risk to their health and safety which cannot be controlled another way",
       "B": "Twice a year",
       "C": "If the client or main contractor specifies it in the contract",
-      "D": "Every years"
+      "D": "Every year"
     },
     "rightAnswer": "A",
-    "explanation": "As required by regulation of the PPE Regulations."
+    "explanation": "As required by regulation 4 of the PPE Regulations."
   },
   {
     "id": "4.11",
@@ -1548,7 +1548,7 @@
       "A": "It can be adjusted to suit your head size",
       "B": "It is a good visible colour",
       "C": "It has a label with your name on it",
-      "D": "It is less than year old"
+      "D": "It is less than 1 year old"
     },
     "rightAnswer": "A",
     "explanation": "An assessment of the suitability of head protection would include consideration of whether it can be adjusted to suit the individual who is to wear it, that it is compatible with the work to be done and that it is comfortable to wear."
@@ -1772,7 +1772,7 @@
       "A": "The last resort",
       "B": "The first line of defence",
       "C": "The best way to tackle the job",
-      "D": "The only practical measure\n\n \n   HEALTH AND HYGIENE"
+      "D": "The only practical measure"
     },
     "rightAnswer": "A",
     "explanation": "Engineering controls and safe systems of work should always be considered first."
@@ -1907,7 +1907,7 @@
     "id": "5.10",
     "section": 5,
     "sectionName": "Health and Hygiene",
-    "question": "The presence of rats on site creates a risk of catching Weil’ s disease. What is the EASIEST PRACTICAL MEASURE that you can take to discourage the presence of rats?",
+    "question": "The presence of rats on site creates a risk of catching Weil’s disease. What is the EASIEST PRACTICAL MEASURE that you can take to discourage the presence of rats?",
     "options": {
       "A": "Avoid leaving scraps of food lying about",
       "B": "Lay traps containing rat poison",
@@ -1957,7 +1957,7 @@
       "D": "The number of personnel on site"
     },
     "rightAnswer": "D",
-    "explanation": "Guidance on the provision of welfare facilities is given in HSE publication ‘Health and Safety in Construction‘."
+    "explanation": "Guidance on the provision of welfare facilities is given in HSE publication ‘Health and Safety in Construction’."
   },
   {
     "id": "5.14",
@@ -1971,7 +1971,7 @@
       "D": "Drinking water"
     },
     "rightAnswer": "C",
-    "explanation": "Guidance on the provision of welfare facilities as required by COM is given in HSE publication ‘Health and Safety in Construction‘."
+    "explanation": "Guidance on the provision of welfare facilities as required by CDM is given in HSE publication ‘Health and Safety in Construction’."
   },
   {
     "id": "5.15",
@@ -1991,7 +1991,7 @@
     "id": "5.16",
     "section": 5,
     "sectionName": "Health and Hygiene",
-    "question": "What must your employer do if the daily personal noise exposure is at or exceeds db(A)?",
+    "question": "What must your employer do if the daily personal noise exposure is at or exceeds 85 dB(A)?",
     "options": {
       "A": "Provide hearing protection to those employees who ask for it",
       "B": "Issue hearing protection to those exposed and ensure that it is worn",
@@ -1999,7 +1999,7 @@
       "D": "Report it to the Health and Safety Executive"
     },
     "rightAnswer": "B",
-    "explanation": "This is an interim measure under the Control of Noise at Work Regulations 2005 when the daily personal noise exposure is at or exceeds the upper exposure action value of dB(A). Exposure should subsequently be reduced by implementing organizational or technical measures."
+    "explanation": "This is an interim measure under the Control of Noise at Work Regulations 2005 when the daily personal noise exposure is at or exceeds the upper exposure action value of 85 dB(A). Exposure should subsequently be reduced by implementing organizational or technical measures."
   },
   {
     "id": "5.17",
@@ -2010,7 +2010,7 @@
       "A": "85 dB(A) and 90 dB(A)",
       "B": "80 dB(A) and 85 dB(A)",
       "C": "70 dB(A) and 80 dB(A)",
-      "D": "75 dB(A) and 85dB(A)"
+      "D": "75 dB(A) and 85 dB(A)"
     },
     "rightAnswer": "B",
     "explanation": "Daily personal noise exposure is the average noise level experienced by an individual over an 8 hour period."
@@ -2133,7 +2133,7 @@
     "sectionName": "Health and Hygiene",
     "question": "What should you do if the toilets on your site are continually dirty?",
     "options": {
-      "A": "Ignore the problem – its normal on a construction site",
+      "A": "Ignore the problem – it’s normal on a construction site",
       "B": "Make sure you tell someone who can sort it out",
       "C": "Find some cleaning materials and clean it up yourself",
       "D": "Ask in a nearby cafe or pub if you can use their toilets"
@@ -2150,7 +2150,7 @@
       "A": "Dermatitis",
       "B": "Rickets",
       "C": "Acne",
-      "D": "Skin cancer\n\n \n   FIRE AND EMERGENCY"
+      "D": "Skin cancer"
     },
     "rightAnswer": "D",
     "explanation": "Ultraviolet rays in sunlight can cause sunburn and premature ageing of the skin. The most serious effect, however, is an increased chance of developing skin cancer."
@@ -2397,7 +2397,7 @@
     "id": "6.18",
     "section": 6,
     "sectionName": "Fire and Emergency",
-    "question": "Which of the following items should not be in a first   aid box?",
+    "question": "Which of the following items should not be in a first aid box?",
     "options": {
       "A": "Safety pins",
       "B": "Pain killers",
@@ -2503,7 +2503,7 @@
       "D": "Try to start the casualty breathing"
     },
     "rightAnswer": "A",
-    "explanation": "Do not delay in sending for help;   then   try to start the casualty breathing."
+    "explanation": "Do not delay in sending for help; then try to start the casualty breathing."
   },
   {
     "id": "6.26",
@@ -2573,7 +2573,7 @@
       "D": "Just wash it clean"
     },
     "rightAnswer": "B",
-    "explanation": "It is important to obtain first-aid to prevent further harm (e.g. through infection). It should also be recorded in the accident book (Bl 510)."
+    "explanation": "It is important to obtain first-aid to prevent further harm (e.g. through infection). It should also be recorded in the accident book (BI 510)."
   },
   {
     "id": "6.31",
@@ -2615,7 +2615,7 @@
       "D": "Set off the fire alarm"
     },
     "rightAnswer": "B",
-    "explanation": "Fire-stopping is a passive fire protection measure used to seal any openings created in a fire   resistance-rated wall or floor assembly, e.g. to allow pipes or wiring systems to pass through. During fire conditions this will impede the spread of fire and smoke."
+    "explanation": "Fire-stopping is a passive fire protection measure used to seal any openings created in a fire resistance-rated wall or floor assembly, e.g. to allow pipes or wiring systems to pass through. During fire conditions this will impede the spread of fire and smoke."
   },
   {
     "id": "6.34",
@@ -2649,7 +2649,7 @@
     "id": "6.36",
     "section": 6,
     "sectionName": "Fire and Emergency",
-    "question": "lntumescent materials used to provide fire-stopping are designed to:",
+    "question": "Intumescent materials used to provide fire-stopping are designed to:",
     "options": {
       "A": "Expand when subjected to smoke",
       "B": "Shrink when subjected to heat",
@@ -2657,7 +2657,7 @@
       "D": "Prevent noise transmission"
     },
     "rightAnswer": "C",
-    "explanation": "A limited number of fire-resistant materials may be used to provide fire-stopping. These include intumescent products, which are designed to expand and provide fire-stopping when subjected to heat. Examples  include intumescent ‘pillows’."
+    "explanation": "A limited number of fire-resistant materials may be used to provide fire-stopping. These include intumescent products, which are designed to expand and provide fire-stopping when subjected to heat. Examples include intumescent ‘pillows’."
   },
   {
     "id": "6.37",
@@ -2822,7 +2822,7 @@
       "A": "A branch of the British Red Cross for Construction Workers",
       "B": "An online forum for workers to complain about their employers",
       "C": "A confidential reporting system to report on fire and structural safety issues",
-      "D": "A charity that supplies work equipment to apprentices\n\n \n   WORK AT HEIGHT"
+      "D": "A charity that supplies work equipment to apprentices"
     },
     "rightAnswer": "C",
     "explanation": "CROSS-UK is Collaborative Reporting for Safer Structures UK – a confidential reporting system which allows professionals working in the built environment to report on fire or structural safety issues."
@@ -2948,10 +2948,10 @@
       "A": "The foot of the ladder is firmly wedged",
       "B": "It does not move when you climb up it",
       "C": "Any broken rungs are clearly marked",
-      "D": "It is tied and extends at least metre above the platform"
+      "D": "It is tied and extends at least 1 metre above the platform"
     },
     "rightAnswer": "D",
-    "explanation": "Access ladders should extend at least metre above the landing point to provide a safe handhold."
+    "explanation": "Access ladders should extend at least 1 metre above the landing point to provide a safe handhold."
   },
   {
     "id": "7.10",
@@ -2965,7 +2965,7 @@
       "D": "Four metres up for every metre out from the wall"
     },
     "rightAnswer": "D",
-    "explanation": "The correct angle for a ladder is degrees, which can be judged using the angle indicator marked on the stiles of some ladders or using the in rule."
+    "explanation": "The correct angle for a ladder is 75 degrees, which can be judged using the angle indicator marked on the stiles of some ladders or using the 1 in 4 rule."
   },
   {
     "id": "7.11",
@@ -3046,7 +3046,7 @@
       "A": "470mm",
       "B": "910mm",
       "C": "950mm",
-      "D": "metres"
+      "D": "2 metres"
     },
     "rightAnswer": "C",
     "explanation": "This is a requirement of the Work at Height Regulations 2005."
@@ -3055,7 +3055,7 @@
     "id": "7.17",
     "section": 7,
     "sectionName": "Work at Height",
-    "question": "A working platform used for construction work, and from which a person could fall metres or more, must not be used unless it has been inspected (and a report is subsequently prepared) by a competent person:",
+    "question": "A working platform used for construction work, and from which a person could fall 2 metres or more, must not be used unless it has been inspected (and a report is subsequently prepared) by a competent person:",
     "options": {
       "A": "Only after an accident",
       "B": "That day",
@@ -3116,7 +3116,7 @@
       "A": "Make sure that everyone is told where the panels are and to avoid treading on them",
       "B": "Cover the fragile panels with a strong material and secure the covers to stop them being dislodged",
       "C": "Remove the panels carefully to leave an open space.",
-      "D": "It shouldn’ t be necessary to do anything, everyone knows the dangers"
+      "D": "It shouldn’t be necessary to do anything, everyone knows the dangers"
     },
     "rightAnswer": "B",
     "explanation": "Protection from falling through openings and fragile roof lights can be provided by barriers or with covers which can be secured or labelled with a warning."
@@ -3171,7 +3171,7 @@
     "options": {
       "A": "Never – stepladders are banned",
       "B": "At any time",
-      "C": "Provided you can’t fall metres or more",
+      "C": "Provided you can’t fall 2 metres or more",
       "D": "Only when a risk assessment shows that safer alternatives have been ruled out and the task is of low risk and of short duration"
     },
     "rightAnswer": "D",
@@ -3209,7 +3209,7 @@
     "id": "7.28",
     "section": 7,
     "sectionName": "Work at Height",
-    "question": "Prior to moving a mobile tower scaffold, the platform height should reduced to a maximum of:",
+    "question": "Prior to moving a mobile tower scaffold, the platform height should be reduced to a maximum of:",
     "options": {
       "A": "2 metres",
       "B": "3 metres",
@@ -3239,7 +3239,7 @@
     "sectionName": "Work Equipment",
     "question": "Who should operate plant and equipment on site?",
     "options": {
-      "A": "Only people over years of age",
+      "A": "Only people over 18 years of age",
       "B": "Trained and authorised employees only",
       "C": "An employee holding a full driving licence",
       "D": "Any experienced employee"
@@ -3394,9 +3394,9 @@
     "question": "If an electric drill gives off blue smoke from the motor, you should:",
     "options": {
       "A": "Pour water over it",
-      "B": "Use a CO extinguisher",
+      "B": "Use a CO2 extinguisher",
       "C": "Switch it off and report it",
-      "D": "Stop work for minutes"
+      "D": "Stop work for 10 minutes"
     },
     "rightAnswer": "C",
     "explanation": "Defective electric hand tools must not be used. Stop what you are doing and inform your supervisor."
@@ -3447,9 +3447,9 @@
     "id": "8.17",
     "section": 8,
     "sectionName": "Work Equipment",
-    "question": "What is the preferred nominal voltage for local lighting up to kW on construction sites?",
+    "question": "What is the preferred nominal voltage for local lighting up to 2 kW on construction sites?",
     "options": {
-      "A": "volts",
+      "A": "50 volts",
       "B": "110 volts",
       "C": "400 volts",
       "D": "230 volts"
@@ -3461,15 +3461,15 @@
     "id": "8.18",
     "section": 8,
     "sectionName": "Work Equipment",
-    "question": "What is the recommended   maximum   voltage for portable hand lamps when working in confined or damp locations?",
+    "question": "What is the recommended maximum voltage for portable hand lamps when working in confined or damp locations?",
     "options": {
-      "A": "volts",
+      "A": "50 volts",
       "B": "110 volts",
       "C": "230 volts",
       "D": "400 volts"
     },
     "rightAnswer": "A",
-    "explanation": "Where the environment is damp, or restricting and conductive, the magnitude of any electric shock will be higher than under normal conditions. Hand lamps in such locations should therefore be supplied from a SELV (separated extra-low voltage) system, i.e. having a maximum voltage of volts and which is electrically separated from earth."
+    "explanation": "Where the environment is damp, or restricting and conductive, the magnitude of any electric shock will be higher than under normal conditions. Hand lamps in such locations should therefore be supplied from a SELV (separated extra-low voltage) system, i.e. having a maximum voltage of 50 volts and which is electrically separated from earth."
   },
   {
     "id": "8.19",
@@ -3521,7 +3521,7 @@
     "options": {
       "A": "Throw wooden boards over it",
       "B": "Place a rubber protection ramp over it and put up a sign stating ’Ramp Ahead’",
-      "C": "Don’ t do anything to protect the cable",
+      "C": "Don’t do anything to protect the cable",
       "D": "Lay the cable over wooden boards"
     },
     "rightAnswer": "B",
@@ -3550,7 +3550,7 @@
       "A": "Make up a temporary guard yourself",
       "B": "Use the tool but try to work quickly",
       "C": "Not use the tool until a proper guard has been fitted",
-      "D": "Use the tool but work carefully and slowly\n\n \n   SPECIAL SITE HAZARDS"
+      "D": "Use the tool but work carefully and slowly"
     },
     "rightAnswer": "C",
     "explanation": "Visual checks should be carried out before using equipment. Any faults should be reported immediately and rectified before use."
@@ -3601,7 +3601,7 @@
     "id": "9.4",
     "section": 9,
     "sectionName": "Special Site Hazards",
-    "question": "To determine the safety of the atmosphere in an excavation, which of the following is essential.",
+    "question": "To determine the safety of the atmosphere in an excavation, which of the following is essential?",
     "options": {
       "A": "Sniffing the atmosphere after entry",
       "B": "Using a gas detector",
@@ -3774,7 +3774,7 @@
       "A": "If you have a long way to go",
       "B": "If it is raining",
       "C": "If it is designed to carry passengers",
-      "D": "At any time\n\n \n   ELECTROTECHNICAL"
+      "D": "At any time"
     },
     "rightAnswer": "C",
     "explanation": "Don’t hitch rides on vehicles unless safe seating is provided."
@@ -3814,7 +3814,7 @@
     "question": "Test instruments used for working on electrical systems should:",
     "options": {
       "A": "Be yellow in colour",
-      "B": "Be less than years old",
+      "B": "Be less than 10 years old",
       "C": "Have non-insulated test probes",
       "D": "Have insulated test probes"
     },
@@ -3857,11 +3857,11 @@
     "options": {
       "A": "Make sure equipment is not working",
       "B": "Check between line and earth",
-      "C": "Check that the voltage detector is working on a proving device, known live source or in   built test feature",
+      "C": "Check that the voltage detector is working on a proving device, known live source or in-built test feature",
       "D": "Check between line and neutral"
     },
     "rightAnswer": "C",
-    "explanation": "This will prove that that the voltage detector (such as a two-pole voltage detector or proprietary test lamp) is working, i.e. indicating voltage."
+    "explanation": "This will prove that the voltage detector (such as a two-pole voltage detector or proprietary test lamp) is working, i.e. indicating voltage."
   },
   {
     "id": "10.7",
@@ -3931,7 +3931,7 @@
       "D": "Milliamps"
     },
     "rightAnswer": "D",
-    "explanation": "Research has shown that a person is in serious danger of a fatal electric shock at. or above, approximately milliamps."
+    "explanation": "Research has shown that a person is in serious danger of a fatal electric shock at, or above, approximately 50 milliamps."
   },
   {
     "id": "10.12",
@@ -3939,10 +3939,10 @@
     "sectionName": "Electrotechnical",
     "question": "With regard to the effect of electrical current on the human body, one of the following is correct:",
     "options": {
-      "A": "A amp circuit breaker should prevent a person receiving a fatal electric shock",
-      "B": "A amp fuse should prevent a person receiving a fatal electric shock",
-      "C": "A mA Residual Current Device (RCD) should prevent a person receiving a fatal electric shock",
-      "D": "A amp rewireable fuse should prevent a person receiving a fatal electric shock"
+      "A": "A 30 amp circuit breaker should prevent a person receiving a fatal electric shock",
+      "B": "A 30 amp fuse should prevent a person receiving a fatal electric shock",
+      "C": "A 30 mA Residual Current Device (RCD) should prevent a person receiving a fatal electric shock",
+      "D": "A 30 amp rewireable fuse should prevent a person receiving a fatal electric shock"
     },
     "rightAnswer": "C",
     "explanation": "An RCD is a mechanical switching device intended to cause the opening of the contacts when the residual current attains a given value under specified conditions."
@@ -4053,7 +4053,7 @@
     "options": {
       "A": "110 volts",
       "B": "230 volts",
-      "C": "volts",
+      "C": "50 volts",
       "D": "400 volts"
     },
     "rightAnswer": "C",
@@ -4217,7 +4217,7 @@
     "id": "10.32",
     "section": 10,
     "sectionName": "Electrotechnical",
-    "question": "Which of the following work procedures on electrical systems will   always   require a permit-to-work to be issued?",
+    "question": "Which of the following work procedures on electrical systems will always require a permit-to-work to be issued?",
     "options": {
       "A": "Dead working on low-voltage systems",
       "B": "Live working on low-voltage systems",
@@ -4278,7 +4278,7 @@
       "A": "The use of a multi-lock hasp on the isolator with a padlock for each operative",
       "B": "Blowing a horn before the power is switched on again",
       "C": "Giving each operative a volt stick",
-      "D": "Telling everyone what time the power will be switched on again\n\n \n   ENVIRONMENTAL"
+      "D": "Telling everyone what time the power will be switched on again"
     },
     "rightAnswer": "A",
     "explanation": "A multi-lock hasp can be used to prevent operation of the isolator until such time that all persons working on the electrical installation have completed their work and removed their padlocks from the hasp."
@@ -4474,7 +4474,7 @@
       "A": "To save the client money",
       "B": "A lot of energy and raw materials go into making most construction products",
       "C": "It makes less mess on site",
-      "D": "Its’ a European Union Law"
+      "D": "It’s a European Union Law"
     },
     "rightAnswer": "B",
     "explanation": "Although reducing the amount of waste is the first priority, the re-use of materials can also contribute to effective waste management."
