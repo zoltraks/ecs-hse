@@ -82,9 +82,12 @@ const App = {
         <span class="lang-option-name">${this.escapeHtml(info.name)}</span>
         ${code === I18n.locale ? '<span class="lang-option-check">✓</span>' : ''}
       `;
-      option.onclick = () => { this.selectLanguage(code); requestAnimationFrame(() => this.closeLanguageModal()); };
+      // Defer the close by two frames: the first frame paints the re-rendered
+      // layout behind the overlay, so the page the user sees is already final.
+      const closeAfterPaint = () => requestAnimationFrame(() => requestAnimationFrame(() => this.closeLanguageModal()));
+      option.onclick = () => { this.selectLanguage(code); closeAfterPaint(); };
       option.onkeydown = (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectLanguage(code); requestAnimationFrame(() => this.closeLanguageModal()); }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectLanguage(code); closeAfterPaint(); }
       };
       body.appendChild(option);
     }
@@ -162,7 +165,9 @@ const App = {
         this.showPracticeSection(this.state.practiceSection);
       }
     }
-    requestAnimationFrame(() => document.body.classList.remove('no-transition'));
+    // Lift transition suppression only after the new layout has painted,
+    // otherwise the first visible frame still animates the settle.
+    requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.remove('no-transition')));
   },
 
   renderUI() {
