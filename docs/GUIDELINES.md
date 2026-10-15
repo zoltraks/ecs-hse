@@ -16,7 +16,8 @@ The following files contain rules and guidelines for working in this repository:
 - **[`docs/GUIDELINES.md`](GUIDELINES.md)**: This document.
 - **[`docs/STYLE.md`](STYLE.md)**: Markdown text style conventions.
 - **[`docs/TABLE.md`](TABLE.md)**: Markdown table formatting rules.
-- **[`docs/standard/html-vanilla-app-development.md`](standard/html-vanilla-app-development.md)**: HTML vanilla application development standard.
+- **[`docs/standard/html-general-development.md`](standard/html-general-development.md)**: HTML, CSS, and JavaScript engineering standard.
+- **[`docs/standard/html-vanilla-development.md`](standard/html-vanilla-development.md)**: Vanilla application and website development standard.
 
 Files in `docs/reference/` are source material, not rules.
 

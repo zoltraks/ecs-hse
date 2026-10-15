@@ -1,16 +1,19 @@
-# HTML Vanilla Application Development
+# Vanilla HTML Engineering Standards
+
+<!-- Version: 0.1.0 | Date: 2026-10-15 | Runtime: Node.js 18+ -->
 
 ## Purpose
 
-This document defines development standards for single page applications built with plain HTML, CSS, and JavaScript.
+This document defines development standards for browser applications and websites built with plain
+HTML, CSS, and JavaScript.
 
 It applies to applications that run in the browser with no framework, no bundler, and no build step.
 
-The standard covers three application models and four source layouts, and stays general so it can be applied to unrelated projects.
+It builds on the general HTML engineering standard and adds only the rules specific to a
+frameworkless application.
 
-It is written to be executed directly by an AI coding agent such as Devin, Antigravity, or Claude Code, and to be read without effort by a human reviewer.
-
-For CSS architecture, layout systems, and design tokens, maintain a separate CSS development standard and add only the rules specific to a frameworkless application here.
+It is written to be executed directly by an AI coding agent such as Devin, Antigravity,
+or Claude Code, and to be read without effort by a human reviewer.
 
 ## Scope
 
@@ -36,7 +39,8 @@ Read it before reading anything else in this document.
 
 Follow these steps in order at the start of every task that touches application code.
 
-1. Read the project rules file, such as `AGENTS.md`, `README.md`, or `docs/GUIDELINES.md`, because a project rule overrides this standard.
+1. Read the project rules file, such as `AGENTS.md`, `README.md`, or `docs/GUIDELINES.md`,
+   because a project rule overrides this standard.
 2. Determine the application model and the source layout using the Agent Intake Protocol below.
 3. Confirm the model with the user when the repository is ambiguous or empty.
 4. Apply the sections of this standard that match the confirmed model and layout.
@@ -51,7 +55,7 @@ When two rules conflict, apply the first matching source in this list.
 | 1    | An explicit instruction from the user     | "Keep everything in one file"                  |
 | 2    | The project rules file                    | `AGENTS.md`, `docs/GUIDELINES.md`              |
 | 3    | The existing convention in the repository | Double quotes in JavaScript across every file  |
-| 4    | This standard                             | Single quotes in JavaScript                    |
+| 4    | This standard and the general standard    | Single quotes in JavaScript                    |
 | 5    | General web development best practice     | Anything not covered by the four sources above |
 
 Never silently reformat existing code to match this standard.
@@ -60,28 +64,38 @@ Bring a deviation to the user as a proposal, not as an unrequested edit.
 
 ### Non-Negotiable Rules
 
-These rules hold in every model and every layout, including the single-file layout and including a throwaway prototype.
+These rules hold in every model and every layout,
+including the single-file layout and including a throwaway prototype.
 
-- **No native dialogs.** `window.alert`, `window.confirm`, and `window.prompt` are inadmissible in application code.
-- **Responsive.** The application adapts to viewport width, viewport height, and orientation, with no horizontal page scroll at any supported size.
-- **Reactive.** The interface answers user input within the interaction budget and never blocks the main thread while data loads.
+- **No native dialogs.** `window.alert`, `window.confirm`,
+  and `window.prompt` are inadmissible in application code.
+- **Responsive.** The application adapts to viewport width, viewport height, and orientation,
+  with no horizontal page scroll at any supported size.
+- **Reactive.** The interface answers user input within the interaction budget and never blocks the
+  main thread while data loads.
 - **One source of truth.** State lives in JavaScript, the DOM is a projection of it.
 - **Escape everything.** No value reaches `innerHTML` without passing through the escape helper.
 - **Readable source.** The code is formatted, indented, and logically divided, whatever the layout.
-- **Lowest workable complexity.** Choose the smallest structure that solves the problem, and grow only when a real boundary appears.
-- **Keyboard and screen reader parity.** Every action reachable with a pointer is reachable with a keyboard.
+- **Lowest workable complexity.** Choose the smallest structure that solves the problem,
+  and grow only when a real boundary appears.
+- **Keyboard and screen reader parity.** Every action reachable with a pointer is reachable with a
+  keyboard.
 
 A violation of any of these rules is a defect, not a style preference.
 
 ## Agent Intake Protocol
 
-The agent must know two things before it writes a single line: the application model and the source layout.
+The agent must know two things before it writes a single line:
+the application model and the source layout.
 
-These two answers determine the render surface, the file structure, the loop model, and most of the remaining rules.
+These two answers determine the render surface, the file structure, the loop model,
+and most of the remaining rules.
 
 There is no profile file to maintain.
 
-The repository itself is the record of the decision, so the agent derives the answers from the files that exist and asks only when the files cannot answer.
+The repository itself is the record of the decision,
+so the agent derives the answers from the files that exist and asks only when the files cannot
+answer.
 
 ### Detection First
 
@@ -124,23 +138,26 @@ Do not run the full questionnaire against a repository that already answers it.
 
 Use one short message in the following shape.
 
-```text
+```
 Detected: Application model, Minimal layout, classic scripts, namespace object,
 overlay-div modals, double quotes, two-space indent, i18n present, localStorage present.
 Continuing on that basis unless you say otherwise.
 ```
 
-Ask a targeted question only for a decision that detection could not resolve and that the task actually depends on.
+Ask a targeted question only for a decision that detection could not resolve and that the task
+actually depends on.
 
 Never ask about a decision that has no bearing on the requested change.
 
 ### New Project
 
-When the repository is empty, or the task is to start a new application, ask the intake questions before writing code.
+When the repository is empty, or the task is to start a new application,
+ask the intake questions before writing code.
 
 Ask them as one grouped set, not one at a time.
 
-Ask only the questions in the first table, and derive everything else from the answers and from the defaults in this standard.
+Ask only the questions in the first table,
+and derive everything else from the answers and from the defaults in this standard.
 
 | Question            | Options                                               | Default If Declined |
 |---------------------|-------------------------------------------------------|---------------------|
@@ -167,7 +184,8 @@ The answers cascade into the secondary decisions without further questions.
 
 Present the questions as a compact numbered list with the default marked.
 
-State that the user may answer with a single line, such as `Application, Single File, static host, localStorage, one language, offline`.
+State that the user may answer with a single line,
+such as `Application, Single File, static host, localStorage, one language, offline`.
 
 Do not block on an answer that the task does not need.
 
@@ -179,9 +197,11 @@ Do not create a profile file, a decision log, or a settings file to store the an
 
 Create the file structure that the answers imply, and let that structure be the record.
 
-State the resulting structure in `README.md` so a human reader sees the same conclusion the agent will detect later.
+State the resulting structure in `README.md` so a human reader sees the same conclusion the agent
+will detect later.
 
-A future session re-derives the model from the repository using the detection table, which is why the layouts in this standard are deliberately distinguishable from each other.
+A future session re-derives the model from the repository using the detection table,
+which is why the layouts in this standard are deliberately distinguishable from each other.
 
 ## Documentation
 
@@ -204,69 +224,6 @@ Consult these sources rather than guessing at browser behavior.
 - **ECMAScript 2020 or later**: Written directly, never transpiled.
 - **Node.js 18 or later**: Runs the static development server only, never in the browser path.
 
-Add a third-party library only when the alternative is significantly more code.
-
-When a library is added, load it lazily and provide a fallback for the case where the load fails.
-
-## Platform Baseline
-
-A frameworkless application is viable today because the platform absorbed most of what a framework used to provide.
-
-Prefer a platform feature over hand-written code whenever the platform feature exists.
-
-The table below lists the features this standard assumes, grouped by how safe they are to depend on.
-
-**Widely available**, meaning safe to use with no fallback.
-
-| Feature                            | Replaces                                     |
-|------------------------------------|----------------------------------------------|
-| `<dialog>` and `showModal()`       | A hand-written modal with a focus trap       |
-| CSS custom properties              | A preprocessor variable                      |
-| CSS Grid and Flexbox               | A layout framework                           |
-| Container queries and `@container` | A width-observing script                     |
-| `:has()`                           | A parent-marking class toggled by JavaScript |
-| Cascade layers and `@layer`        | Specificity arithmetic                       |
-| CSS nesting                        | A preprocessor                               |
-| `clamp()`, `min()`, `max()`        | A resize handler that computes a font size   |
-| `color-mix()`                      | A hand-maintained tint and shade palette     |
-| ES modules and dynamic `import()`  | A bundler                                    |
-| Import maps                        | A module resolver                            |
-| Custom elements and `<template>`   | A component abstraction                      |
-| `AbortController`                  | Manual listener bookkeeping                  |
-| `ResizeObserver`                   | A polled `resize` handler                    |
-| `IntersectionObserver`             | A polled `scroll` handler                    |
-| `matchMedia`                       | A width comparison in JavaScript             |
-| `structuredClone()`                | `JSON.parse(JSON.stringify(value))`          |
-| `requestAnimationFrame`            | `setInterval` for animation                  |
-
-**Newly available**, meaning usable with a documented fallback.
-
-| Feature                   | Fallback                                            |
-|---------------------------|-----------------------------------------------------|
-| Popover API               | A positioned element with an outside-click listener |
-| View Transitions API      | An immediate swap with no transition                |
-| Navigation API            | The History API                                     |
-| CSS anchor positioning    | A computed position from `getBoundingClientRect`    |
-| Declarative shadow DOM    | An imperative `attachShadow` call                   |
-| `scheduler.yield()`       | `await new Promise(r => setTimeout(r, 0))`          |
-| `requestIdleCallback()`   | `setTimeout` with a short delay                     |
-| `<dialog closedby="any">` | A click listener that compares the event target     |
-
-Guard a newly available feature at the point of use, never through user agent sniffing.
-
-```javascript
-function withViewTransition(update) {
-  if (!document.startViewTransition) return update();
-  return document.startViewTransition(update);
-}
-```
-
-Verify the current status of any feature before depending on it, and record the decision in the project documentation when the choice is not obvious.
-
-Web components are worth their cost when the project needs style encapsulation or a component that must outlive the current file layout.
-
-They are not worth their cost in a single-file tool with a handful of screens.
-
 ## Application Models
 
 A vanilla application falls into one of three models, and the model shapes the rest of the choices.
@@ -285,7 +242,7 @@ Keep the dominant surface as the primary one and treat the other as a companion.
 
 The model is independent of the source layout, so any model can be built in any layout.
 
-## Source Layouts
+## Project Structure
 
 Choose one of four layouts before writing any code.
 
@@ -306,26 +263,33 @@ Grow the layout only when a real boundary appears, such as a second subsystem or
 
 The layout is a project-wide contract.
 
-An agent must not migrate a project from one layout to another as a side effect of an unrelated task.
+An agent must not migrate a project from one layout to another as a side effect of an unrelated
+task.
 
 ### Single File Layout
 
 The whole application lives in one `.html` file.
 
-Markup, style definitions, images, and logic are all inline, and the file has no external asset of any kind.
+Markup, style definitions, images, and logic are all inline,
+and the file has no external asset of any kind.
 
-This layout is selectable for a new project and must be preserved during further development of a project that already uses it.
+This layout is selectable for a new project and must be preserved during further development of a
+project that already uses it.
 
-It is not the recommended default, because a split layout gives better caching, cleaner diffs, per-file linting, and a stricter security posture.
+It is not the recommended default, because a split layout gives better caching, cleaner diffs,
+per-file linting, and a stricter security posture.
 
 Select it when one of the following is true.
 
-- The application must be distributed as one file that is mailed, embedded, or carried on a memory stick.
+- The application must be distributed as one file that is mailed, embedded,
+  or carried on a memory stick.
 - The application must run by double-clicking the file with no server and no network.
-- The application is a small tool, a demo, or an embed where a directory of assets is disproportionate.
+- The application is a small tool, a demo,
+  or an embed where a directory of assets is disproportionate.
 - The user has asked for it.
 
-Convenience alone is not a reason to select it, and neither is an unwillingness to create a second file.
+Convenience alone is not a reason to select it,
+and neither is an unwillingness to create a second file.
 
 ```plaintext
 project-root/
@@ -336,7 +300,8 @@ project-root/
 
 Every other rule in this standard applies to this layout unchanged.
 
-The Single File Applications section describes how the file is divided, how images are embedded, and where its limits are.
+The Single File Applications section describes how the file is divided, how images are embedded,
+and where its limits are.
 
 ### Minimal Layout
 
@@ -366,7 +331,8 @@ Keep the token block at the top of `style.css` and the `@media` rules at the bot
 
 A generated data file stays separate even in this layout, because it is not hand-edited.
 
-A translations directory is the one other admissible split, because one file per locale keeps a diff reviewable.
+A translations directory is the one other admissible split,
+because one file per locale keeps a diff reviewable.
 
 ### Modular Layout
 
@@ -395,7 +361,8 @@ project-root/
 
 ### Modular With `src/` Layout
 
-Use this layout when the project has enough tooling that separating source from tooling is worth an extra directory level.
+Use this layout when the project has enough tooling that separating source from tooling is worth an
+extra directory level.
 
 The distinguishing feature is that the deployable artifact is exactly the `src/` directory.
 
@@ -443,35 +410,40 @@ Never place application source inside `docs/`.
 
 This section applies only to the Single File layout.
 
-It exists because a one-file application is the layout most likely to decay into an unreadable wall of text, and the standard refuses that outcome.
+It exists because a one-file application is the layout most likely to decay into an unreadable wall
+of text, and the standard refuses that outcome.
 
 The absence of files is not an absence of structure.
 
 ### Internal Order
 
-The file has the same logical divisions a split layout would have, expressed as ordered regions rather than as files.
+The file has the same logical divisions a split layout would have,
+expressed as ordered regions rather than as files.
 
 Keep the regions in this order and never interleave them.
 
 | Order | Region        | Location           | Content                                          |
 |-------|---------------|--------------------|--------------------------------------------------|
-| 1     | Document head | `<head>`           | Doctype, charset, viewport, title, meta          |
-| 2     | Style         | `<style>` in head  | Tokens, reset, layout, components, states, media |
-| 3     | Icon sprite   | Start of `<body>`  | One hidden `<svg>` holding every `<symbol>`      |
-| 4     | Shell markup  | `<body>`           | Header, main, screens, overlays                  |
-| 5     | Templates     | End of markup      | `<template>` elements for repeated structures    |
-| 6     | Data          | `<script>` in body | Constants, generated data, translation tables    |
-| 7     | Logic         | `<script>` in body | State, rendering, events, bootstrap              |
+| 1.    | Document head | `<head>`           | Doctype, charset, viewport, title, meta          |
+| 2.    | Style         | `<style>` in head  | Tokens, reset, layout, components, states, media |
+| 3.    | Icon sprite   | Start of `<body>`  | One hidden `<svg>` holding every `<symbol>`      |
+| 4.    | Shell markup  | `<body>`           | Header, main, screens, overlays                  |
+| 5.    | Templates     | End of markup      | `<template>` elements for repeated structures    |
+| 6.    | Data          | `<script>` in body | Constants, generated data, translation tables    |
+| 7.    | Logic         | `<script>` in body | State, rendering, events, bootstrap              |
 
-Place the style block in `<head>` so the browser paints once instead of repainting after a late stylesheet.
+Place the style block in `<head>` so the browser paints once instead of repainting after a late
+stylesheet.
 
 Place both script blocks at the end of `<body>` so the markup parses before the logic runs.
 
-Keep data and logic in two separate `<script>` blocks even though one would work, because that boundary is what makes the file splittable later.
+Keep data and logic in two separate `<script>` blocks even though one would work,
+because that boundary is what makes the file splittable later.
 
 ### Region Banners
 
-Mark every region and every subsection with a banner comment, because the file has no directory tree to navigate by.
+Mark every region and every subsection with a banner comment,
+because the file has no directory tree to navigate by.
 
 A banner is the only navigation aid the reader has, so make it greppable and make it unique.
 
@@ -493,7 +465,8 @@ A banner is the only navigation aid the reader has, so make it greppable and mak
    ============================================================ */
 ```
 
-Number the banners to match the internal order table, so the file reads the same way in every project that uses this layout.
+Number the banners to match the internal order table,
+so the file reads the same way in every project that uses this layout.
 
 A reviewer can then refer to a location as "region 7.3" in a task or a comment.
 
@@ -505,21 +478,23 @@ Divide the script block in the same order split scripts would use.
 
 | Order | Style Subsection | Script Subsection |
 |-------|------------------|-------------------|
-| 1     | Tokens           | Constants         |
-| 2     | Reset            | State             |
-| 3     | Layout           | Helpers           |
-| 4     | Components       | Persistence       |
-| 5     | States           | Rendering         |
-| 6     | Media queries    | Events            |
-| 7     |                  | Bootstrap         |
+| 1.    | Tokens           | Constants         |
+| 2.    | Reset            | State             |
+| 3.    | Layout           | Helpers           |
+| 4.    | Components       | Persistence       |
+| 5.    | States           | Rendering         |
+| 6.    | Media queries    | Events            |
+| 7.    |                  | Bootstrap         |
 
-Declare exactly one namespace object or one bootstrap function, and attach nothing else to the global scope.
+Declare exactly one namespace object or one bootstrap function,
+and attach nothing else to the global scope.
 
 Sharing one scope is a property of the layout, not a licence to use it.
 
 Pass collaborators explicitly, exactly as a split layout would have to.
 
-Do not use `<script type="module">` in this layout when the file must open over `file://`, because module loading is blocked on that scheme.
+Do not use `<script type="module">` in this layout when the file must open over `file://`,
+because module loading is blocked on that scheme.
 
 ### Inline Images
 
@@ -568,16 +543,19 @@ The single-file layout has a working range, and beyond it the layout stops payin
 
 A generated data table is the usual reason a single file grows past its limit.
 
-Moving only the data into one adjacent `.js` file is the smallest useful step and is preferable to a full split.
+Moving only the data into one adjacent `.js` file is the smallest useful step and is preferable to a
+full split.
 
-State that deviation in `README.md`, because the layout is then Minimal with one script, not Single File.
+State that deviation in `README.md`, because the layout is then Minimal with one script,
+not Single File.
 
 ### Staying Upgradable
 
 Write the single file so that splitting it later is a copy operation, not a rewrite.
 
 - Keep each region contiguous, so a region becomes a file by cutting it whole.
-- Keep the style subsections in cascade order, so they become `variables.css`, `layout.css`, `components.css`, and `interactive.css` in that order.
+- Keep the style subsections in cascade order, so they become `variables.css`, `layout.css`,
+  `components.css`, and `interactive.css` in that order.
 - Keep data separate from logic, so the data block becomes `data.js`.
 - Reference icons by fragment, so moving the sprite to `sprite.svg` changes only the `href` prefix.
 - Keep translation tables in their own subsection, so they become `i18n.js`.
@@ -598,79 +576,48 @@ Name the trade-off out loud in `README.md` rather than pretending it does not ex
 
 ## Naming Conventions
 
-### Code Conventions
+Naming follows the general standard.
 
-| Kind             | Style                  | Example              |
-|------------------|------------------------|----------------------|
-| Namespace object | `PascalCase`           | `App`, `I18n`        |
-| Class            | `PascalCase`           | `ItemListRenderer`   |
-| Function, method | `camelCase`            | `showScreen()`       |
-| Variable         | `camelCase`            | `currentIndex`       |
-| Module constant  | `SCREAMING_SNAKE_CASE` | `STORAGE_KEY`        |
-| CSS class        | `kebab-case`           | `.question-card`     |
-| CSS modifier     | `kebab-case--modifier` | `.btn--danger`       |
-| CSS state class  | `kebab-case`           | `.active`, `.hidden` |
-| HTML id          | `kebab-case`           | `home-screen`        |
-| Custom property  | `--kebab-case`         | `--color-bg`         |
+The deltas below are the conventions an application adds on top.
 
-Do not use a leading underscore to mark a method as private.
+### Internationalization Keys
 
-### File Naming Conventions
+Use `snake_case` for all translation keys.
 
-| Artifact         | Convention           | Example                    |
-|------------------|----------------------|----------------------------|
-| HTML entry point | `index.html`         | `src/index.html`           |
-| Stylesheet       | `kebab-case.css`     | `css/style.css`            |
-| Module script    | `kebab-case.js`      | `js/item-list-renderer.js` |
-| Generated data   | `kebab-case-data.js` | `js/catalog-data.js`       |
-| Static server    | `server.js`          | `runtime/server.js`        |
+Prefix every key with the category it belongs to.
 
-A file name describes the single responsibility of the file.
+| Key Pattern                  | Purpose                            |
+|------------------------------|------------------------------------|
+| `app_title`                  | Global application text            |
+| `nav_back`, `nav_play`       | Navigation and control labels      |
+| `tab_process`, `tab_effects` | Tab labels                         |
+| `<id>_name`                  | Item name for a data-driven entry  |
+| `<id>_description`           | Item description                   |
+| `<id>_frame_<N>_title`       | Frame title for step N             |
+| `<id>_frame_<N>_desc`        | Frame description for step N       |
+| `<id>_effect_<N>`            | Effect list item N                 |
+| `<id>_<label_key>`           | In-scene label inside an SVG frame |
 
-## HTML Conventions
+The `<id>` placeholder is the unique identifier of a data entry, not a human-readable name.
 
-### Entry Document
+This convention lets the application construct keys dynamically from data.
 
-The entry document declares the doctype, the language, the character set, and the viewport.
+### Storage Keys
 
-It links stylesheets in cascade order and loads scripts in dependency order at the end of `<body>`.
+Use one `localStorage` key per concern, and prefer a versioned key so the schema can evolve.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Item Catalog</title>
-  <link rel="stylesheet" href="css/variables.css" />
-  <link rel="stylesheet" href="css/layout.css" />
-  <link rel="stylesheet" href="css/interactive.css" />
-</head>
-<body>
-  <div id="app"></div>
-  <script src="js/model.js"></script>
-  <script src="js/app.js"></script>
-</body>
-</html>
-```
+| Purpose           | Key Pattern        | Example                     |
+|-------------------|--------------------|-----------------------------|
+| Application state | `<app>-state-v<n>` | `catalog-state-v1`          |
+| Locale            | `<app>-locale`     | `catalog-locale`            |
+| Feature flag      | `<app>-<feature>`  | `catalog-sidebar-collapsed` |
 
-Set `lang` to the actual content language of the application.
+## Code Conventions
 
-Never place a script in `<head>` without `defer`.
+### Screens
 
-### Semantic Markup
-
-Use `<header>`, `<nav>`, `<main>`, `<aside>`, and `<section>` for page regions.
-
-Use `<button>` for anything clickable that is not a link.
-
-Use `<div>` only when no semantic element carries the correct meaning.
-
-Every heading level must follow the previous one without skipping.
-
-### Screen Markup
-
-Represent every screen as a `<section>` with the `screen` class and a stable `id` ending in `-screen`.
+Represent every screen as a `<section>` with the `screen` class and a stable `id` ending in
+`-screen`.
 
 ```html
 <main>
@@ -688,311 +635,11 @@ The stylesheet controls visibility so that JavaScript only toggles a class.
 .hidden { display: none !important; }
 ```
 
-### Static and Generated Markup
-
 Markup that never changes belongs in the entry document.
 
 Markup that depends on state is generated by a render function.
 
 Do not mix both inside the same container element.
-
-## CSS Conventions
-
-The full CSS architecture should be defined in a separate CSS development standard.
-
-This section states only the rules that a vanilla application must additionally follow.
-
-### Stylesheet Order
-
-In the modular layout, stylesheets load in a documented order and that order defines cascade priority.
-
-The order is tokens, then layout, then components, then interactive states.
-
-`variables.css` must load first so that every later file can reference its custom properties.
-
-`interactive.css` must load last so that state styles win over base styles.
-
-In the minimal layout, keep the same order inside the single stylesheet.
-
-### Design Tokens
-
-Every colour, radius, shadow, spacing value, and fixed dimension is a custom property on `:root`.
-
-A literal value may appear in a rule only if it is used exactly once in the whole stylesheet.
-
-The prefix categories below are a guide, not a rigid contract.
-
-| Category  | Prefix      | Example                           |
-|-----------|-------------|-----------------------------------|
-| Color     | `--color-`  | `--color-danger`                  |
-| Surface   | `--bg-`     | `--bg-card`                       |
-| Text      | `--text-`   | `--text-muted`                    |
-| Spacing   | `--space-`  | `--space-md`                      |
-| Radius    | `--radius-` | `--radius-sm`                     |
-| Shadow    | `--shadow-` | `--shadow-lg`                     |
-| Dimension | none        | `--sidebar-width`, `--row-height` |
-| Z-index   | `--z-`      | `--z-modal`                       |
-| Font      | `--font-`   | `--font-family`                   |
-
-Token names describe role, not appearance.
-
-Use `--color-danger`, not `--color-red`.
-
-A project may use shorter unprefixed names such as `--primary` or `--success` when the application is small enough that the category is obvious.
-
-### Reset
-
-Start every stylesheet with the same minimal reset.
-
-```css
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-button, input, select, textarea {
-  font: inherit;
-}
-
-img, svg {
-  max-width: 100%;
-  height: auto;
-}
-```
-
-Do not import `normalize.css` or a comparable third-party reset.
-
-Form controls do not inherit the page font by default, so the `font: inherit` rule is mandatory.
-
-### Layout
-
-Use Flexbox for one-dimensional arrangements such as toolbars, rows, and stacks.
-
-Use CSS Grid for two-dimensional arrangements such as card grids, tables, and timelines.
-
-Use `position: absolute` only inside an element that establishes a containing block.
-
-Every z-index value comes from a `--z-` token.
-
-### Responsive Design
-
-Responsive is a requirement, not a feature.
-
-The application adapts to viewport width, viewport height, and orientation, and produces no horizontal page scroll at any supported size.
-
-Every application defines at least one breakpoint.
-
-Place all `@media` rules at the end of the file they belong to.
-
-The breakpoints below are common reference points, not a mandatory set.
-
-| Breakpoint | Target      | Typical Change                                    |
-|------------|-------------|---------------------------------------------------|
-| `1024px`   | Tablet      | Sidebar becomes an off-canvas drawer              |
-| `768px`    | Large phone | Multi-column grids collapse to one or two columns |
-| `640px`    | Phone       | Toolbars stack, tables become card lists          |
-| `420px`    | Small phone | Labels shorten, secondary actions hide            |
-
-Use only the breakpoints the layout actually needs.
-
-A component must not shrink below its widest mobile size when the viewport grows past the breakpoint.
-
-This preserves the largest comfortable mobile size on desktop and prevents a visible jump at the breakpoint.
-
-Below the breakpoint the component fills the viewport.
-
-Above the breakpoint the component is capped and floored, and the desktop `min-width` equals the maximum mobile width measured at the breakpoint.
-
-### Fluid Before Breakpoints
-
-Reach for a fluid value before reaching for a breakpoint.
-
-A breakpoint is a step change, and a step change is only correct when the layout genuinely rearranges.
-
-| Need                             | Fluid Technique                        |
-|----------------------------------|----------------------------------------|
-| Type that scales with the screen | `clamp()` on `font-size`               |
-| A column count that adapts       | `repeat(auto-fit, minmax(16rem, 1fr))` |
-| A width that never overflows     | `min(100%, 60rem)`                     |
-| Spacing that grows with the page | `clamp()` on `padding`                 |
-
-```css
-.card-grid {
-  display: grid;
-  gap: var(--space-md);
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-}
-
-h1 {
-  font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-}
-```
-
-A component that must respond to its container rather than to the viewport uses a container query.
-
-This is the correct tool for a card that appears both in a wide main region and in a narrow sidebar.
-
-```css
-.card { container-type: inline-size; }
-
-@container (min-width: 24rem) {
-  .card-inner { grid-template-columns: auto 1fr; }
-}
-```
-
-### Orientation and Viewport Height
-
-A width breakpoint alone does not describe a phone held sideways.
-
-A landscape phone is wide and short, so a layout tuned only for width will push its actions off the bottom of the screen.
-
-```css
-@media (orientation: landscape) and (max-height: 480px) {
-  .app-header { position: static; }
-  .hero { display: none; }
-}
-```
-
-Use `dvh` rather than `vh` for a full-height region, because mobile browser toolbars change the visible height while the user scrolls.
-
-```css
-.app { min-height: 100dvh; }
-```
-
-Never set a fixed pixel height on a region that contains text.
-
-### Input Modality
-
-Adapt to the pointer, not only to the width, because a large touch screen and a small laptop are different problems.
-
-```css
-@media (pointer: coarse) {
-  .btn { min-height: 44px; }
-}
-
-@media (hover: none) {
-  .tooltip-on-hover { display: none; }
-}
-```
-
-Every interactive target is at least 24 by 24 CSS pixels, and 44 by 44 where a coarse pointer is expected.
-
-A hover-only affordance must have a tap-reachable or keyboard-reachable equivalent.
-
-### Preventing Overflow
-
-Horizontal page scroll is a defect.
-
-The recurring causes are few, and each has a standard fix.
-
-| Cause                                   | Fix                                                 |
-|-----------------------------------------|-----------------------------------------------------|
-| A flex or grid child refusing to shrink | `min-width: 0` on the child                         |
-| A long unbroken string                  | `overflow-wrap: anywhere` on the text container     |
-| A wide table                            | A scroll container with `overflow: auto` around it  |
-| A fixed pixel width                     | `max-width: 100%` or a `min()` expression           |
-| An oversized image                      | `max-width: 100%` and `height: auto` from the reset |
-
-Test at the narrowest supported width before considering a layout change complete.
-
-### Motion
-
-Keep transitions between `0.1s` and `0.3s`.
-
-Transition named properties, never `all`.
-
-Respect the reduced motion preference.
-
-```css
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-```
-
-## JavaScript Conventions
-
-### Module System
-
-Two module systems are valid, and a project picks one and does not mix them.
-
-**Classic scripts**: ordered `<script>` tags with an explicit global namespace.
-
-This is the default because it works over `http://` and over `file://` without change.
-
-Each file attaches exactly one symbol to `window`.
-
-```javascript
-window.ItemListRenderer = class ItemListRenderer {
-  constructor(container, catalog) {
-    this.container = container;
-    this.catalog = catalog;
-  }
-};
-```
-
-**ES modules**: `<script type="module">` with `import` and `export`.
-
-Permitted only when the application is always served over HTTP and never opened from the file system, because `file://` blocks module loading with CORS.
-
-State that choice in the project specification.
-
-Begin every classic script file with `'use strict';` unless it is an ES module.
-
-### Organization
-
-Two organization patterns are valid, and the choice follows the size of the application.
-
-**Namespace object**: an application with a small number of screens uses one global namespace object.
-
-The object owns all state and all public methods.
-
-```javascript
-const App = {
-  state: {
-    screen: 'home',
-    items: [],
-    selection: new Set(),
-    currentIndex: 0,
-  },
-
-  init() {
-    this.loadState();
-    this.showScreen(this.state.screen);
-  },
-};
-```
-
-**Class per file**: an application with distinct subsystems uses one class per file.
-
-Each class receives its collaborators through the constructor.
-
-The bootstrap file constructs them and wires them together.
-
-```javascript
-function init() {
-  const container = document.getElementById('app');
-  if (!container) {
-    console.error('Missing #app container');
-    return;
-  }
-  const renderer = new ItemListRenderer(container, catalog);
-  const history = new HistoryManager(() => Persistence.save(catalog));
-  new DragController(renderer, catalog, history);
-  renderer.render();
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
-```
-
-Never leave a loose function or variable in the global scope outside these two patterns.
 
 ### State Management
 
@@ -1015,23 +662,25 @@ Two rendering techniques are allowed.
 - `document.createElement` with `appendChild` for structural and interactive content.
 - A template literal assigned to `innerHTML` for a self-contained block that is replaced as a whole.
 
-Be consistent within a single render function and do not mix the two techniques inside that function.
+Be consistent within a single render function and do not mix the two techniques inside that
+function.
 
 Clear a container with `container.innerHTML = ''` before a full re-render.
 
 Cache a DOM query when the same element is read more than once.
 
-### Full Re-renders
-
 A full re-render replaces the text or markup of many elements at once.
 
-A language change is the typical trigger, because every visible label and every generated list must update.
+A language change is the typical trigger,
+because every visible label and every generated list must update.
 
-A full re-render can cause visible flicker when the browser paints intermediate layout states while the re-render is still in progress.
+A full re-render can cause visible flicker when the browser paints intermediate layout states while
+the re-render is still in progress.
 
 Two techniques prevent the flicker.
 
-Suppress CSS transitions during the re-render so elements with `transition: all` do not animate property changes caused by the re-render.
+Suppress CSS transitions during the re-render so elements with `transition: all` do not animate
+property changes caused by the re-render.
 
 Add a class to the `body` before the re-render and remove it in the next `requestAnimationFrame`.
 
@@ -1050,11 +699,14 @@ onLocaleChange() {
 }
 ```
 
-Defer visibility changes to the next animation frame when a re-render happens behind a modal or an overlay.
+Defer visibility changes to the next animation frame when a re-render happens behind a modal or an
+overlay.
 
-Closing the overlay in the same synchronous block as the re-render forces the browser to paint the new layout and hide the overlay in one frame.
+Closing the overlay in the same synchronous block as the re-render forces the browser to paint the
+new layout and hide the overlay in one frame.
 
-Deferring the close to `requestAnimationFrame` lets the new layout settle behind the overlay before the user sees it.
+Deferring the close to `requestAnimationFrame` lets the new layout settle behind the overlay before
+the user sees it.
 
 ```javascript
 option.onclick = () => {
@@ -1063,66 +715,9 @@ option.onclick = () => {
 };
 ```
 
-### Escaping
-
-Every value that reaches `innerHTML` must be escaped.
-
-Provide one escape helper and use it without exception.
-
-```javascript
-function escapeHtml(text) {
-  if (text === null || text === undefined) return '';
-  const div = document.createElement('div');
-  div.textContent = String(text);
-  return div.innerHTML;
-}
-```
-
-Prefer `textContent` when the value is plain text and no markup is needed.
-
-Never interpolate a value into an event handler attribute inside a template literal.
-
-### Events
-
-Attach listeners with `addEventListener`.
-
-Use event delegation on a stable parent for lists and grids that re-render.
-
-```javascript
-list.addEventListener('click', event => {
-  const row = event.target.closest('[data-id]');
-  if (!row) return;
-  App.selectItem(row.dataset.id);
-});
-```
-
-Inline `onclick` attributes are permitted only in static markup and only when the application uses the global namespace pattern.
-
-In that case the handler contains a single call to a namespace method and no logic.
-
-```html
-<button class="btn btn--primary" onclick="App.startTest()">Start</button>
-```
-
-Never write an inline handler into generated markup.
-
-Remove listeners when the element they belong to is destroyed.
-
-Use `PointerEvent` for combined mouse and touch input.
-
-Fall back to `mousedown`, `mousemove`, and `mouseup` only when the application must run over `file://`, and document the deviation in the affected file.
-
 ### Persistence
 
 Persist state to `localStorage` whenever the user may resume later.
-
-Use one key per concern, and prefer a versioned key so the schema can evolve.
-
-| Purpose           | Key Pattern        | Example                     |
-|-------------------|--------------------|-----------------------------|
-| Application state | `<app>-state-v<n>` | `catalog-state-v1`          |
-| Locale            | `<app>-locale`     | `catalog-locale`            |
-| Feature flag      | `<app>-<feature>`  | `catalog-sidebar-collapsed` |
 
 Write and read inside `try` and `catch` because storage can be full or blocked.
 
@@ -1171,38 +766,14 @@ Never hand-edit generated data.
 
 Use `fetch` only for data that genuinely changes at runtime.
 
-### Third-Party Libraries
-
-Load a library on demand at the moment it is first needed.
-
-Resolve to a boolean and degrade gracefully when the load fails.
-
-```javascript
-function ensureXlsx() {
-  if (typeof XLSX !== 'undefined') return Promise.resolve(true);
-  return new Promise(resolve => {
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
-    s.onload = () => resolve(true);
-    s.onerror = () => resolve(false);
-    document.head.appendChild(s);
-  });
-}
-```
-
-Pin an exact version in the URL.
-
-Provide a fallback path, such as CSV export when the spreadsheet library is unavailable.
-
-Vendor the file into the repository when the application must work offline.
-
 ### Error Handling
 
 Validate input at the boundary of every public method.
 
 Log an unexpected state to the console and never swallow an error silently.
 
-Wrap only the operations that can genuinely fail, such as storage access, JSON parsing, and file reading.
+Wrap only the operations that can genuinely fail, such as storage access, JSON parsing,
+and file reading.
 
 Show the user a message for any failure that changes what they can do.
 
@@ -1210,13 +781,138 @@ Show the user a message for any failure that changes what they can do.
 
 Every message, warning, error, confirmation, and prompt is a component the application owns.
 
-`window.alert`, `window.confirm`, and `window.prompt` are inadmissible, with no exception for a prototype, a demo, or an internal tool.
+`window.alert`, `window.confirm`, and `window.prompt` are inadmissible,
+with no exception for a prototype, a demo, or an internal tool.
 
 See the Messages and Dialogs section for the required mechanism.
 
+## Formatting and Linting
+
+Formatting follows the general standard: two-space indentation, the project's quote style,
+semicolons, no `var`, and lines under roughly 120 characters.
+
+No linter or formatter is mandated.
+
+Verify source files with `node --check` before delivery.
+
+## Testing
+
+Automated tests are optional.
+
+When they are added, extract the pure logic into a file with no DOM access and test that file with
+the Node test runner.
+
+```bash
+node --test test/
+```
+
+Maintain the verification checklist as a numbered list of manual steps that exercise the main flows.
+
+## Build
+
+There is no build step.
+
+Start the server with `npm start` and open the printed URL.
+
+An IDE browser preview is a proxy to that server and stops working when the server stops.
+
+Deployment is a copy of the source directory to any static host.
+
+## Development Server
+
+Every project in the modular or minimal layout ships a static server with zero npm dependencies.
+
+The inline layout may omit the server because the file opens directly from the file system.
+
+The server serves the source directory, maps MIME types, rejects directory traversal,
+and disables caching.
+
+```javascript
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const port = process.env.PORT || 8080;
+const root = path.join(__dirname, '..', 'src');
+
+const mimeTypes = {
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'application/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+};
+
+const server = http.createServer((req, res) => {
+  const urlPath = decodeURIComponent(req.url.split('?')[0]);
+  const filePath = path.normalize(path.join(root, urlPath === '/' ? 'index.html' : urlPath));
+  if (filePath !== root && !filePath.startsWith(root + path.sep)) {
+    res.writeHead(403, { 'Content-Type': 'text/plain' });
+    res.end('Forbidden');
+    return;
+  }
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      res.writeHead(err.code === 'ENOENT' ? 404 : 500, { 'Content-Type': 'text/plain' });
+      res.end(err.code === 'ENOENT' ? 'Not found' : 'Server error');
+      return;
+    }
+    res.writeHead(200, {
+      'Content-Type': mimeTypes[path.extname(filePath).toLowerCase()] || 'application/octet-stream',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    });
+    res.end(data);
+  });
+});
+
+server.listen(port, () => console.log(`Server running at http://localhost:${port}/`));
+```
+
+The server may be a CommonJS file (`server.js`) or an ES module (`server.mjs`).
+
+Live reload is optional and is implemented with `fs.watch` and a server-sent events endpoint.
+
+The server injects the reload client into the HTML response so the source stays clean.
+
+The port is fixed per project and overridable through the `PORT` environment variable.
+
+Document the chosen port in `README.md`.
+
+## Dependencies
+
+Runtime dependencies are zero by default,
+and the package manifest declares metadata and scripts only.
+
+```json
+{
+  "name": "catalog",
+  "version": "0.0.1",
+  "description": "Single page item catalog with local persistence",
+  "private": true,
+  "scripts": {
+    "start": "node runtime/server.js",
+    "check": "node --check src/js/app.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
+```
+
+Set `private` to `true`.
+
+Keep `dependencies` empty.
+
+A `devDependencies` entry is acceptable only for a linter or a formatter.
+
+When a library genuinely earns its place, load it on demand, pin an exact version,
+and provide a fallback, per the general standard.
+
 ## Reactivity
 
-Reactive means the interface answers the user immediately and never makes the user wait for something the application could have hidden, deferred, or cancelled.
+Reactive means the interface answers the user immediately and never makes the user wait for
+something the application could have hidden, deferred, or cancelled.
 
 It does not mean a reactivity framework, and it does not mean a virtual DOM.
 
@@ -1232,7 +928,8 @@ Treat these numbers as the contract between the application and the user.
 | Content ready   | 2.5 s  | The main content of the first screen is visible      |
 | Layout shift    | None   | Content never moves under a pointer or a reading eye |
 
-A handler that cannot finish inside the interaction budget must acknowledge the input first and continue afterwards.
+A handler that cannot finish inside the interaction budget must acknowledge the input first and
+continue afterwards.
 
 ### Acknowledge Then Work
 
@@ -1281,7 +978,8 @@ Show progress while a chunked task runs, because a task worth chunking is a task
 
 ### Batching DOM Work
 
-Read every measurement first, then write every change, because interleaving them forces the browser to recalculate layout on each read.
+Read every measurement first, then write every change,
+because interleaving them forces the browser to recalculate layout on each read.
 
 ```javascript
 const heights = rows.map(row => row.offsetHeight);
@@ -1303,7 +1001,8 @@ function scheduleRender() {
 }
 ```
 
-Build a list off-document in a `DocumentFragment` and insert it once, rather than appending inside the loop.
+Build a list off-document in a `DocumentFragment` and insert it once,
+rather than appending inside the loop.
 
 Prefer a targeted update over a full re-render when only one value changed.
 
@@ -1328,7 +1027,8 @@ Using the wrong one produces either a laggy field or a flooded handler.
 
 Every request that can be superseded carries an `AbortSignal`.
 
-Abort the previous request before starting a new one, otherwise a slow earlier response can overwrite a fast later one.
+Abort the previous request before starting a new one,
+otherwise a slow earlier response can overwrite a fast later one.
 
 ```javascript
 let inFlight = null;
@@ -1349,7 +1049,8 @@ async function search(term) {
 
 Never leave a rejected promise unhandled, and never report an abort as an error.
 
-Give every request a timeout, because a request that never settles leaves the interface in a permanent loading state.
+Give every request a timeout, because a request that never settles leaves the interface in a
+permanent loading state.
 
 ### Loading States
 
@@ -1364,13 +1065,15 @@ An empty region is not a loading state.
 | No result                | An empty state explaining what to do next               |
 | A failure                | An inline message or a modal with a retry action        |
 
-Reserve the final dimensions of the region before the data arrives, so the content does not shift when it does.
+Reserve the final dimensions of the region before the data arrives,
+so the content does not shift when it does.
 
 A skeleton whose size differs from the real content is worse than no skeleton at all.
 
 ### Optimistic Updates
 
-Apply an update to the interface immediately when the operation is local, reversible, and almost always succeeds.
+Apply an update to the interface immediately when the operation is local, reversible,
+and almost always succeeds.
 
 Toggling a flag, reordering a list, and marking an item are good candidates.
 
@@ -1388,7 +1091,8 @@ Two shells cover almost every application of this kind.
 
 Use a centered shell when the application is a sequence of screens with no persistent navigation.
 
-A sticky header carries the identity and the global actions, and a centered column carries the content.
+A sticky header carries the identity and the global actions,
+and a centered column carries the content.
 
 ```css
 .app-header {
@@ -1440,7 +1144,8 @@ Use a sidebar shell when the application has persistent navigation between many 
 
 The `min-width: 0` declaration is mandatory on every flex child that holds text or a table.
 
-A flex item defaults to `min-width: auto`, which refuses to shrink below its content and pushes the layout wider than the viewport.
+A flex item defaults to `min-width: auto`,
+which refuses to shrink below its content and pushes the layout wider than the viewport.
 
 ### Collapsing the Sidebar
 
@@ -1477,7 +1182,8 @@ Close the sidebar after a navigation click when the viewport is narrow.
 
 A table does not reflow into a narrow viewport.
 
-Wrap it in a scroll container and give the table a minimum width, so the page never scrolls sideways as a whole.
+Wrap it in a scroll container and give the table a minimum width,
+so the page never scrolls sideways as a whole.
 
 ```css
 .table-wrap {
@@ -1533,7 +1239,8 @@ Declare the modal once in the entry document and reuse it for every message.
 
 Do not create a second modal for a second message.
 
-The Messages and Dialogs section defines the two admissible mechanisms and the behavior both must implement.
+The Messages and Dialogs section defines the two admissible mechanisms and the behavior both must
+implement.
 
 ### Drawer
 
@@ -1543,13 +1250,16 @@ Build it as a head, a body, and a foot, and let only the body scroll.
 
 The fixed head and foot keep the title and the save action visible however long the record is.
 
-A drawer follows the same required behavior as a modal, except that it does not have to trap focus when the list behind it stays interactive.
+A drawer follows the same required behavior as a modal,
+except that it does not have to trap focus when the list behind it stays interactive.
 
 ### Dropdown
 
-Close a dropdown from a listener on the document and stop the propagation of clicks inside the panel.
+Close a dropdown from a listener on the document and stop the propagation of clicks inside the
+panel.
 
-Register the document listener on the next tick, otherwise the click that opened the panel closes it immediately.
+Register the document listener on the next tick,
+otherwise the click that opened the panel closes it immediately.
 
 ## Messages and Dialogs
 
@@ -1565,15 +1275,18 @@ They block the main thread, so the application stops responding while one is ope
 
 They cannot be styled, so they break the visual identity of the application.
 
-They cannot be translated, so a multilingual application shows a browser-language button label next to its own text.
+They cannot be translated, so a multilingual application shows a browser-language button label next
+to its own text.
 
-They are suppressed in some embedded and cross-origin contexts, so the message silently never appears.
+They are suppressed in some embedded and cross-origin contexts,
+so the message silently never appears.
 
 They cannot carry a third action, a form field with validation, or a scrolling body.
 
 This rule has no exception for a prototype, a demo, an internal tool, or a debugging path.
 
-Use `console.log`, `console.warn`, and `console.error` for developer diagnostics, and a component for anything the user is meant to read.
+Use `console.log`, `console.warn`, and `console.error` for developer diagnostics,
+and a component for anything the user is meant to read.
 
 ### Message Taxonomy
 
@@ -1596,7 +1309,8 @@ A modal that only says "Saved" is a toast written in the wrong component.
 
 Expose one small API and route every message through it.
 
-The three functions mirror the three native calls they replace, and each returns a promise so the calling code reads sequentially.
+The three functions mirror the three native calls they replace,
+and each returns a promise so the calling code reads sequentially.
 
 ```javascript
 const Dialogs = {
@@ -1629,11 +1343,13 @@ Two mechanisms are admissible, and a project picks one and applies it to every d
 
 Neither mechanism is preferred by this standard.
 
-Record the choice by using it consistently, because a mixed codebase is the failure this rule exists to prevent.
+Record the choice by using it consistently,
+because a mixed codebase is the failure this rule exists to prevent.
 
 ### Native Dialog Mechanism
 
-`<dialog>` with `showModal()` provides the top layer, the `::backdrop` pseudo-element, the inert background, the initial focus, the focus trap, and Escape dismissal.
+`<dialog>` with `showModal()` provides the top layer, the `::backdrop` pseudo-element,
+the inert background, the initial focus, the focus trap, and Escape dismissal.
 
 That removes most of the code the overlay mechanism has to write by hand.
 
@@ -1677,16 +1393,20 @@ function confirmDialog(title, message) {
 }
 ```
 
-A button inside `<form method="dialog">` closes the dialog and sets `returnValue` to its `value`, so no click handler is needed for the actions.
+A button inside `<form method="dialog">` closes the dialog and sets `returnValue` to its `value`,
+so no click handler is needed for the actions.
 
 Escape fires `close` with an empty `returnValue`, which the code above correctly reads as a cancel.
 
 Two behaviors are still the application's responsibility.
 
-- **Scroll lock**, because the page behind the dialog can still scroll. Set `overscroll-behavior: contain` on the dialog and add a body scroll lock class.
-- **Backdrop dismissal**, because light dismiss is not universally available. Add a click listener that compares the event target to the dialog element itself.
+- **Scroll lock**, because the page behind the dialog can still scroll.
+  Set `overscroll-behavior: contain` on the dialog and add a body scroll lock class.
+- **Backdrop dismissal**, because light dismiss is not universally available.
+  Add a click listener that compares the event target to the dialog element itself.
 
-Use `addEventListener` with `{ once: true }` so the listener cannot accumulate across repeated opens.
+Use `addEventListener` with `{ once: true }` so the listener cannot accumulate across repeated
+opens.
 
 ### Overlay Element Mechanism
 
@@ -1722,7 +1442,8 @@ Center the dialog with flexbox on the overlay rather than with offsets and trans
 body.scroll-locked { overflow: hidden; }
 ```
 
-Mark the overlay with `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` pointing at the title, because none of that is implied by a `div`.
+Mark the overlay with `role="dialog"`, `aria-modal="true"`,
+and `aria-labelledby` pointing at the title, because none of that is implied by a `div`.
 
 One open function owns the whole lifecycle and returns the page to its previous state on close.
 
@@ -1736,7 +1457,8 @@ The function must implement every behavior the native mechanism provides for fre
 - Add and remove the body scroll lock class.
 - Mark the content behind the overlay `inert` so a screen reader does not read it.
 
-Detach every listener in `close`, otherwise each open call leaves another Escape handler on the document.
+Detach every listener in `close`, otherwise each open call leaves another Escape handler on the
+document.
 
 An `AbortController` removes every listener in one call and makes that impossible to forget.
 
@@ -1769,7 +1491,8 @@ Both mechanisms must satisfy every row of this table.
 
 The maximum height and the scrolling body are mandatory.
 
-Without them a long message grows the dialog past the viewport and the action buttons become unreachable.
+Without them a long message grows the dialog past the viewport and the action buttons become
+unreachable.
 
 ### Toast
 
@@ -1779,9 +1502,11 @@ Clear the previous timer, otherwise a second toast is hidden early by the first 
 
 Keep `pointer-events: none` while hidden so the toast never intercepts a click.
 
-Give the toast container `role="status"` and `aria-live="polite"` so the message is announced without stealing focus.
+Give the toast container `role="status"` and `aria-live="polite"` so the message is announced
+without stealing focus.
 
-Never use a toast for an error the user must act on, because a message that disappears cannot be acted on.
+Never use a toast for an error the user must act on,
+because a message that disappears cannot be acted on.
 
 ### Inline Messages
 
@@ -1795,7 +1520,8 @@ Associate it with its control through `aria-describedby` and mark the control `a
 
 ### Field Structure
 
-One field is a label and its control in a column, and fields sit in a grid that collapses to one column.
+One field is a label and its control in a column,
+and fields sit in a grid that collapses to one column.
 
 ```html
 <div class="field-grid">
@@ -1816,7 +1542,8 @@ Every label carries a `for` attribute that matches the `id` of its control.
 
 This is what makes the label clickable and what lets a screen reader announce the field.
 
-A grid section heading spans the full row with `grid-column: 1 / -1` and groups related fields without nesting another container.
+A grid section heading spans the full row with `grid-column: 1 / -1` and groups related fields
+without nesting another container.
 
 ### Describing Fields
 
@@ -1837,19 +1564,23 @@ const FIELDS = [
 
 Mark every control with `data-key` and bind the whole form with one loop.
 
-A `<select>` reports `change` and a text control reports `input`, so the event name is derived from the element.
+A `<select>` reports `change` and a text control reports `input`,
+so the event name is derived from the element.
 
-Normalize an empty string to `null` at the boundary, so the rest of the application tests one absent value.
+Normalize an empty string to `null` at the boundary,
+so the rest of the application tests one absent value.
 
 ### Editing a Copy
 
 Edit a copy of the record and commit it only when the user saves.
 
-Binding directly to the stored record makes cancel impossible, because every keystroke has already been applied.
+Binding directly to the stored record makes cancel impossible,
+because every keystroke has already been applied.
 
 ### Dependent Fields
 
-When one control determines the options of another, clear the dependent value and re-render that part of the form.
+When one control determines the options of another,
+clear the dependent value and re-render that part of the form.
 
 Leaving a stale value behind is the most common defect in a form of this kind.
 
@@ -1879,7 +1610,8 @@ Never report a validation error with `window.alert`.
 
 A control that is comfortable with a mouse is often too small for a thumb.
 
-Raise the minimum height on a coarse pointer rather than at a width breakpoint, because the pointer type is the real condition.
+Raise the minimum height on a coarse pointer rather than at a width breakpoint,
+because the pointer type is the real condition.
 
 ```css
 @media (pointer: coarse) {
@@ -1891,7 +1623,8 @@ Raise the minimum height on a coarse pointer rather than at a width breakpoint, 
 }
 ```
 
-The absolute floor is 24 by 24 CSS pixels for every pointer type, as stated in the Input Modality section.
+The absolute floor is 24 by 24 CSS pixels for every pointer type,
+as stated in the Input Modality section.
 
 ### Custom Choice Controls
 
@@ -1903,9 +1636,11 @@ A clickable `<div>` that behaves like a radio button must declare that role and 
 </div>
 ```
 
-Update `aria-checked` whenever the selected class changes, because the class alone tells assistive technology nothing.
+Update `aria-checked` whenever the selected class changes,
+because the class alone tells assistive technology nothing.
 
-Prefer a real `<input type="radio">` with a styled `<label>` when the control does not need custom layout.
+Prefer a real `<input type="radio">` with a styled `<label>` when the control does not need custom
+layout.
 
 ## Internationalization
 
@@ -1943,35 +1678,8 @@ The lookup function follows a three-step fallback chain.
 
 It tries the current locale first, then the default locale, then returns the key itself.
 
-Returning the key instead of throwing an error lets the application render with missing translations during development.
-
-### Key Naming Convention
-
-Use `snake_case` for all translation keys.
-
-Prefix every key with the category it belongs to.
-
-| Key Pattern                  | Purpose                            |
-|------------------------------|------------------------------------|
-| `app_title`                  | Global application text            |
-| `nav_back`, `nav_play`       | Navigation and control labels      |
-| `tab_process`, `tab_effects` | Tab labels                         |
-| `<id>_name`                  | Item name for a data-driven entry  |
-| `<id>_description`           | Item description                   |
-| `<id>_frame_<N>_title`       | Frame title for step N             |
-| `<id>_frame_<N>_desc`        | Frame description for step N       |
-| `<id>_effect_<N>`            | Effect list item N                 |
-| `<id>_<label_key>`           | In-scene label inside an SVG frame |
-
-The `<id>` placeholder is the unique identifier of a data entry, not a human-readable name.
-
-This convention lets the application construct keys dynamically from data.
-
-Store only structural data such as IDs, frame counts, and colors in `data.js`.
-
-Store all human-readable text in `i18n.js`.
-
-Never store a translated string inside `data.js` or inside an animation function.
+Returning the key instead of throwing an error lets the application render with missing translations
+during development.
 
 ### Placeholders
 
@@ -1979,7 +1687,8 @@ Never concatenate translated fragments.
 
 Use a placeholder inside the translation string instead.
 
-A project may use positional placeholders such as `{0}` or named placeholders such as `{name}`, and must apply one style consistently.
+A project may use positional placeholders such as `{0}` or named placeholders such as `{name}`,
+and must apply one style consistently.
 
 ### Default Locale
 
@@ -1995,7 +1704,8 @@ Persist the active locale in `localStorage` under the `<app>-locale` key.
 
 Read the saved locale on module initialization so the user's choice survives a page reload.
 
-Wrap both the read and the write in a `try`/`catch` block because `localStorage` may be unavailable in private browsing mode.
+Wrap both the read and the write in a `try` / `catch` block because `localStorage` may be
+unavailable in private browsing mode.
 
 Call `setLocale()` when the user selects a language.
 
@@ -2025,7 +1735,8 @@ Never use emoji flags such as the regional indicator sequences for GB or PL as a
 
 Flag emoji depend on operating system font support and render inconsistently across browsers.
 
-Embedded browser environments such as IDE previews lack the font fallback that draws flag emoji, and fall back to regional indicator letters.
+Embedded browser environments such as IDE previews lack the font fallback that draws flag emoji,
+and fall back to regional indicator letters.
 
 Use inline SVG flags instead, which render identically in every browser.
 
@@ -2047,7 +1758,8 @@ Flags and other icons have different native aspect ratios.
 
 Displaying them with a fixed height and `width: auto` produces inconsistent widths.
 
-Give every icon in a group the same fixed bounding box and let `preserveAspectRatio` fit each icon inside it.
+Give every icon in a group the same fixed bounding box and let `preserveAspectRatio` fit each icon
+inside it.
 
 ```css
 .lang-option-flag svg {
@@ -2057,15 +1769,18 @@ Give every icon in a group the same fixed bounding box and let `preserveAspectRa
 }
 ```
 
-The default `preserveAspectRatio` value (`xMidYMid meet`) fits the entire icon inside the box and centers it.
+The default `preserveAspectRatio` value (`xMidYMid meet`)
+fits the entire icon inside the box and centers it.
 
-Use `xMidYMid slice` or a CSS `background-image` with `background-size: cover` when the icon must fill a shaped container such as a circle and crop the overflow.
+Use `xMidYMid slice` or a CSS `background-image` with `background-size: cover` when the icon must
+fill a shaped container such as a circle and crop the overflow.
 
 ### Script Load Order
 
 Load `i18n.js` before any module that calls `I18n.t()`.
 
-The typical order is `i18n.js` first, then `data.js`, then view or animation modules, then `app.js` last.
+The typical order is `i18n.js` first, then `data.js`, then view or animation modules,
+then `app.js` last.
 
 ## Accessibility
 
@@ -2085,9 +1800,11 @@ Accessibility is part of the definition of done, not a later pass.
 - Announce an asynchronous result through a live region rather than only through a visual change.
 - Respect the reduced motion preference.
 
-Build a non-native widget from the matching WAI-ARIA Authoring Practices pattern rather than from an invented set of attributes.
+Build a non-native widget from the matching WAI-ARIA Authoring Practices pattern rather than from an
+invented set of attributes.
 
-Copy the roles, the states, and the keyboard interactions from the pattern in full, because a partial implementation is often worse than a plain `<div>`.
+Copy the roles, the states, and the keyboard interactions from the pattern in full,
+because a partial implementation is often worse than a plain `<div>`.
 
 Do not hide the system cursor unless the application is a full-screen visual experience.
 
@@ -2117,20 +1834,24 @@ Read the device pixel ratio and resize the backing store on `resize`.
 
 Keep pure math helpers such as `lerp`, `clamp`, and `ease` in one place.
 
-Mirror every canvas interaction with a keyboard equivalent, because a canvas is invisible to assistive technology.
+Mirror every canvas interaction with a keyboard equivalent,
+because a canvas is invisible to assistive technology.
 
 ## Interactive Presentations with SVG
 
-An interactive presentation is a vanilla application that displays a sequence of visual frames to explain a process, navigated by the user or played automatically.
+An interactive presentation is a vanilla application that displays a sequence of visual frames to
+explain a process, navigated by the user or played automatically.
 
-It differs from a data-driven dashboard or a form editor because the primary content is a set of generated images, not a list of records or a form.
+It differs from a data-driven dashboard or a form editor because the primary content is a set of
+generated images, not a list of records or a form.
 
 ### When to Use This Pattern
 
 Apply this pattern when the application meets all of the following conditions.
 
 - The content is a set of discrete steps that must be shown one at a time.
-- Each step is a visual scene built from shapes, text, and indicators rather than a photograph or a static illustration.
+- Each step is a visual scene built from shapes, text,
+  and indicators rather than a photograph or a static illustration.
 - The user navigates between steps manually or plays them in sequence.
 - The same scene must render at different viewport sizes without redrawing every pixel.
 
@@ -2155,7 +1876,8 @@ No animation markup is hardcoded in the HTML.
 
 ### SVG as the Render Surface
 
-Use an SVG with a `viewBox` rather than a canvas when each frame is a composition of named shapes, text labels, and indicators.
+Use an SVG with a `viewBox` rather than a canvas when each frame is a composition of named shapes,
+text labels, and indicators.
 
 The `viewBox` lets the scene scale to any container size without recalculating coordinates.
 
@@ -2210,17 +1932,20 @@ This lets a single constant change shift every dependent element at once.
 
 ### Frame Generation
 
-Each frame is produced by computing a set of intermediate values and then composing the SVG from them.
+Each frame is produced by computing a set of intermediate values and then composing the SVG from
+them.
 
 Store the per-frame progression as an array indexed by the frame number.
 
-Derive every visual property, such as position, opacity, color, and label text, from that single value.
+Derive every visual property, such as position, opacity, color, and label text,
+from that single value.
 
 Never branch on the frame number to set a pixel coordinate.
 
 Always set `text-anchor` on SVG text, never rely on the default `start` alignment.
 
-When a label describes a specific element, derive its position from that element's coordinates, not from the viewport origin.
+When a label describes a specific element, derive its position from that element's coordinates,
+not from the viewport origin.
 
 This keeps the label attached to the element if the element's position changes.
 
@@ -2228,9 +1953,11 @@ This keeps the label attached to the element if the element's position changes.
 
 Each animation function defines its own `<defs>` block with gradient and pattern IDs.
 
-Prefix every ID with the animation class code to prevent collisions when the SVG is injected into the same document.
+Prefix every ID with the animation class code to prevent collisions when the SVG is injected into
+the same document.
 
-When two SVGs with the same gradient ID exist in the document at the same time, the second one silently references the first definition.
+When two SVGs with the same gradient ID exist in the document at the same time,
+the second one silently references the first definition.
 
 ### Random Elements
 
@@ -2254,17 +1981,20 @@ A longer delay after the last frame lets the viewer absorb the final state befor
 
 Bind arrow keys to frame navigation and stop playback on any keypress.
 
-Stopping playback on any keypress prevents a running timer from advancing the frame while the user is manually navigating.
+Stopping playback on any keypress prevents a running timer from advancing the frame while the user
+is manually navigating.
 
 ### Internationalization of In-Scene Text
 
-Every text element inside the SVG must use a translation key, including proper names, status labels, and measurement units.
+Every text element inside the SVG must use a translation key, including proper names, status labels,
+and measurement units.
 
 A hardcoded string inside an animation function is invisible to the locale switch.
 
 When the locale changes, re-render the current frame so all in-scene text updates.
 
-Mathematical expressions and scientific formulas are language-neutral, but proper names, status words, and unit labels are not.
+Mathematical expressions and scientific formulas are language-neutral, but proper names,
+status words, and unit labels are not.
 
 ### State Persistence
 
@@ -2272,193 +2002,19 @@ Persist the current class, frame, and tab so the user can resume after a reload.
 
 Do not persist the `playing` state.
 
-A user who reloads during auto-play expects to see the paused frame, not a suddenly running animation.
+A user who reloads during auto-play expects to see the paused frame,
+not a suddenly running animation.
 
 ### Tabs
 
-A presentation often shows two views of the same content: the animated process and a static list of effects.
+A presentation often shows two views of the same content:
+the animated process and a static list of effects.
 
 Use a tab bar with two panels rather than two separate screens.
 
 The tab state is part of the application state and is persisted.
 
 Switching tabs does not stop playback, only navigating away from the detail screen does.
-
-## Security
-
-A vanilla application has a small attack surface, and that is exactly why the few remaining risks must be handled explicitly.
-
-### Injection
-
-The only injection vector in a typical vanilla application is an untrusted value reaching `innerHTML`.
-
-Untrusted means anything the application did not author, which includes user input, imported JSON, URL parameters, and stored state from a previous session.
-
-Escape every such value, and prefer `textContent` whenever markup is not required.
-
-Never build an event handler attribute from a value.
-
-Never pass a value to `eval`, to `new Function`, or to `setTimeout` as a string.
-
-Validate an imported file before applying it, and reject a payload whose shape or version does not match.
-
-### Content Security Policy
-
-A Content Security Policy is the second line of defence, and its cost depends entirely on the source layout.
-
-| Layout      | Inline Script | Inline Style | Policy Approach                            |
-|-------------|---------------|--------------|--------------------------------------------|
-| Modular     | None          | None         | `script-src 'self'` and `style-src 'self'` |
-| Minimal     | None          | None         | `script-src 'self'` and `style-src 'self'` |
-| Single File | Required      | Required     | Source hashes for each inline block        |
-
-A split layout can adopt a strict policy at no cost, so it should.
-
-```http
-Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; object-src 'none'
-```
-
-The single-file layout cannot use `'self'` for its own script and style, and it cannot use a nonce either, because a static file cannot produce a fresh nonce per response.
-
-The correct mechanism is a source hash, one per inline block, computed over the exact bytes between the tags.
-
-```http
-Content-Security-Policy: default-src 'self'; script-src 'sha256-BASE64HASH'; style-src 'sha256-BASE64HASH'; img-src 'self' data:; base-uri 'none'; object-src 'none'
-```
-
-A hash changes whenever the block changes, including a whitespace change, so the policy is regenerated whenever the file is published.
-
-Never add `'unsafe-inline'` to escape this problem, because it disables the protection the policy exists to provide.
-
-Never allow the `data:` scheme in `script-src` or `style-src`, and allow it in `img-src` only because the single-file layout needs it for inline images.
-
-A file opened over `file://` receives no policy at all, which is a reason to keep an offline single-file tool free of any untrusted input rather than a reason to ignore the topic.
-
-### Third-Party Code
-
-Every third-party script is code the project did not review and cannot patch.
-
-Pin an exact version, never a range and never a `latest` tag.
-
-Add a Subresource Integrity hash to every remote script and stylesheet.
-
-```html
-<script src="https://cdn.example.com/lib@1.2.3/lib.min.js"
-        integrity="sha384-BASE64HASH"
-        crossorigin="anonymous"></script>
-```
-
-Vendor the file into the repository when the application must work offline, and record the origin and version beside it.
-
-Prefer a newly published version that has been available for at least a week, because a compromised package is often withdrawn within days.
-
-### Data Handling
-
-Never store a secret, a token, or a password in `localStorage`, because any script on the page can read it.
-
-Treat `localStorage` as public, unsynchronized, and erasable at any moment.
-
-Never log a user-entered value, and never send one anywhere the user did not ask for.
-
-Add `rel="noopener noreferrer"` to every link that opens in a new tab.
-
-Set `referrerpolicy="no-referrer"` on an outbound request that does not need the referrer.
-
-## Development Server
-
-Every project in the modular or minimal layout ships a static server with zero npm dependencies.
-
-The inline layout may omit the server because the file opens directly from the file system.
-
-The server serves the source directory, maps MIME types, rejects directory traversal, and disables caching.
-
-```javascript
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-
-const port = process.env.PORT || 8080;
-const root = path.join(__dirname, '..', 'src');
-
-const mimeTypes = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'application/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-};
-
-const server = http.createServer((req, res) => {
-  const urlPath = decodeURIComponent(req.url.split('?')[0]);
-  const filePath = path.normalize(path.join(root, urlPath === '/' ? 'index.html' : urlPath));
-  if (filePath !== root && !filePath.startsWith(root + path.sep)) {
-    res.writeHead(403, { 'Content-Type': 'text/plain' });
-    res.end('Forbidden');
-    return;
-  }
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      res.writeHead(err.code === 'ENOENT' ? 404 : 500, { 'Content-Type': 'text/plain' });
-      res.end(err.code === 'ENOENT' ? 'Not found' : 'Server error');
-      return;
-    }
-    res.writeHead(200, {
-      'Content-Type': mimeTypes[path.extname(filePath).toLowerCase()] || 'application/octet-stream',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-    });
-    res.end(data);
-  });
-});
-
-server.listen(port, () => console.log(`Server running at http://localhost:${port}/`));
-```
-
-The server may be a CommonJS file (`server.js`) or an ES module (`server.mjs`).
-
-Live reload is optional and is implemented with `fs.watch` and a server-sent events endpoint.
-
-The server injects the reload client into the HTML response so the source stays clean.
-
-The port is fixed per project and overridable through the `PORT` environment variable.
-
-Document the chosen port in `README.md`.
-
-## Package Manifest
-
-The manifest declares metadata and scripts only.
-
-```json
-{
-  "name": "catalog",
-  "version": "0.0.1",
-  "description": "Single page item catalog with local persistence",
-  "private": true,
-  "scripts": {
-    "start": "node runtime/server.js",
-    "check": "node --check src/js/app.js"
-  },
-  "engines": {
-    "node": ">=18"
-  }
-}
-```
-
-Set `private` to `true`.
-
-Keep `dependencies` empty.
-
-A `devDependencies` entry is acceptable only for a linter or a formatter.
-
-## Build and Serve
-
-There is no build step.
-
-Start the server with `npm start` and open the printed URL.
-
-An IDE browser preview is a proxy to that server and stops working when the server stops.
-
-Deployment is a copy of the source directory to any static host.
 
 ## Verification
 
@@ -2477,185 +2033,9 @@ Verify every change before considering it complete.
 | Focus visibility  | Tab through the changed region           | Every new control     |
 | Interaction delay | Performance panel while using the change | Every new slow action |
 
-The single-file layout has no server and no manifest, so verify it by opening the file directly and by copying the script block into a scratch file for `node --check`.
-
-Maintain the verification checklist as a numbered list of manual steps that exercise the main flows.
-
-Automated tests are optional.
-
-When they are added, extract the pure logic into a file with no DOM access and test that file with the Node test runner.
-
-The Definition of Done section lists what the result of these checks must be.
-
-## Readability
-
-The source is read far more often than it is written, and an agent rewrites it far more often than a human does.
-
-Both facts point the same way: the code must be immediately legible, consistently formatted, and divided along lines a reader can predict.
-
-This applies identically in every layout, and it applies most strictly in the single-file layout, where nothing else provides structure.
-
-### Structural Simplicity
-
-Choose the least complex structure that solves the problem.
-
-Complexity is a cost paid on every future read, so it must be earned by a real requirement.
-
-| Prefer                    | Over                                    |
-|---------------------------|-----------------------------------------|
-| A plain object            | A class with one instance               |
-| A function                | A class with one method                 |
-| An array of descriptors   | A chain of `if` branches                |
-| A `switch` on a known set | A lookup object built at runtime        |
-| Direct DOM calls          | A general-purpose rendering abstraction |
-| One clear duplication     | An abstraction with three parameters    |
-| A named local variable    | A long inline expression                |
-
-Do not build an abstraction for a second case, build it for a third.
-
-Do not add a layer whose only purpose is to make a future change easier, because the future change is usually a different one.
-
-Do not add a configuration option that no caller passes.
-
-### Function Size and Shape
-
-A function fits on one screen, which is roughly forty lines.
-
-A function does one thing, and its name says which thing without an "and" in it.
-
-Return early to keep the main path at the lowest indentation level.
-
-```javascript
-function selectAnswer(questionId, optionIndex) {
-  if (this.state.submitted) return;
-  const question = this.findQuestion(questionId);
-  if (!question) return;
-  this.state.answers[questionId] = optionIndex;
-  this.saveState();
-  this.renderQuestion();
-}
-```
-
-Keep nesting at three levels or fewer inside a function.
-
-Extract a named helper when a block needs a comment to explain what it is doing, because the helper name is that comment.
-
-Keep the parameter count at four or fewer, and pass an options object beyond that.
-
-### Consistent Division
-
-Divide every file, and every region of a single file, in the same order.
-
-A reader who has read one file then knows the shape of every other file.
-
-| Position | Content                                     |
-|----------|---------------------------------------------|
-| 1        | The `'use strict'` directive or the imports |
-| 2        | Module constants                            |
-| 3        | State                                       |
-| 4        | Pure helpers with no DOM access             |
-| 5        | Persistence                                 |
-| 6        | Rendering                                   |
-| 7        | Event handlers                              |
-| 8        | Bootstrap                                   |
-
-Group related functions together and separate groups with one blank line and a section banner.
-
-Keep a function and the function it calls near each other, so following a call does not require a search.
-
-### Vertical Rhythm
-
-Use one blank line between functions and between logical groups inside a function.
-
-Do not stack blank lines.
-
-Do not separate a declaration from its first use with unrelated code.
-
-Declare a variable at the point where it is first needed, not at the top of the function.
-
-### Naming
-
-A name describes the role, not the type and not the implementation.
-
-| Kind                | Pattern                        | Example                       |
-|---------------------|--------------------------------|-------------------------------|
-| A boolean           | A predicate reading as a claim | `isVisible`, `hasAnswer`      |
-| A function          | A verb phrase                  | `renderQuestion`, `loadState` |
-| A collection        | A plural noun                  | `questions`, `flagged`        |
-| An event handler    | `on` plus the event            | `onLocaleChange`, `onSubmit`  |
-| A boolean parameter | Avoid it, take an enum instead | `mode: 'replace'`             |
-
-Do not abbreviate a name to save characters.
-
-Do not encode the type in the name, such as `strTitle` or `arrItems`.
-
-Do not reuse one name for two meanings in one file.
-
-### Formatting
-
-Use two-space indentation in HTML, CSS, and JavaScript.
-
-Use single quotes in JavaScript and double quotes in HTML attributes.
-
-A project may pick one quoting style and apply it everywhere, and that choice overrides the default.
-
-Terminate every JavaScript statement with a semicolon.
-
-Use `const` by default and `let` only when the binding is reassigned.
-
-Never use `var`.
-
-Keep a line under roughly 120 characters.
-
-Break a long chain or a long argument list across lines rather than letting the line wrap in the editor.
-
-Use a trailing comma in a multi-line literal, so adding an entry touches one line.
-
-Use one declaration per line in CSS, and keep the properties of a rule in a stable order.
-
-Never ship minified, generated, or machine-formatted source as hand-maintained code.
-
-### What Not To Leave Behind
-
-- Commented-out code.
-- A `console.log` added for debugging.
-- An unused variable, parameter, function, or CSS rule.
-- A `TODO` with no owner and no issue reference.
-- A duplicated block that was copied instead of extracted.
-- A magic number that is used more than once.
-
-An agent removes its own scaffolding before reporting a task complete.
-
-An agent does not remove someone else's scaffolding as an unrequested side effect.
-
-## Comments
-
-Naming carries the meaning, comments carry the reason.
-
-A comment is appropriate in three cases.
-
-- A short block at the top of a file stating its single responsibility.
-- A note explaining a non-obvious decision, such as a browser quirk or a compensation formula.
-- A reference to an external specification the behavior is derived from.
-
-Do not describe what the code does.
-
-Do not leave commented-out code in the repository.
-
-## Project Documentation
-
-Every project carries the following content.
-
-- An overview with the quick start, the feature list, and the structure diagram.
-- The project rules and the sources of truth.
-- The project specification with the module boundaries, the load order, and the data flow.
-- The manual verification checklist.
-
-The project specification is the document that describes how the application is built.
-
-It may be a single file or a set of files, and the file names are chosen per project.
-
-Record the script load order in the project specification because that order is a real dependency contract.
+The single-file layout has no server and no manifest,
+so verify it by opening the file directly and by copying the script block into a scratch file for
+`node --check`.
 
 ## Definition of Done
 
@@ -2677,6 +2057,13 @@ An agent runs this list before reporting, and states which rows were checked and
 - No new global symbol was introduced outside the established pattern.
 - No file exceeds the scaling threshold for its layout without a stated reason.
 
+### Quality
+
+- Comments explain reasons, not actions.
+- No debugging output, commented-out code, or unused declaration remains.
+- Every value reaching `innerHTML` is escaped.
+- Documentation was updated when the change altered structure, load order, or a project rule.
+
 ### Interface
 
 - The layout is correct at every project breakpoint, and at the narrowest supported width.
@@ -2695,16 +2082,16 @@ An agent runs this list before reporting, and states which rows were checked and
 
 ### Hygiene
 
-- Every value reaching `innerHTML` is escaped.
-- No debugging output, commented-out code, or unused declaration remains.
-- Comments explain reasons, not actions.
-- Documentation was updated when the change altered structure, load order, or a project rule.
+- No secret, token, or credential is committed.
+- The modal or overlay the change touched still traps focus, restores it, and closes on Escape.
 
 ## Comparison With Market Practice
 
 This section records why the rules above are what they are.
 
-It compares the standard against the authoritative specifications, against widely cited reference projects, and against the way applications of this kind are actually built.
+It compares the standard against the authoritative specifications,
+against widely cited reference projects,
+and against the way applications of this kind are actually built.
 
 An agent can follow the standard without reading this section.
 
@@ -2730,19 +2117,38 @@ The following positions are settled, and this standard adopts them without quali
 
 Three rules in this document are deliberately harder than common practice.
 
-**No native dialogs, with no exception.** Most style guides discourage `alert` and `confirm` and then permit them in a prototype. That exception is the reason they survive into production, because a prototype is where most production code comes from. This standard removes the exception.
+**No native dialogs, with no exception.** Most style guides discourage `alert` and `confirm` and
+then permit them in a prototype. That exception is the reason they survive into production,
+because a prototype is where most production code comes from. This standard removes the exception.
 
-**Escape everything, including trusted data.** A common position is that generated or internal data does not need escaping. The problem is that trust is a property of the moment, and a data file that is generated today is hand-edited or imported tomorrow. A single unconditional rule is cheaper to enforce and cheaper to verify than a case-by-case judgement.
+**Escape everything, including trusted data.** A common position is that generated or internal data
+does not need escaping. The problem is that trust is a property of the moment,
+and a data file that is generated today is hand-edited or imported tomorrow.
+A single unconditional rule is cheaper to enforce and cheaper to verify than a case-by-case
+judgement.
 
-**No layout migration as a side effect.** Tooling and agents both tend to "improve" structure while doing something else. This standard treats the source layout as a contract, because an unrequested reorganisation destroys review history and costs more than it saves.
+**No layout migration as a side effect.** Tooling and agents both tend to "improve" structure while
+doing something else. This standard treats the source layout as a contract,
+because an unrequested reorganisation destroys review history and costs more than it saves.
 
 ### Where This Standard Is Deliberately Looser
 
-**No mandated linter or formatter.** The field is split between StandardJS, an ESLint configuration, and Prettier, and the Google JavaScript style guide is no longer maintained. A no-build project should not acquire a toolchain to satisfy a preference, so this standard specifies the formatting outcome and leaves the tool to the project.
+**No mandated linter or formatter.** The field is split between StandardJS, an ESLint configuration,
+and Prettier, and the Google JavaScript style guide is no longer maintained.
+A no-build project should not acquire a toolchain to satisfy a preference,
+so this standard specifies the formatting outcome and leaves the tool to the project.
 
-**No mandated modal mechanism.** The native `<dialog>` element provides the top layer, the inert background, the focus trap, and Escape dismissal, which makes it the better starting point for new code. It is not made mandatory here, because a working overlay implementation that satisfies the required behavior table has no defect to fix, and rewriting it would be change for its own sake. What is mandatory is that a project uses one mechanism and not both.
+**No mandated modal mechanism.** The native `<dialog>` element provides the top layer,
+the inert background, the focus trap, and Escape dismissal,
+which makes it the better starting point for new code. It is not made mandatory here,
+because a working overlay implementation that satisfies the required behavior table has no defect to
+fix, and rewriting it would be change for its own sake.
+What is mandatory is that a project uses one mechanism and not both.
 
-**No mandated state pattern.** A proxy-based store, a namespace object, and a set of collaborating classes are all defensible at this scale. The rule that matters is that state has one home and the DOM is a projection of it, and that rule is enforced regardless of pattern.
+**No mandated state pattern.** A proxy-based store, a namespace object,
+and a set of collaborating classes are all defensible at this scale.
+The rule that matters is that state has one home and the DOM is a projection of it,
+and that rule is enforced regardless of pattern.
 
 ### What The Reference Projects Show
 
@@ -2757,9 +2163,11 @@ The reference implementations of this kind of application converge on a small nu
 | Single-file developer tools                 | That a directory of assets is disproportionate for a small focused utility      |
 | Single-file bundler output                  | That the format has mechanical limits, mostly around asset size and caching     |
 
-The most useful lesson from the single-file projects is that they succeed on discipline, not on size.
+The most useful lesson from the single-file projects is that they succeed on discipline,
+not on size.
 
-They keep strict region ordering, heavy banner commenting, and one clear entry point, which is exactly what the Single File Applications section requires.
+They keep strict region ordering, heavy banner commenting, and one clear entry point,
+which is exactly what the Single File Applications section requires.
 
 ### What Changed In The Platform
 
@@ -2781,11 +2189,13 @@ Most of the specific gaps that argument rested on have closed.
 
 What the platform still does not provide is a declarative binding between state and markup.
 
-That single remaining gap is why this standard specifies rendering, escaping, and full re-render behavior in as much detail as it does.
+That single remaining gap is why this standard specifies rendering, escaping,
+and full re-render behavior in as much detail as it does.
 
 ### Observations From Applications Of This Kind
 
-Reviewing working applications built to this pattern, the same defects recur, and the sections of this standard exist to prevent them.
+Reviewing working applications built to this pattern, the same defects recur,
+and the sections of this standard exist to prevent them.
 
 | Recurring Defect                                           | Section That Prevents It |
 |------------------------------------------------------------|--------------------------|
@@ -2804,38 +2214,50 @@ Reviewing working applications built to this pattern, the same defects recur, an
 
 None of these are exotic.
 
-They are the predictable cost of building without a framework, which is the cost this standard is written to pay down once rather than repeatedly.
+They are the predictable cost of building without a framework,
+which is the cost this standard is written to pay down once rather than repeatedly.
 
 ## General Principles
 
-**Single Responsibility.** One file does one thing and its name says which thing.
-
 **One Source of Truth.** State lives in JavaScript objects, the DOM only displays it.
-
-**Explicit Order.** Stylesheet order and script order are dependencies and are documented as such.
-
-**Zero Dependencies by Default.** Add a library only when it removes significantly more code than it adds.
-
-**Escape Everything.** No value reaches `innerHTML` without passing through the escape helper.
 
 **No Native Dialogs.** Every message is a component the project owns and styles.
 
-**Progressive Enhancement.** The application degrades to a usable state when a lazy library or a storage API is unavailable.
+**Progressive Enhancement.** The application degrades to a usable state when a lazy library or a
+storage API is unavailable.
 
-**Design With Intent.** Commit to one aesthetic direction and express it through tokens, typography, and motion rather than through scattered one-off values.
+**Design With Intent.** Commit to one aesthetic direction and express it through tokens, typography,
+and motion rather than through scattered one-off values.
 
-**Render Consistently.** Prefer vector graphics over emoji for icons that must look the same in every browser, and suppress transitions during a full re-render so the user never sees an intermediate layout state.
+**Render Consistently.** Prefer vector graphics over emoji for icons that must look the same in
+every browser, and suppress transitions during a full re-render so the user never sees an
+intermediate layout state.
 
-**Prefer The Platform.** Reach for a browser feature before writing the code it would replace.
-
-**Simplest Structure That Works.** Complexity must be earned by a requirement, not anticipated for one.
-
-**Readable In Any Layout.** A single file is divided as rigorously as a directory tree, because the reader has nothing else to navigate by.
-
-**Answer Immediately.** Acknowledge input in the current frame, and do the slow part in the next one.
+**Answer Immediately.** Acknowledge input in the current frame,
+and do the slow part in the next one.
 
 **Fit Every Screen.** Width, height, orientation, and pointer type are all part of the requirement.
 
-**Detect Before Asking.** The repository records the decisions, so read it first and ask only what it cannot answer.
+## Sources
 
-**Change What Was Asked.** A layout, a convention, or a pattern is a contract, and changing one is a proposal, not a side effect.
+The following authoritative references support the rules in this document.
+
+- [WHATWG HTML Standard](https://html.spec.whatwg.org/) - the living standard for document
+  structure, elements, and script behavior.
+- [WHATWG DOM Standard](https://dom.spec.whatwg.org/) - the document object model and event model.
+- [WHATWG Fetch Standard](https://fetch.spec.whatwg.org/) - the `fetch` contract.
+- [ECMA-262 ECMAScript Language Specification](https://tc39.es/ecma262/) - the JavaScript language
+  specification.
+- [MDN HTML](https://developer.mozilla.org/en-US/docs/Web/HTML),
+  [MDN CSS](https://developer.mozilla.org/en-US/docs/Web/CSS),
+  [MDN JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript), and
+  [MDN Web API](https://developer.mozilla.org/en-US/docs/Web/API) - the practical references for
+  elements, properties, syntax, and platform APIs.
+- [W3C ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/) - accessible names, roles,
+  states, and keyboard interaction patterns.
+- [WCAG 2.2](https://www.w3.org/TR/WCAG22/) - the conformance criteria for accessibility
+  requirements.
+- [web.dev Web Vitals](https://web.dev/articles/vitals) - the performance metrics and their
+  thresholds.
+- [webstatus.dev](https://webstatus.dev/) and [Can I Use](https://caniuse.com/)
+  - feature-support lookups for the baseline gate.

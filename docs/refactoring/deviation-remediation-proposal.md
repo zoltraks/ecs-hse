@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document proposes refactoring steps to bring the ECS HSE Test application into compliance with the development standard defined in [`docs/standard/html-vanilla-app-development.md`](../standard/html-vanilla-app-development.md).
+This document proposes refactoring steps to bring the ECS HSE Test application into compliance with the development standards defined in [`docs/standard/html-general-development.md`](../standard/html-general-development.md) and [`docs/standard/html-vanilla-development.md`](../standard/html-vanilla-development.md).
 
 Each deviation is categorized by priority and scoped so it can be addressed as an independent change.
 
@@ -28,7 +28,7 @@ The deviations listed below are specific gaps between the current implementation
 
 **Priority**: Medium
 
-**Standard reference**: Module System, line 427
+**Standard reference**: `html-general-development.md`, Code Conventions > JavaScript > Module system
 
 The standard requires every classic script file to begin with `'use strict';` unless it is an ES module.
 
@@ -40,7 +40,7 @@ The file `js/app.js` does not include the directive.
 
 **Priority**: Low
 
-**Standard reference**: Layer Order, line 797-812
+**Standard reference**: `html-vanilla-development.md`, Overlays > Layer Order
 
 The standard requires every `z-index` value to come from a `--z-` token.
 
@@ -57,7 +57,7 @@ The stylesheet uses literal values in two places:
 
 **Priority**: Low
 
-**Standard reference**: Motion, line 385-388
+**Standard reference**: `html-general-development.md`, Code Conventions > CSS > Motion
 
 The standard says to transition named properties, never `all`.
 
@@ -69,7 +69,7 @@ The `.btn` rule uses `transition: all 0.15s;`.
 
 **Priority**: Medium
 
-**Standard reference**: Motion, line 389-398
+**Standard reference**: `html-general-development.md`, Code Conventions > CSS > Motion
 
 The standard requires respecting the reduced motion preference.
 
@@ -90,7 +90,7 @@ The stylesheet has animations on `.timer-display.danger` and transitions on seve
 
 **Priority**: Medium
 
-**Standard reference**: Reset, line 324-346
+**Standard reference**: `html-general-development.md`, Code Conventions > CSS > Reset
 
 The standard requires a minimal reset that includes `font: inherit` for form controls and `max-width`/`height` for images and SVGs.
 
@@ -113,7 +113,7 @@ img, svg {
 
 **Priority**: High
 
-**Standard reference**: Reusable Modal, line 833-850
+**Standard reference**: `html-vanilla-development.md`, Overlays > Reusable Modal; Messages and Dialogs > Required Behavior
 
 The standard mandates `max-height: 90vh` on the modal and an `overflow-y: auto` scrolling body.
 
@@ -127,7 +127,7 @@ The current `.modal` rule has no `max-height`, and the modal body does not scrol
 
 **Priority**: High
 
-**Standard reference**: Modal Behavior, line 852-868
+**Standard reference**: `html-vanilla-development.md`, Messages and Dialogs > Overlay Element Mechanism; Messages and Dialogs > Required Behavior
 
 The standard requires three behaviors the current modal does not implement:
 
@@ -149,7 +149,7 @@ The current `showModal` function in `js/app.js` attaches `onclick` handlers to t
 
 **Priority**: Medium
 
-**Standard reference**: Modal Behavior, line 866
+**Standard reference**: `html-vanilla-development.md`, Messages and Dialogs > Required Behavior
 
 The standard says to compare `e.target` to the overlay itself so a click inside the dialog does not close it, but a click on the backdrop does.
 
@@ -161,7 +161,7 @@ The current modal does not handle backdrop clicks at all.
 
 **Priority**: High
 
-**Standard reference**: Escaping, line 510-512
+**Standard reference**: `html-general-development.md`, Code Conventions > JavaScript > Escaping
 
 The standard requires every value that reaches `innerHTML` to be escaped without exception.
 
@@ -184,7 +184,7 @@ While the section names come from generated data and are currently safe, the sta
 
 **Priority**: Medium
 
-**Standard reference**: Persistence, line 561-571
+**Standard reference**: `html-vanilla-development.md`, Code Conventions > Persistence; Naming Conventions > Storage Keys
 
 The standard prefers a versioned key so the schema can evolve, and recommends rejecting a payload whose `version` field does not match.
 
@@ -201,7 +201,7 @@ The current key is `ecs-hse-test-state` with no version suffix and no `version` 
 
 **Priority**: Medium
 
-**Standard reference**: Development Server, line 1337-1338
+**Standard reference**: `html-vanilla-development.md`, Development Server
 
 The standard requires the server to disable caching.
 
@@ -213,7 +213,7 @@ The current `server.mjs` does not set a `Cache-Control` header on responses.
 
 **Priority**: Low
 
-**Standard reference**: Package Manifest, line 1401-1403
+**Standard reference**: `html-vanilla-development.md`, Dependencies
 
 The standard suggests a `check` script for syntax verification.
 
@@ -225,7 +225,7 @@ The current `package.json` has only the `start` script.
 
 **Priority**: High
 
-**Standard reference**: Accessibility, line 1122-1136 and Custom Choice Controls, line 992-1004
+**Standard reference**: `html-vanilla-development.md`, Accessibility; Forms > Custom Choice Controls
 
 The standard requires several accessibility behaviors the application does not currently implement:
 
@@ -247,7 +247,7 @@ The standard requires several accessibility behaviors the application does not c
 
 **Priority**: Low
 
-**Standard reference**: Comments, line 1464-1474
+**Standard reference**: `html-general-development.md`, Readability > Comments
 
 The standard says comments should carry the reason, not describe what the code does.
 

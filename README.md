@@ -12,9 +12,10 @@ Before making any changes, read [`docs/GUIDELINES.md`](docs/GUIDELINES.md).
 
 It contains development rules with a focus on AI assisted development.
 
-It references the development standard and two style documents:
+It references the development standards and two style documents:
 
-- [`docs/standard/html-vanilla-app-development.md`](docs/standard/html-vanilla-app-development.md) -- HTML vanilla application development standard.
+- [`docs/standard/html-general-development.md`](docs/standard/html-general-development.md) -- HTML, CSS, and JavaScript engineering standard.
+- [`docs/standard/html-vanilla-development.md`](docs/standard/html-vanilla-development.md) -- Vanilla application and website development standard.
 - [`docs/STYLE.md`](docs/STYLE.md) -- Markdown text style conventions.
 - [`docs/TABLE.md`](docs/TABLE.md) -- Markdown table formatting rules.
 
