@@ -11,16 +11,16 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-content">
-        <div class="logo" onclick="App.goHome()" role="button" aria-label="Go to home screen" tabindex="0">
-          <span class="logo-icon">⚡</span>
+        <div class="logo" onclick="App.goHome()" onkeydown="App.keyActivate(event)" role="button" aria-label="Go to home screen" tabindex="0">
+          <span class="logo-icon" aria-hidden="true">⚡</span>
           <div class="logo-text">
             <span class="logo-title">ECS HSE Test</span>
             <span class="logo-subtitle">Health, Safety & Environmental Assessment</span>
           </div>
         </div>
         <div class="header-right">
-          <div id="timer-display" class="timer-display hidden" onclick="App.toggleTimerPause()" role="button" aria-label="Timer, click to pause or resume" title="Click to pause/resume" tabindex="0">
-            <span class="timer-icon">⏱</span>
+          <div id="timer-display" class="timer-display hidden" onclick="App.toggleTimerPause()" onkeydown="App.keyActivate(event)" role="button" aria-label="Timer, click to pause or resume" title="Click to pause/resume" tabindex="0">
+            <span class="timer-icon" aria-hidden="true">⏱</span>
             <span id="timer-value" class="timer-value">30:00</span>
           </div>
           <button id="cheat-btn" class="btn btn-cheat hidden" onclick="App.toggleCheatMode()">Cheater</button>
@@ -43,48 +43,48 @@
 
           <div class="info-cards">
             <div class="info-card">
-              <div class="info-card-icon">📝</div>
+              <div class="info-card-icon" aria-hidden="true">📝</div>
               <div class="info-card-value" id="info-total-questions">50</div>
               <div class="info-card-label">Questions per test</div>
             </div>
             <div class="info-card">
-              <div class="info-card-icon">⏱</div>
+              <div class="info-card-icon" aria-hidden="true">⏱</div>
               <div class="info-card-value" id="info-time-limit">30 min</div>
               <div class="info-card-label">Time limit</div>
             </div>
             <div class="info-card">
-              <div class="info-card-icon">✅</div>
+              <div class="info-card-icon" aria-hidden="true">✅</div>
               <div class="info-card-value" id="info-pass-mark">43/50</div>
               <div class="info-card-label">Pass mark (86%)</div>
             </div>
             <div class="info-card">
-              <div class="info-card-icon">📚</div>
+              <div class="info-card-icon" aria-hidden="true">📚</div>
               <div class="info-card-value" id="info-bank-count">327</div>
               <div class="info-card-label">Total question bank</div>
             </div>
           </div>
 
           <div class="action-cards">
-            <div class="action-card primary" onclick="App.startTest()" role="button" tabindex="0">
-              <div class="action-card-icon">🚀</div>
+            <div class="action-card primary" onclick="App.startTest()" onkeydown="App.keyActivate(event)" role="button" tabindex="0">
+              <div class="action-card-icon" aria-hidden="true">🚀</div>
               <h2>Full Test</h2>
               <p><span id="desc-total-questions">50</span> random questions from all <span id="desc-topic-count">11</span> topics, <span id="desc-time-limit">30</span>-minute timer. Simulates the real assessment.</p>
               <button class="btn btn-primary">Begin Test</button>
             </div>
-            <div class="action-card" onclick="App.startQuickTest()" role="button" tabindex="0">
-              <div class="action-card-icon">⚡</div>
+            <div class="action-card" onclick="App.startQuickTest()" onkeydown="App.keyActivate(event)" role="button" tabindex="0">
+              <div class="action-card-icon" aria-hidden="true">⚡</div>
               <h2>Quick Quiz</h2>
               <p>20 random questions, no timer. Great for a quick knowledge check.</p>
               <button class="btn btn-primary">Start Quiz</button>
             </div>
-            <div class="action-card" onclick="App.startAllQuestions()" role="button" tabindex="0">
-              <div class="action-card-icon">📚</div>
+            <div class="action-card" onclick="App.startAllQuestions()" onkeydown="App.keyActivate(event)" role="button" tabindex="0">
+              <div class="action-card-icon" aria-hidden="true">📚</div>
               <h2>All Questions</h2>
               <p>All <span id="desc-bank-count">327</span> questions in topic order, no timer. Answers are shuffled for a full practice run.</p>
               <button class="btn btn-primary">Check All</button>
             </div>
-            <div class="action-card" onclick="App.showScreen('practice')" role="button" tabindex="0">
-              <div class="action-card-icon">📖</div>
+            <div class="action-card" onclick="App.showScreen('practice')" onkeydown="App.keyActivate(event)" role="button" tabindex="0">
+              <div class="action-card-icon" aria-hidden="true">📖</div>
               <h2>Practice Topics</h2>
               <p>Browse and study all <span id="desc-bank-count-2">327</span> questions organised by topic, with answers and explanations.</p>
               <button class="btn btn-primary">Browse Topics</button>
@@ -108,7 +108,7 @@
             </div>
             <div class="test-header-right">
               <button id="reveal-btn" class="btn btn-reveal" onclick="App.toggleReveal()">Reveal</button>
-              <button id="flag-btn" class="btn btn-warning" onclick="App.toggleFlag()">Flag</button>
+              <button id="flag-btn" class="btn btn-warning" onclick="App.toggleFlag()" aria-pressed="false">Flag</button>
               <button id="review-btn" class="btn btn-success" onclick="App.showReview()">Review</button>
             </div>
           </div>
@@ -134,10 +134,10 @@
             <div class="question-number">
               <span id="current-q-num">1</span>
               <span class="question-of">/ <span id="total-q-num">50</span></span>
-              <span id="flag-indicator" class="flag-indicator hidden">🚩</span>
+              <span id="flag-indicator" class="flag-indicator hidden" aria-hidden="true">🚩</span>
             </div>
             <div class="question-section-tag" id="question-section-tag"></div>
-            <div class="question-text" id="question-text"></div>
+            <div class="question-text" id="question-text" tabindex="-1"></div>
             <div class="options-list" id="options-list"></div>
           </div>
 
@@ -167,7 +167,7 @@
       <section id="results-screen" class="screen">
         <div class="results-container">
           <div id="result-banner" class="result-banner">
-            <div id="result-icon" class="result-icon"></div>
+            <div id="result-icon" class="result-icon" aria-hidden="true"></div>
             <h1 id="result-title" tabindex="-1"></h1>
             <div id="result-score" class="result-score"></div>
             <div id="result-percentage" class="result-percentage"></div>
@@ -266,10 +266,6 @@
   <script src="js/questions-data.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/translations/pl.js"></script>
-  <script src="js/translations/de.js"></script>
-  <script src="js/translations/es.js"></script>
-  <script src="js/translations/it.js"></script>
-  <script src="js/translations/fr.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

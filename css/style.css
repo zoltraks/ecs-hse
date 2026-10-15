@@ -541,7 +541,7 @@ body {
   background: var(--bg);
   color: var(--text-muted);
   border: 2px solid transparent;
-  transition: all 0.15s;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.15s;
 }
 
 .qnav-item:hover {
@@ -627,7 +627,7 @@ body {
   border: 2px solid transparent;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .option-item:hover {
@@ -1045,7 +1045,7 @@ body {
   background: var(--bg);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: border-color 0.15s, background 0.15s;
   border: 2px solid transparent;
 }
 
@@ -1190,7 +1190,7 @@ body {
   border-radius: var(--radius);
   padding: 28px;
   width: 90%;
-  min-width: 730px;
+  min-width: min(730px, 90vw);
   max-width: 50%;
   max-height: 90vh;
   box-shadow: var(--shadow-lg);
@@ -1248,6 +1248,9 @@ body.no-transition * {
 }
 
 /* ===== Focus ===== */
+.logo:focus-visible,
+.timer-display:focus-visible,
+.action-card:focus-visible,
 .option-item:focus-visible,
 .qnav-item:focus-visible,
 .review-item:focus-visible,
@@ -1372,6 +1375,7 @@ body.no-transition * {
 }
 
 .lang-modal {
+  min-width: 0;
   max-width: 360px;
 }
 

@@ -94,26 +94,43 @@ const App = {
 
     const closeBtn = document.getElementById('lang-modal-close');
     const trigger = document.activeElement;
+    const focusable = [...body.querySelectorAll('.lang-option'), closeBtn];
 
     const onEscape = (e) => { if (e.key === 'Escape') close(); };
+    const onKeydown = (e) => {
+      if (e.key !== 'Tab') return;
+      e.preventDefault();
+      const idx = focusable.indexOf(document.activeElement);
+      const next = e.shiftKey ? (idx - 1 + focusable.length) % focusable.length : (idx + 1) % focusable.length;
+      focusable[next].focus();
+    };
     const onBackdrop = (e) => { if (e.target === overlay) close(); };
 
     const close = () => {
       overlay.classList.add('hidden');
       this.unlockScroll();
       document.removeEventListener('keydown', onEscape);
+      overlay.removeEventListener('keydown', onKeydown);
       overlay.removeEventListener('click', onBackdrop);
       closeBtn.onclick = null;
       if (trigger && typeof trigger.focus === 'function') trigger.focus();
     };
 
+    this._langModalClose = close;
+
     document.addEventListener('keydown', onEscape);
+    overlay.addEventListener('keydown', onKeydown);
     overlay.addEventListener('click', onBackdrop);
     closeBtn.onclick = close;
     closeBtn.focus();
   },
 
   closeLanguageModal() {
+    if (this._langModalClose) {
+      this._langModalClose();
+      this._langModalClose = null;
+      return;
+    }
     const overlay = document.getElementById('lang-modal-overlay');
     overlay.classList.add('hidden');
     this.unlockScroll();
@@ -436,7 +453,7 @@ const App = {
 
     window.scrollTo(0, 0);
 
-    const heading = document.querySelector('#' + name + '-screen h1, #' + name + '-screen h2, #' + name + '-screen h3');
+    const heading = document.querySelector('#' + name + '-screen h1, #' + name + '-screen h2, #' + name + '-screen h3, #' + name + '-screen [tabindex="-1"]');
     if (heading) heading.focus();
 
     this.saveState();
@@ -575,10 +592,8 @@ const App = {
         selected.push(...shuffled.slice(0, info.assessmentCount));
       }
     } else {
-      // Random selection from entire bank
       selected = this.shuffle([...QUESTIONS]).slice(0, count);
     }
-    // Shuffle the selected questions and shuffle options within each
     selected = this.shuffle(selected);
     return selected.map(q => this.shuffleOptions(q));
   },
@@ -745,12 +760,14 @@ const App = {
     document.getElementById('question-section-tag').textContent = q.sectionName;
     document.getElementById('question-text').textContent = q.question;
 
+    const isFlagged = this.state.flagged.has(this.state.currentIndex);
     const flagIndicator = document.getElementById('flag-indicator');
-    if (this.state.flagged.has(this.state.currentIndex)) {
+    if (isFlagged) {
       flagIndicator.classList.remove('hidden');
     } else {
       flagIndicator.classList.add('hidden');
     }
+    document.getElementById('flag-btn').setAttribute('aria-pressed', isFlagged ? 'true' : 'false');
 
     const isRevealed = this.state.revealed.has(this.state.currentIndex);
 
@@ -804,7 +821,6 @@ const App = {
       I18n.tf('test_question_of', this.state.currentIndex + 1, this.state.questions.length);
     document.getElementById('progress-bar').style.width = progress + '%';
 
-    // Show the current question's bank id (e.g. Q1.1) on the right of the row.
     const qidEl = document.getElementById('progress-qid');
     if (q.id) {
       qidEl.textContent = 'Q' + q.id;
@@ -1005,7 +1021,6 @@ const App = {
     const container = document.getElementById('topic-breakdown');
     container.innerHTML = '';
 
-    // Group by section
     const sectionStats = {};
     this.state.questions.forEach((rawQ, i) => {
       const q = I18n.getTranslatedQuestion(rawQ);
@@ -1080,7 +1095,7 @@ const App = {
           <span class="dr-number">${I18n.tf('results_question_label', i + 1)}</span>
           <span class="dr-status ${statusClass}">${statusText}</span>
         </div>
-        <div class="dr-section-tag" style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">${q.sectionName}</div>
+        <div class="dr-section-tag" style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">${this.escapeHtml(q.sectionName)}</div>
         <div class="dr-question">${this.escapeHtml(q.question)}</div>
         <div class="dr-options">${optionsHtml}</div>
         ${explanationHtml}
@@ -1265,6 +1280,15 @@ const App = {
   },
 
   // ===== Utility =====
+  // Keyboard activation for role="button" elements; preventDefault keeps
+  // Space from scrolling the page.
+  keyActivate(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.currentTarget.click();
+    }
+  },
+
   escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -1273,8 +1297,5 @@ const App = {
   },
 };
 
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => App.init());
-
-// Save state before page unloads (e.g. refresh, close, navigate away)
 window.addEventListener('beforeunload', () => App.saveState());
