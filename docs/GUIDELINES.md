@@ -187,11 +187,15 @@ A new project of this kind starts at version `0.1`.
 
 This project carries version `1.0.0`.
 
-Bump the least significant segment on every change.
+Bump the least significant segment once per commit, however many change sets the commit contains.
 
 Roll a segment over after `9`, so `1.0.9` becomes `1.1.0` and `9.9.9` becomes `10.0.0`.
 
-Run `npm run bump` once per change set, however many edits the set contains.
+Run `npm run bump` only when the version has not yet been bumped since the last commit.
+
+Before bumping, compare the version in `package.json` with the committed version.
+
+If it already differs, the bump for this commit is done and must not run again.
 
 ### Commit Messages
 

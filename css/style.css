@@ -279,11 +279,11 @@ body {
   align-items: center;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: background 0.15s, box-shadow 0.2s;
 }
 
 .action-card:hover {
-  transform: translateY(-2px);
+  background: #eff6ff;
   box-shadow: var(--shadow-lg);
 }
 
@@ -323,7 +323,7 @@ body {
 }
 
 .btn-primary:hover {
-  background: var(--primary-dark);
+  background: #1e3a8a;
 }
 
 .btn-secondary {
@@ -333,7 +333,7 @@ body {
 }
 
 .btn-secondary:hover {
-  background: var(--border);
+  background: #cbd5e1;
 }
 
 .btn-outline {
@@ -353,7 +353,7 @@ body {
 }
 
 .btn-warning:hover {
-  background: #d97706;
+  background: #b45309;
 }
 
 .btn-cheat {
@@ -362,7 +362,7 @@ body {
 }
 
 .btn-cheat:hover {
-  background: #374151;
+  background: #1f2937;
 }
 
 .btn-cheat.active {
@@ -370,7 +370,7 @@ body {
 }
 
 .btn-cheat.active:hover {
-  background: #b91c1c;
+  background: #991b1b;
 }
 
 .btn-teal {
@@ -379,7 +379,7 @@ body {
 }
 
 .btn-teal:hover {
-  background: #374151;
+  background: #1f2937;
 }
 
 .btn-reveal {
@@ -388,7 +388,7 @@ body {
 }
 
 .btn-reveal:hover {
-  background: #a21caf;
+  background: #86198f;
 }
 
 /* Active state: answer is revealed, click again to hide */
@@ -397,7 +397,7 @@ body {
 }
 
 .btn-reveal.reveal-active:hover {
-  background: #0f766e;
+  background: #115e59;
 }
 
 .btn-danger {
@@ -406,7 +406,7 @@ body {
 }
 
 .btn-danger:hover {
-  background: #b91c1c;
+  background: #991b1b;
 }
 
 .btn-success {
@@ -415,7 +415,7 @@ body {
 }
 
 .btn-success:hover {
-  background: #15803d;
+  background: #166534;
 }
 
 .btn-small {
@@ -1236,7 +1236,7 @@ body {
 }
 
 .btn-modal-cancel:hover {
-  background: #374151;
+  background: #1f2937;
 }
 
 /* ===== Utility ===== */

@@ -33,11 +33,16 @@ const App = {
     this.renderPracticeTopics();
     this.updateLanguageFlag();
     window.addEventListener('localechange', () => this.onLocaleChange());
+    // Skip the heading focus during initial load: it announces a user-driven
+    // screen switch, and on refresh the browser paints a focus ring on an
+    // element the user never navigated to.
+    this.restoring = true;
     if (this.loadState() && this.state.screen !== 'home') {
       this.restoreScreen();
     } else {
       this.showScreen('home');
     }
+    this.restoring = false;
     this.updateCheatButton();
   },
 
@@ -473,7 +478,7 @@ const App = {
     window.scrollTo(0, 0);
 
     const heading = document.querySelector('#' + name + '-screen h1, #' + name + '-screen h2, #' + name + '-screen h3, #' + name + '-screen [tabindex="-1"]');
-    if (heading) heading.focus();
+    if (heading && !this.restoring) heading.focus();
 
     this.saveState();
   },
