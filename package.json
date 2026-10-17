@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "start": "node server.mjs",
-    "check": "node --check js/app.js && node --check server.mjs"
+    "check": "node --check js/app.js && node --check server.mjs && node --check version.mjs && node version.mjs check",
+    "bump": "node version.mjs bump",
+    "sync-version": "node version.mjs"
   },
   "engines": {
     "node": ">=18"

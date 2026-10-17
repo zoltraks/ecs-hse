@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines the rules for developing and maintaining the ECS HSE Test project.
+This document defines the rules for developing and maintaining the ECS HSE TEST project.
 
 It has a particular focus on AI assisted development.
 
@@ -40,6 +40,12 @@ Use available tools to read files, search, and run commands before answering que
 If something is uncertain, investigate first.
 
 ### Scope of Changes
+
+The application is working and in use.
+
+Make only small adjustments and fixes.
+
+Do not redesign or rewrite the application.
 
 Make the smallest change that solves the problem.
 
@@ -89,7 +95,7 @@ Assume the code is for a real production task unless stated otherwise.
 
 - Use vanilla JavaScript (no frameworks, no transpilation).
 - Follow the existing `App` object pattern in `js/app.js`.
-- Use `const` by default; use `let` only when reassignment is needed.
+- Use `const` by default, use `let` only when reassignment is needed.
 - Use double quotes for string literals to match the existing code.
 - Use two-space indentation.
 - Keep functions short and focused.
@@ -166,6 +172,26 @@ Key principles:
 - Place runtime code in `js/` or the project root.
 
 ## Version Control
+
+### Versioning
+
+The version number lives in `package.json` when that file exists.
+
+The `version` meta tag in `index.html` mirrors it.
+
+Keep the two synchronized with `version.mjs`.
+
+When `package.json` does not exist, the meta tag is the single source of truth.
+
+A new project of this kind starts at version `0.1`.
+
+This project carries version `1.0.0`.
+
+Bump the least significant segment on every change.
+
+Roll a segment over after `9`, so `1.0.9` becomes `1.1.0` and `9.9.9` becomes `10.0.0`.
+
+Run `npm run bump` once per change set, however many edits the set contains.
 
 ### Commit Messages
 

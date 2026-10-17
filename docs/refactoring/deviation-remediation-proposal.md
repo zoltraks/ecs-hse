@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document proposes refactoring steps to bring the ECS HSE Test application into compliance with the development standards defined in [`docs/standard/html-general-development.md`](../standard/html-general-development.md) and [`docs/standard/html-vanilla-development.md`](../standard/html-vanilla-development.md).
+This document proposes refactoring steps to bring the ECS HSE TEST application into compliance with the development standards defined in [`docs/standard/html-general-development.md`](../standard/html-general-development.md) and [`docs/standard/html-vanilla-development.md`](../standard/html-vanilla-development.md).
 
 Each deviation is categorized by priority and scoped so it can be addressed as an independent change.
 

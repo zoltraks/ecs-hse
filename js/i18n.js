@@ -19,10 +19,9 @@ window.I18n = {
 
   T: {
     en: {
-      app_title: 'ECS HSE Test',
+      app_title: 'ECS HSE TEST',
       app_subtitle: 'Health, Safety & Environmental Assessment',
-      home_hero_title: 'ECS Health, Safety & Environmental Assessment',
-      home_hero_subtitle: 'Practice for the ECS HSE Awareness Assessment with the official question bank',
+      home_hero_subtitle: 'Practice for the ECS Health, Safety & Environmental Awareness Assessment with the official question bank',
       home_info_questions_per_test: 'Questions per test',
       home_info_time_limit: 'Time limit',
       home_info_pass_mark: 'Pass mark (86%)',
@@ -105,7 +104,6 @@ window.I18n = {
     pl: {
       app_title: 'Test ECS BHP',
       app_subtitle: 'Egzamin BHP i ochrony środowiska',
-      home_hero_title: 'Egzamin ECS z zakresu BHP i ochrony środowiska',
       home_hero_subtitle: 'Ćwicz do egzaminu ECS BHP z oficjalnego banku pytań',
       home_info_questions_per_test: 'Pytań w teście',
       home_info_time_limit: 'Limit czasu',

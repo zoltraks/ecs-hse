@@ -1,4 +1,4 @@
-# ECS HSE Test
+# ECS HSE TEST
 
 Practice application for the ECS Health, Safety and Environmental Awareness Assessment.
 

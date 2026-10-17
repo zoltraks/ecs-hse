@@ -1,6 +1,6 @@
 'use strict';
 
-// ===== ECS HSE Test Application =====
+// ===== ECS HSE TEST Application =====
 
 const STORAGE_KEY = 'ecs-hse-test-state-v1';
 const STORAGE_KEY_LEGACY = 'ecs-hse-test-state';
@@ -42,10 +42,14 @@ const App = {
   },
 
   // ===== Scroll Lock =====
+  // scrollbar-gutter on html reserves the scrollbar space; the padding fallback
+  // below covers engines without it.
   lockScroll() {
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = scrollbarWidth + 'px';
+    if (!CSS.supports('scrollbar-gutter', 'stable')) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = scrollbarWidth + 'px';
+      }
     }
     document.body.classList.add('scroll-locked');
   },
@@ -181,8 +185,6 @@ const App = {
     document.getElementById('timer-display').setAttribute('aria-label', I18n.t('timer_pause_resume'));
     document.getElementById('lang-btn').setAttribute('aria-label', I18n.t('lang_title'));
 
-    const heroTitle = document.querySelector('#home-screen .hero h1');
-    if (heroTitle) heroTitle.textContent = I18n.t('home_hero_title');
     const heroSubtitle = document.querySelector('#home-screen .hero-subtitle');
     if (heroSubtitle) heroSubtitle.textContent = I18n.t('home_hero_subtitle');
 
@@ -333,6 +335,18 @@ const App = {
     } catch (e) {
       // ignore
     }
+  },
+
+  // Console-facing full reset: wiping storage alone is not enough because the
+  // beforeunload handler would immediately re-save the in-memory state.
+  reset() {
+    this.resetting = true;
+    try {
+      localStorage.clear();
+    } catch (e) {
+      console.error('reset error:', e);
+    }
+    location.reload();
   },
 
   restoreScreen() {
@@ -1303,4 +1317,7 @@ const App = {
 };
 
 document.addEventListener('DOMContentLoaded', () => App.init());
-window.addEventListener('beforeunload', () => App.saveState());
+window.addEventListener('beforeunload', () => {
+  if (!App.resetting) App.saveState();
+});
+window.reset = () => App.reset();

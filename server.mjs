@@ -63,5 +63,5 @@ const server = createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`ECS HSE Test app running at http://localhost:${PORT}`);
+  console.log(`ECS HSE TEST app running at http://localhost:${PORT}`);
 });
